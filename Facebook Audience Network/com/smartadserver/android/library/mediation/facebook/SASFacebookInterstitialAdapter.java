@@ -1,0 +1,102 @@
+package com.smartadserver.android.library.mediation.facebook;
+
+import android.content.Context;
+import android.support.annotation.NonNull;
+
+import com.facebook.ads.Ad;
+import com.facebook.ads.AdError;
+import com.facebook.ads.InterstitialAd;
+import com.facebook.ads.InterstitialAdListener;
+import com.smartadserver.android.library.mediation.SASMediationInterstitialAdapter;
+import com.smartadserver.android.library.mediation.SASMediationInterstitialAdapterListener;
+import com.smartadserver.android.library.util.SASUtil;
+
+import java.util.Map;
+
+/**
+ * Mediation adapter class for Facebook interstitial format
+ */
+public class SASFacebookInterstitialAdapter extends SASFacebookAdapterBase implements SASMediationInterstitialAdapter {
+
+    // Tag for logging purposes
+    static private final String TAG = SASFacebookInterstitialAdapter.class.getSimpleName();
+
+    // Facebook interstitial object
+    private InterstitialAd interstitialAdView;
+
+    @Override
+    public void requestInterstitialAd(@NonNull Context context, @NonNull String serverParametersString, @NonNull Map<String, String> clientParameters,
+                                @NonNull final SASMediationInterstitialAdapterListener interstitialAdapterListener) {
+
+        configureAdRequest(context, serverParametersString, clientParameters);
+
+        String placementID = serverParametersString;
+
+        // instantiate Facebook interstitial object
+        interstitialAdView = new InterstitialAd(context,placementID);
+
+        // instantiate Facebook interstitial listener object
+        InterstitialAdListener interstitialAdListener = new InterstitialAdListener() {
+            @Override
+            public void onError(Ad ad, AdError adError) {
+                SASUtil.logDebug(TAG, "Facebook onError for interstitial");
+                boolean isNoAd = adError.getErrorCode() == AdError.NO_FILL_ERROR_CODE;
+                interstitialAdapterListener.adRequestFailed(adError.getErrorMessage(), isNoAd);
+            }
+
+            @Override
+            public void onAdLoaded(Ad ad) {
+                SASUtil.logDebug(TAG, "Facebook onAdLoaded for interstitial");
+                interstitialAdapterListener.onInterstitialLoaded();
+            }
+
+            @Override
+            public void onAdClicked(Ad ad) {
+                SASUtil.logDebug(TAG, "Facebook onAdClicked for interstitial");
+                interstitialAdapterListener.onAdClicked();
+            }
+
+            @Override
+            public void onLoggingImpression(Ad ad) {
+                SASUtil.logDebug(TAG, "Facebook onLoggingImpression for interstitial");
+            }
+
+            // interstitial only methods
+            @Override
+            public void onInterstitialDisplayed(Ad ad) {
+                SASUtil.logDebug(TAG, "Facebook onInterstitialDisplayed for interstitial");
+                interstitialAdapterListener.onInterstitialShown();
+            }
+
+            @Override
+            public void onInterstitialDismissed(Ad ad) {
+                SASUtil.logDebug(TAG, "Facebook onInterstitialDismissed for interstitial");
+                interstitialAdapterListener.onAdClosed();
+            }
+        };
+
+        // set interstitial listener on interstitial
+        interstitialAdView.setAdListener(interstitialAdListener);
+
+        // perform ad request
+        interstitialAdView.loadAd();
+
+    }
+
+        @Override
+    public void showInterstitial() throws Exception {
+        if (interstitialAdView != null && interstitialAdView.isAdLoaded()) {
+            interstitialAdView.show();
+        } else {
+            throw new Exception("No Facebook insterstitial ad loaded !");
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        SASUtil.logDebug(TAG, "Facebook onDestroy for interstitial");
+        if (interstitialAdView != null) {
+            interstitialAdView.destroy();
+        }
+    }
+}
