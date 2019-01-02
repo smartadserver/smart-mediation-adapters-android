@@ -23,7 +23,7 @@ public class SASAppLovinAdapterBase {
     /**
      * Common AdMob ad request configuration for all formats
      */
-    void configureAdRequest(Context context, String serverParametersString, Map<String, String> clientParameters) {
+    protected void configureAdRequest(Context context, String serverParametersString, Map<String, String> clientParameters) {
 
         // execute one time initialization code
         if (!initAppLovinDone) {
@@ -37,12 +37,15 @@ public class SASAppLovinAdapterBase {
         // GDPR consent
         boolean userConsent = false;
 
-        // check Smart value
+        // check if GDPR applies
         final String GDPRApplies = clientParameters.get(SASMediationAdapter.GDPR_APPLIES_KEY);
         // check if GDPR does NOT apply
         if ("false".equalsIgnoreCase(GDPRApplies)) {
             userConsent = true;
         } else {
+            // Due to the fact that AppLovin is not IAB compliant, it does not accept IAB Consent String, but only a
+            // binary consent status. The Smart Display SDK will retrieve it from the SharedPreferences with the
+            // key "Smart_advertisingConsentStatus". Note that this is not an IAB requirement, so you have to set it by yourself.
             final String smartConsentStatus = SASConfiguration.getSharedInstance().getGDPRConsentStatus();
             userConsent = "1".equals(smartConsentStatus);
         }

@@ -23,15 +23,15 @@ public class SASAdinCubeBannerAdapter extends SASAdinCubeAdapterBase implements 
     /**
      * Loads an AdInCube banner ad
      *
-     * @param context               the {@link android.content.Context} needed by the mediation SDK to make the bannr ad request
+     * @param context                the {@link android.content.Context} needed by the mediation SDK to make the bannr ad request
      * @param serverParametersString a String containing all needed parameters (as returned by Smart ad delivery)
-     *                              to make the mediation ad call
-     * @param clientParameters      additional client-side parameters (user specific, like location)
-     * @param bannerAdapterListener the {@link SASMediationBannerAdapterListener} provided to
-     *                              this {@link com.smartadserver.android.library.mediation.SASMediationAdapter} to notify Smart SDK of events occurring
+     *                               to make the mediation ad call
+     * @param clientParameters       additional client-side parameters (user specific, like location)
+     * @param bannerAdapterListener  the {@link SASMediationBannerAdapterListener} provided to
+     *                               this {@link com.smartadserver.android.library.mediation.SASMediationAdapter} to notify Smart SDK of events occurring
      */
     @Override
-    public void requestBannerAd(@NonNull Context context, @NonNull String serverParametersString, @NonNull Map<String,String> clientParameters,
+    public void requestBannerAd(@NonNull Context context, @NonNull String serverParametersString, @NonNull Map<String, String> clientParameters,
                                 @NonNull final SASMediationBannerAdapterListener bannerAdapterListener) {
         SASUtil.logDebug(TAG, "SASAdinCubeBannerAdapter requestAd");
 

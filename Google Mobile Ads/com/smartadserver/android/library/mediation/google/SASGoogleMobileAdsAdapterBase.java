@@ -25,10 +25,14 @@ class SASGoogleMobileAdsAdapterBase {
     /**
      * Common Google ad request configuration for all formats
      */
-    AdRequest configureAdRequest(Context context, String serverParametersString, Map<String, String> clientParameters) {
+    protected AdRequest configureAdRequest(Context context, String serverParametersString, Map<String, String> clientParameters) {
 
-        // check Smart value
-        final String GDPRApplies = (String) clientParameters.get(SASMediationAdapter.GDPR_APPLIES_KEY);
+        // check if GDPR applies
+        final String GDPRApplies = clientParameters.get(SASMediationAdapter.GDPR_APPLIES_KEY);
+
+        // Due to the fact that Google Mobile Ads is not IAB compliant, it does not accept IAB Consent String, but only a
+        // binary consent status. The Smart Display SDK will retrieve it from the SharedPreferences with the
+        // key "Smart_advertisingConsentStatus". Note that this is not an IAB requirement, so you have to set it by yourself.
         final String smartConsentStatus = SASConfiguration.getSharedInstance().getGDPRConsentStatus();
 
         boolean addNPAFlag = false;
@@ -46,7 +50,7 @@ class SASGoogleMobileAdsAdapterBase {
             // NO consent, enable google NPA (non personalized ads)
             Bundle extras = new Bundle();
             extras.putString("npa", "1");
-            adRequestBuilder.addNetworkExtrasBundle(AdMobAdapter.class,extras);
+            adRequestBuilder.addNetworkExtrasBundle(AdMobAdapter.class, extras);
         }
 
         // build ad request
@@ -57,7 +61,7 @@ class SASGoogleMobileAdsAdapterBase {
             // reason behind the '|' separator is because Google mobile ads placement already use '/'
             String appID = serverParametersString.split("\\|")[0];
             // appID = "ca-app-pub-3940256099942544~3347511713"; // USE FOR TESTING ONLY (AdMob sample ID)
-            MobileAds.initialize(context,appID);
+            MobileAds.initialize(context, appID);
             initGoogleMobileAdsDone = true;
         }
 
@@ -76,18 +80,17 @@ class SASGoogleMobileAdsAdapterBase {
         int width = Integer.parseInt(clientParameters.get(SASMediationAdapter.AD_VIEW_WIDTH_KEY));
         int height = Integer.parseInt(clientParameters.get(SASMediationAdapter.AD_VIEW_HEIGHT_KEY));
 
-        // get Anndroid metrics
+        // get Android metrics
         DisplayMetrics metrics = new DisplayMetrics();
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         windowManager.getDefaultDisplay().getMetrics(metrics);
 
         // compute ad view size in dp
-        int adViewWidthDp = (int)(width / metrics.density);
-        int adViewHeightDp = (int)(height / metrics.density);
+        int adViewWidthDp = (int) (width / metrics.density);
+        int adViewHeightDp = (int) (height / metrics.density);
 
         // return an google mobile ad size
-        AdSize adSize = new AdSize(adViewWidthDp,adViewHeightDp);
-        return adSize;
+        return new AdSize(adViewWidthDp, adViewHeightDp);
     }
 
 }

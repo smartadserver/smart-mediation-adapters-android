@@ -36,14 +36,14 @@ public class SASAdinCubeNativeAdAdapter extends SASAdinCubeAdapterBase implement
     private AdChoicesView adincubeAdChoicesView;
 
     /**
-     * @param context                the {@link android.content.Context} needed by the mediation SDK to make the ad request
-     * @param serverParametersString a String containing all needed parameters (as returned by Smart ad delivery)
-     *                               to make the mediation call
-     * @param clientParameters       additional client-side parameters (user specific, like location)
-     * @param nativeAdAdapterListener  the {@link SASMediationNativeAdAdapterListener} provided to this {@link com.smartadserver.android.library.mediation.SASMediationAdapter}
+     * @param context                 the {@link android.content.Context} needed by the mediation SDK to make the ad request
+     * @param serverParametersString  a String containing all needed parameters (as returned by Smart ad delivery)
+     *                                to make the mediation call
+     * @param clientParameters        additional client-side parameters (user specific, like location)
+     * @param nativeAdAdapterListener the {@link SASMediationNativeAdAdapterListener} provided to this {@link com.smartadserver.android.library.mediation.SASMediationAdapter}
      */
     @Override
-    public void requestNativeAd(@NonNull Context context, @NonNull String serverParametersString, @NonNull Map<String,String> clientParameters,
+    public void requestNativeAd(@NonNull Context context, @NonNull String serverParametersString, @NonNull Map<String, String> clientParameters,
                                 @NonNull final SASMediationNativeAdAdapterListener nativeAdAdapterListener) {
         SASUtil.logDebug(TAG, "SASAdinCubeNativeAdAdapter requestNativeAd");
 

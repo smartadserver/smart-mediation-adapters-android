@@ -50,7 +50,7 @@ public class SASAdColonyInterstitialAdapter extends SASAdColonyAdapterBase imple
         final String zoneID = serverParametersString.split("/")[1];
 
         // prepare ad request
-        configureAdRequest((Activity)context,serverParametersString,clientParameters);
+        configureAdRequest((Activity) context, serverParametersString, clientParameters);
 
         // instantiate adcolony listener
         AdColonyInterstitialListener listener = new AdColonyInterstitialListener() {
@@ -114,7 +114,7 @@ public class SASAdColonyInterstitialAdapter extends SASAdColonyAdapterBase imple
         AdColony.requestInterstitial(zoneID, listener, null);
     }
 
-    
+
     @Override
     public void showInterstitial() throws Exception {
         if (adColonyInterstitial != null) {

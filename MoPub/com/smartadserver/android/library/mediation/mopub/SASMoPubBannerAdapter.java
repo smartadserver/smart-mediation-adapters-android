@@ -56,7 +56,7 @@ public class SASMoPubBannerAdapter implements SASMediationBannerAdapter {
                     SASUtil.logDebug(TAG, "MoPub onInitializationFinished");
                     initMoPubDone = true;
                     // call requestBannerAd again, with SDK initialized
-                    requestBannerAd(context,serverParametersString,clientParameters,bannerAdapterListener);
+                    requestBannerAd(context, serverParametersString, clientParameters, bannerAdapterListener);
                 }
             };
 
@@ -66,7 +66,6 @@ public class SASMoPubBannerAdapter implements SASMediationBannerAdapter {
             MoPub.setLocationAwareness(SASConfiguration.getSharedInstance().isAutomaticLocationAllowed() ?
                     MoPub.LocationAwareness.NORMAL :
                     MoPub.LocationAwareness.DISABLED);
-
 
 
             final PersonalInfoManager personalInfoManager = MoPub.getPersonalInformationManager();

@@ -29,9 +29,9 @@ public class SASTapjoyRewardedVideoAdapter implements SASMediationRewardedVideoA
     private boolean needReward = false;
 
     /**
-     * @param context The {@link Context} needed by the mediation SDK to make the ad request.
-     * @param serverParametersString a String containing all needed parameters (as returned by Smart ad delivery) to make the mediation ad call.
-     * @param clientParameters additional client-side parameters (user specific, like location).
+     * @param context                      The {@link Context} needed by the mediation SDK to make the ad request.
+     * @param serverParametersString       a String containing all needed parameters (as returned by Smart ad delivery) to make the mediation ad call.
+     * @param clientParameters             additional client-side parameters (user specific, like location).
      * @param rewardedVideoAdapterListener the {@link SASMediationRewardedVideoAdapterListener} provided to this {@link com.smartadserver.android.library.mediation.SASMediationAdapter} to notify the Smart SDK of events
      */
     @Override

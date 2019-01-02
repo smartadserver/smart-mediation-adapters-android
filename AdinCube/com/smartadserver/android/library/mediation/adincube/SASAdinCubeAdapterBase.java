@@ -36,13 +36,13 @@ class SASAdinCubeAdapterBase {
     /**
      * Common configuration code for all formats
      */
-    void configureAdRequest(Context context, String serverParametersString, Map<String, String> clientParameters) {
+    protected void configureAdRequest(Context context, String serverParametersString, Map<String, String> clientParameters) {
 
         // reset state variable
         needToShowConsentDialog = false;
 
         // handle GDPR consent
-        handleGDPRConsent(context, (String) clientParameters.get(SASMediationAdapter.GDPR_APPLIES_KEY));
+        handleGDPRConsent(context, clientParameters.get(SASMediationAdapter.GDPR_APPLIES_KEY));
 
         // one time init
         if (!initAdinCubeDone) {
@@ -53,12 +53,15 @@ class SASAdinCubeAdapterBase {
         }
     }
 
-    void handleGDPRConsent(@NonNull Context context, @NonNull String GDPRApplies) {
+    protected void handleGDPRConsent(@NonNull Context context, @NonNull String GDPRApplies) {
         // GDPR consent
+        // Due to the fact that AdinCube is not IAB compliant, it does not accept IAB Consent String, but only a
+        // binary consent status. The Smart Display SDK will retrieve it from the SharedPreferences with the
+        // key "Smart_advertisingConsentStatus". Note that this is not an IAB requirement, so you have to set it by yourself.
         final String smartConsentStatus = SASConfiguration.getSharedInstance().getGDPRConsentStatus();
 
         if (smartConsentStatus != null) {
-            // Smart CMP consent available
+            // binary consent available
 
             // GDPR flag with false default value
             boolean GDPRAccepted = false;
@@ -79,7 +82,7 @@ class SASAdinCubeAdapterBase {
             }
 
         } else {
-            // AdinCube managed consent -> disabled for now
+            // AdinCube managed consent -> uncomment if you want to let AdinCube ask for the consent.
 //                needToShowConsentDialog = true;
 //                if (sasAdView instanceof SASInterstitialManager.InterstitialView) {
 //                    // need to defer consent dialog just before interstitial or rewarded video show()
@@ -88,7 +91,7 @@ class SASAdinCubeAdapterBase {
 //                    showConsentDialogIfNeeded(context);
 //                }
 
-            // fallback solution : do not present consent, assume declined (TODO decide later)
+            // fallback solution : do not present consent, assume declined (comment if you want Adincube to manage the consent)
             AdinCube.UserConsent.setDeclined(context);
         }
     }

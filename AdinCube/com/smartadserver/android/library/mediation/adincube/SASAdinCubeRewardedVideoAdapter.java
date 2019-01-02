@@ -21,7 +21,7 @@ public class SASAdinCubeRewardedVideoAdapter extends SASAdinCubeAdapterBase impl
     private Activity activity;
 
     @Override
-    public void requestRewardedVideoAd(@NonNull Context context, @NonNull String serverParametersString, @NonNull Map<String,String> clientParameters,
+    public void requestRewardedVideoAd(@NonNull Context context, @NonNull String serverParametersString, @NonNull Map<String, String> clientParameters,
                                        @NonNull final SASMediationRewardedVideoAdapterListener rewardedVideoAdapterListener) {
         SASUtil.logDebug(TAG, "SASAdinCubeRewardedVideoAdapter requestAd");
 
@@ -32,7 +32,7 @@ public class SASAdinCubeRewardedVideoAdapter extends SASAdinCubeAdapterBase impl
             return;
         }
 
-        activity = (Activity)context;
+        activity = (Activity) context;
 
         configureAdRequest(context, serverParametersString, clientParameters);
 

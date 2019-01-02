@@ -30,12 +30,16 @@ public class SASAdColonyAdapterBase {
         boolean GDPRRequired = true; // applies by default
 
         // check Smart value
-        final String GDPRApplies= clientParameters.get(SASMediationAdapter.GDPR_APPLIES_KEY);
+        final String GDPRApplies = clientParameters.get(SASMediationAdapter.GDPR_APPLIES_KEY);
+
+        // Due to the fact that AdColony is not IAB compliant, it does not accept IAB Consent String, but only a
+        // binary consent status. The Smart Display SDK will retrieve it from the SharedPreferences with the
+        // key "Smart_advertisingConsentStatus". Note that this is not an IAB requirement, so you have to set it by yourself.
         final String smartConsentStatus = SASConfiguration.getSharedInstance().getGDPRConsentStatus();
         // check if GDPR does NOT apply
         if ("false".equalsIgnoreCase(GDPRApplies)) {
             GDPRRequired = false;
-        };
+        }
 
         // apply AdColony app options with GDPR flags
         AdColonyAppOptions appOptions = new AdColonyAppOptions();

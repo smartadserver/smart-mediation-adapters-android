@@ -33,11 +33,11 @@ public class SASAdColonyRewardedVideoAdapter extends SASAdColonyAdapterBase impl
     /**
      * Requests a mediated interstitial ad asynchronously
      *
-     * @param context The {@link Context} needed by the mediation SDK to make the ad request.
-     * @param serverParametersString a String containing all needed parameters (as returned by Smart ad delivery) to make the mediation ad call.
-     * @param clientParameters additional client-side parameters (user specific, like location).
+     * @param context                      The {@link Context} needed by the mediation SDK to make the ad request.
+     * @param serverParametersString       a String containing all needed parameters (as returned by Smart ad delivery) to make the mediation ad call.
+     * @param clientParameters             additional client-side parameters (user specific, like location).
      * @param rewardedVideoAdapterListener the {@link SASMediationRewardedVideoAdapterListener} provided to this
-     * {@link com.smartadserver.android.library.mediation.SASMediationAdapter} to notify the Smart SDK of events
+     *                                     {@link com.smartadserver.android.library.mediation.SASMediationAdapter} to notify the Smart SDK of events
      */
     @Override
     public void requestRewardedVideoAd(@NonNull Context context, @NonNull String serverParametersString, @NonNull Map<String, String> clientParameters,
@@ -52,7 +52,7 @@ public class SASAdColonyRewardedVideoAdapter extends SASAdColonyAdapterBase impl
         final String zoneID = serverParametersString.split("/")[1];
 
         // prepare ad request
-        configureAdRequest((Activity)context,serverParametersString,clientParameters);
+        configureAdRequest((Activity) context, serverParametersString, clientParameters);
 
         // instantiate adcolony listener
         AdColonyInterstitialListener listener = new AdColonyInterstitialListener() {
@@ -121,7 +121,7 @@ public class SASAdColonyRewardedVideoAdapter extends SASAdColonyAdapterBase impl
                 SASUtil.logDebug(TAG, "AdColony onReward for rewarded video: label:" + currency + " amount:" + amount);
 
                 if (amount > 0) {
-                    rewardedVideoAdapterListener.onReward(new SASReward(currency,amount));
+                    rewardedVideoAdapterListener.onReward(new SASReward(currency, amount));
                 }
             }
         });

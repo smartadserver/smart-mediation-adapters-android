@@ -31,14 +31,14 @@ public class SASAdinCubeInterstitialAdapter extends SASAdinCubeAdapterBase imple
      * Requests a mediated interstitial ad asynchronously
      *
      * @param context                     the {@link android.content.Context} needed by the mediation SDK to make the bannr ad request
-     * @param serverParametersString       a String containing all needed parameters (as returned by Smart ad delivery)
+     * @param serverParametersString      a String containing all needed parameters (as returned by Smart ad delivery)
      *                                    to make the mediation ad call
      * @param clientParameters            additional client-side parameters (user specific, like location)
      * @param interstitialAdapterListener the {@link SASMediationInterstitialAdapterListener} provided to
      *                                    this {@link com.smartadserver.android.library.mediation.SASMediationAdapter} to notify Smart SDK of events occurring
      */
     @Override
-    public void requestInterstitialAd(@NonNull Context context, @NonNull String serverParametersString, @NonNull Map<String,String> clientParameters,
+    public void requestInterstitialAd(@NonNull Context context, @NonNull String serverParametersString, @NonNull Map<String, String> clientParameters,
                                       @NonNull final SASMediationInterstitialAdapterListener interstitialAdapterListener) {
         SASUtil.logDebug(TAG, "SASAdinCubeInterstitialAdapter requestAd");
 
@@ -50,7 +50,7 @@ public class SASAdinCubeInterstitialAdapter extends SASAdinCubeAdapterBase imple
             return;
         }
 
-        activity = (Activity)context;
+        activity = (Activity) context;
 
         configureAdRequest(context, serverParametersString, clientParameters);
 

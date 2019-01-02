@@ -30,14 +30,14 @@ public class SASGoogleMobileAdsRewardedVideoAdapter extends SASGoogleMobileAdsAd
     /**
      * Requests a mediated rewarded video ad asynchronously.
      *
-     * @param context The {@link Context} needed by the mediation SDK to make the ad request.
-     * @param serverParametersString a String containing all needed parameters (as returned by Smart ad delivery) to make the mediation ad call.
-     * @param clientParameters additional client-side parameters (user specific, like location).
+     * @param context                      The {@link Context} needed by the mediation SDK to make the ad request.
+     * @param serverParametersString       a String containing all needed parameters (as returned by Smart ad delivery) to make the mediation ad call.
+     * @param clientParameters             additional client-side parameters (user specific, like location).
      * @param rewardedVideoAdapterListener the {@link SASMediationRewardedVideoAdapterListener} provided to this {@link com.smartadserver.android.library.mediation.SASMediationAdapter} to notify the Smart SDK of events
      */
     @Override
     public void requestRewardedVideoAd(@NonNull Context context, @NonNull String serverParametersString,
-                                       @NonNull Map<String, String> clientParameters, final  @NonNull SASMediationRewardedVideoAdapterListener rewardedVideoAdapterListener) {
+                                       @NonNull Map<String, String> clientParameters, final @NonNull SASMediationRewardedVideoAdapterListener rewardedVideoAdapterListener) {
 
 
         // create rewarded ad request
@@ -75,10 +75,10 @@ public class SASGoogleMobileAdsRewardedVideoAdapter extends SASGoogleMobileAdsAd
 
             @Override
             public void onRewarded(RewardItem rewardItem) {
-                SASUtil.logDebug(TAG, "Google mobile ads onRewarded for rewarded video : label:" + rewardItem.getType() + " amount:"+rewardItem.getAmount());
+                SASUtil.logDebug(TAG, "Google mobile ads onRewarded for rewarded video : label:" + rewardItem.getType() + " amount:" + rewardItem.getAmount());
 
                 // notify Smart SDK of earned reward
-                rewardedVideoAdapterListener.onReward(new SASReward(rewardItem.getType(),rewardItem.getAmount()));
+                rewardedVideoAdapterListener.onReward(new SASReward(rewardItem.getType(), rewardItem.getAmount()));
             }
 
             @Override
@@ -107,7 +107,7 @@ public class SASGoogleMobileAdsRewardedVideoAdapter extends SASGoogleMobileAdsAd
         // make ad call
         String adUnitID = serverParametersString.split("\\|")[1];
 //        adUnitID = "ca-app-pub-3940256099942544/5224354917"; // USE FOR TESTING ONLY (Google mobile ads sample ID)
-        rewardedVideoAd.loadAd(adUnitID,adRequest);
+        rewardedVideoAd.loadAd(adUnitID, adRequest);
 
     }
 

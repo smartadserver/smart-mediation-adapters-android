@@ -105,7 +105,11 @@ public class SASVungleRewardedVideoAdapter implements SASMediationRewardedVideoA
 
         // GDPR related
         final String GDPRApplies = (String) clientParameters.get("gdprapplies");
-        final String smartConsentStatus = SASConfiguration.getSharedInstance().getGDPRConsentStatus();
+
+        // Due to the fact that Vungle is not IAB compliant, it does not accept IAB Consent String, but only a
+        // binary consent status. The Smart Display SDK will retrieve it from the SharedPreferences with the
+        // key "Smart_advertisingConsentStatus". Note that this is not an IAB requirement, so you have to set it by yourself.
+        final String consentStatus = SASConfiguration.getSharedInstance().getGDPRConsentStatus();
 
         //Need to init Vungle at every requestAd call, as the placement id can be different
         final List<String> placementList = Arrays.asList(placementID);
@@ -119,8 +123,8 @@ public class SASVungleRewardedVideoAdapter implements SASMediationRewardedVideoA
                     // Smart determined GDPR applies or not
                     if (!("false".equalsIgnoreCase(GDPRApplies))) {
                         // get GDPR consent status
-                        if (smartConsentStatus != null) {
-                            if (smartConsentStatus.equals("1")) {
+                        if (consentStatus != null) {
+                            if (consentStatus.equals("1")) {
                                 Vungle.updateConsentStatus(Vungle.Consent.OPTED_IN, "REPLACE_WITH_YOUR_CONSENT_POLICY_VERSION");
                             } else {
                                 Vungle.updateConsentStatus(Vungle.Consent.OPTED_OUT, "REPLACE_WITH_YOUR_CONSENT_POLICY_VERSION");
