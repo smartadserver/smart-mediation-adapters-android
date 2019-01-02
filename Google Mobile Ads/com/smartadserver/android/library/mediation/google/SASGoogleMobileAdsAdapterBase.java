@@ -1,7 +1,9 @@
 package com.smartadserver.android.library.mediation.google;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
@@ -10,7 +12,6 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.MobileAds;
 import com.smartadserver.android.library.mediation.SASMediationAdapter;
-import com.smartadserver.android.library.util.SASConfiguration;
 
 import java.util.Map;
 
@@ -31,9 +32,12 @@ class SASGoogleMobileAdsAdapterBase {
         final String GDPRApplies = clientParameters.get(SASMediationAdapter.GDPR_APPLIES_KEY);
 
         // Due to the fact that Google Mobile Ads is not IAB compliant, it does not accept IAB Consent String, but only a
-        // binary consent status. The Smart Display SDK will retrieve it from the SharedPreferences with the
-        // key "Smart_advertisingConsentStatus". Note that this is not an IAB requirement, so you have to set it by yourself.
-        final String smartConsentStatus = SASConfiguration.getSharedInstance().getGDPRConsentStatus();
+        // binary consent status.
+        // Smart advises app developers to store the binary consent in the 'Smart_advertisingConsentStatus' key
+        // in NSUserDefault, therefore this adapter will retrieve it from this key.
+        // Adapt the code below if your app don't follow this convention.
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        final String smartConsentStatus = sharedPreferences.getString("Smart_advertisingConsentStatus", null);
 
         boolean addNPAFlag = false;
         // check if GDPR does apply

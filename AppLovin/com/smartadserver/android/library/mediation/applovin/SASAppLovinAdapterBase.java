@@ -1,11 +1,12 @@
 package com.smartadserver.android.library.mediation.applovin;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import com.applovin.sdk.AppLovinPrivacySettings;
 import com.applovin.sdk.AppLovinSdk;
 import com.smartadserver.android.library.mediation.SASMediationAdapter;
-import com.smartadserver.android.library.util.SASConfiguration;
 
 import java.util.Map;
 
@@ -44,9 +45,12 @@ public class SASAppLovinAdapterBase {
             userConsent = true;
         } else {
             // Due to the fact that AppLovin is not IAB compliant, it does not accept IAB Consent String, but only a
-            // binary consent status. The Smart Display SDK will retrieve it from the SharedPreferences with the
-            // key "Smart_advertisingConsentStatus". Note that this is not an IAB requirement, so you have to set it by yourself.
-            final String smartConsentStatus = SASConfiguration.getSharedInstance().getGDPRConsentStatus();
+            // binary consent status.
+            // Smart advises app developers to store the binary consent in the 'Smart_advertisingConsentStatus' key
+            // in NSUserDefault, therefore this adapter will retrieve it from this key.
+            // Adapt the code below if your app don't follow this convention.
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+            final String smartConsentStatus = sharedPreferences.getString("Smart_advertisingConsentStatus", null);
             userConsent = "1".equals(smartConsentStatus);
         }
 

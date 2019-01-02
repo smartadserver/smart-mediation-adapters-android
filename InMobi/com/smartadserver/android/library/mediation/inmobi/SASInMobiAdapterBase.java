@@ -1,7 +1,10 @@
 package com.smartadserver.android.library.mediation.inmobi;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.location.Location;
+import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 
 import com.inmobi.sdk.InMobiSdk;
 import com.smartadserver.android.library.util.SASConfiguration;
@@ -47,7 +50,7 @@ public class SASInMobiAdapterBase {
     /**
      * Returns a JSON object containing GDPR info as expected by InMobi
      */
-    protected static JSONObject getJSONConsent(Map<String, String> clientParameters) {
+    protected static JSONObject getJSONConsent(Context context, Map<String, String> clientParameters) {
         JSONObject JSONConsent = new JSONObject();
 
         try {
@@ -66,9 +69,12 @@ public class SASInMobiAdapterBase {
             JSONConsent.put("gdpr", GDPRApplies);
 
             // Due to the fact that InMobi is not IAB compliant, it does not accept IAB Consent String, but only a
-            // binary consent status. The Smart Display SDK will retrieve it from the SharedPreferences with the
-            // key "Smart_advertisingConsentStatus". Note that this is not an IAB requirement, so you have to set it by yourself.
-            String smartConsentStatus = SASConfiguration.getSharedInstance().getGDPRConsentStatus();
+            // binary consent status.
+            // Smart advises app developers to store the binary consent in the 'Smart_advertisingConsentStatus' key
+            // in NSUserDefault, therefore this adapter will retrieve it from this key.
+            // Adapt the code below if your app don't follow this convention.
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+            final String smartConsentStatus = sharedPreferences.getString("Smart_advertisingConsentStatus", null);
 
             if (smartConsentStatus != null) {
                 // we have an info
@@ -89,7 +95,7 @@ public class SASInMobiAdapterBase {
     protected void configureAdRequest(Context context, String serverParameterString, Map<String, String> clientParameters) {
 
         // get GDPR consent tailored for inMobi
-        JSONObject JSONConsent = getJSONConsent(clientParameters);
+        JSONObject JSONConsent = getJSONConsent(context, clientParameters);
 
         initInMobiIfNecessary(context, getAccountId(serverParameterString), JSONConsent);
 

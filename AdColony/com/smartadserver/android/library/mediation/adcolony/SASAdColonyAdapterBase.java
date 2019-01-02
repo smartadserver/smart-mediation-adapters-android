@@ -1,11 +1,12 @@
 package com.smartadserver.android.library.mediation.adcolony;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import com.adcolony.sdk.AdColony;
 import com.adcolony.sdk.AdColonyAppOptions;
 import com.smartadserver.android.library.mediation.SASMediationAdapter;
-import com.smartadserver.android.library.util.SASConfiguration;
 
 import java.util.Map;
 
@@ -33,9 +34,13 @@ public class SASAdColonyAdapterBase {
         final String GDPRApplies = clientParameters.get(SASMediationAdapter.GDPR_APPLIES_KEY);
 
         // Due to the fact that AdColony is not IAB compliant, it does not accept IAB Consent String, but only a
-        // binary consent status. The Smart Display SDK will retrieve it from the SharedPreferences with the
-        // key "Smart_advertisingConsentStatus". Note that this is not an IAB requirement, so you have to set it by yourself.
-        final String smartConsentStatus = SASConfiguration.getSharedInstance().getGDPRConsentStatus();
+        // binary consent status.
+        // Smart advises app developers to store the binary consent in the 'Smart_advertisingConsentStatus' key
+        // in NSUserDefault, therefore this adapter will retrieve it from this key.
+        // Adapt the code below if your app don't follow this convention.
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
+        final String smartConsentStatus = sharedPreferences.getString("Smart_advertisingConsentStatus", null);
+
         // check if GDPR does NOT apply
         if ("false".equalsIgnoreCase(GDPRApplies)) {
             GDPRRequired = false;
@@ -44,7 +49,7 @@ public class SASAdColonyAdapterBase {
         // apply AdColony app options with GDPR flags
         AdColonyAppOptions appOptions = new AdColonyAppOptions();
         appOptions.setGDPRRequired(GDPRRequired);
-        appOptions.setGDPRConsentString(smartConsentStatus);
+        appOptions.setGDPRConsentString(smartConsentStatus == null ? "0" : smartConsentStatus);
         AdColony.setAppOptions(appOptions);
     }
 }
