@@ -2,6 +2,7 @@ package com.smartadserver.android.library.mediation.adincube;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.adincube.sdk.AdinCube;
 import com.adincube.sdk.AdinCubeBannerEventListener;
@@ -19,6 +20,8 @@ public class SASAdinCubeBannerAdapter extends SASAdinCubeAdapterBase implements 
 
     // internal TAG string for console output
     private static final String TAG = SASAdinCubeBannerAdapter.class.getSimpleName();
+
+    BannerView bannerView = null;
 
     /**
      * Loads an AdInCube banner ad
@@ -69,15 +72,19 @@ public class SASAdinCubeBannerAdapter extends SASAdinCubeAdapterBase implements 
         };
 
         // create AdInCubeBanner instance, set the listener and load ad
-        BannerView bannerView = AdinCube.Banner.createView(context, AdinCube.Banner.Size.BANNER_AUTO);
+        bannerView = AdinCube.Banner.createView(context, AdinCube.Banner.Size.BANNER_AUTO);
         AdinCube.Banner.setEventListener(bannerView, bannerEventListener);
-        bannerView.setAutoDestroyOnDetach(true);
+        bannerView.setAutoDestroyOnDetach(false);
         bannerView.load();
 
     }
 
     @Override
     public void onDestroy() {
-        // banner will auto release itself
+        Log.d(TAG, "AdinCube onDestroy for banner");
+        if (bannerView != null) {
+            bannerView.destroy();
+            bannerView = null;
+        }
     }
 }
