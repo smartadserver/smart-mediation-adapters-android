@@ -55,7 +55,6 @@ public class SASMoPubInterstitialAdapter implements SASMediationInterstitialAdap
         // Init MoPub SDK -- Here serverParameterString is the MoPub Ad unit id
         if (!initMoPubDone) {
             SdkConfiguration sdkConfiguration = new SdkConfiguration.Builder(serverParametersString)
-                    .withNetworksToInit(new ArrayList<String>())
                     .build();
 
             SdkInitializationListener initializationListener = new SdkInitializationListener() {

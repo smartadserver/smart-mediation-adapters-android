@@ -60,7 +60,6 @@ public class SASMoPubRewardedVideoAdapter implements SASMediationRewardedVideoAd
         // Init MoPub SDK
         if (!initMoPubDone) {
             SdkConfiguration sdkConfiguration = new SdkConfiguration.Builder(serverParametersString)
-                    .withNetworksToInit(new ArrayList<String>())
                     .build();
 
             SdkInitializationListener initializationListener = new SdkInitializationListener() {

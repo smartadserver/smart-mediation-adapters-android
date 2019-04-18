@@ -47,7 +47,6 @@ public class SASMoPubBannerAdapter implements SASMediationBannerAdapter {
         // Init MoPub SDK -- Here serverParametersString is the MoPub Ad unit id
         if (!initMoPubDone) {
             SdkConfiguration sdkConfiguration = new SdkConfiguration.Builder(serverParametersString)
-                    .withNetworksToInit(new ArrayList<String>())
                     .build();
 
             SdkInitializationListener initializationListener = new SdkInitializationListener() {
