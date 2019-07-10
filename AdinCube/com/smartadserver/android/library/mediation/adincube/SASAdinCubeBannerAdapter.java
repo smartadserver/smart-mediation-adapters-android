@@ -9,7 +9,7 @@ import com.adincube.sdk.AdinCubeBannerEventListener;
 import com.adincube.sdk.BannerView;
 import com.smartadserver.android.library.mediation.SASMediationBannerAdapter;
 import com.smartadserver.android.library.mediation.SASMediationBannerAdapterListener;
-import com.smartadserver.android.library.util.SASUtil;
+
 
 import java.util.Map;
 
@@ -36,7 +36,7 @@ public class SASAdinCubeBannerAdapter extends SASAdinCubeAdapterBase implements 
     @Override
     public void requestBannerAd(@NonNull Context context, @NonNull String serverParametersString, @NonNull Map<String, String> clientParameters,
                                 @NonNull final SASMediationBannerAdapterListener bannerAdapterListener) {
-        SASUtil.logDebug(TAG, "SASAdinCubeBannerAdapter requestAd");
+        Log.d(TAG, "SASAdinCubeBannerAdapter requestAd");
 
         configureAdRequest(context, serverParametersString, clientParameters);
 
@@ -44,29 +44,29 @@ public class SASAdinCubeBannerAdapter extends SASAdinCubeAdapterBase implements 
         AdinCubeBannerEventListener bannerEventListener = new AdinCubeBannerEventListener() {
             @Override
             public void onAdLoaded(BannerView bannerView) {
-                SASUtil.logDebug(TAG, "AdinCube banner onAdLoaded");
+                Log.d(TAG, "AdinCube banner onAdLoaded");
                 bannerAdapterListener.onBannerLoaded(bannerView);
             }
 
             @Override
             public void onLoadError(BannerView bannerView, String s) {
-                SASUtil.logDebug(TAG, "AdinCube onLoadError for banner : " + s);
+                Log.d(TAG, "AdinCube onLoadError for banner : " + s);
                 bannerAdapterListener.adRequestFailed(s, true);
             }
 
             @Override
             public void onAdShown(BannerView bannerView) {
-                SASUtil.logDebug(TAG, "AdinCube onAdShown for banner");
+                Log.d(TAG, "AdinCube onAdShown for banner");
             }
 
             @Override
             public void onError(BannerView bannerView, String s) {
-                SASUtil.logDebug(TAG, "AdinCube onError (while displaying) for banner");
+                Log.d(TAG, "AdinCube onError (while displaying) for banner");
             }
 
             @Override
             public void onAdClicked(BannerView bannerView) {
-                SASUtil.logDebug(TAG, "AdinCube onAdClicked for banner");
+                Log.d(TAG, "AdinCube onAdClicked for banner");
                 bannerAdapterListener.onAdClicked();
             }
         };

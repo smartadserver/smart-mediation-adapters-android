@@ -3,6 +3,7 @@ package com.smartadserver.android.library.mediation.inmobi;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.ViewGroup;
 
 import com.inmobi.ads.InMobiAdRequestStatus;
@@ -12,6 +13,7 @@ import com.smartadserver.android.library.mediation.SASMediationBannerAdapter;
 import com.smartadserver.android.library.mediation.SASMediationBannerAdapterListener;
 import com.smartadserver.android.library.util.SASUtil;
 
+
 import java.util.Map;
 
 /**
@@ -20,7 +22,9 @@ import java.util.Map;
 public class SASInMobiBannerAdapter extends SASInMobiAdapterBase implements SASMediationBannerAdapter {
 
 
-    private static final String TAG = "SASInMobiBannerAdapter";
+    private static final String TAG = SASInMobiBannerAdapter.class.getSimpleName();
+
+    private BannerAdEventListener bannerAdEventListener;
 
     @Override
     public void requestBannerAd(@NonNull Context context, @NonNull String serverParameterString,
@@ -47,56 +51,56 @@ public class SASInMobiBannerAdapter extends SASInMobiAdapterBase implements SASM
         }
 
         // create inmobi banner listener
-        BannerAdEventListener bannerAdEventListener = new BannerAdEventListener() {
+        bannerAdEventListener = new BannerAdEventListener() {
             @Override
             public void onAdLoadSucceeded(InMobiBanner inMobiBanner) {
-                SASUtil.logDebug(TAG, "InMobi onAdLoadSucceeded for banner");
+                Log.d(TAG, "InMobi onAdLoadSucceeded for banner");
                 bannerAdapterListener.onBannerLoaded(inMobiBanner);
             }
 
             @Override
             public void onAdLoadFailed(InMobiBanner inMobiBanner, InMobiAdRequestStatus inMobiAdRequestStatus) {
-                SASUtil.logDebug(TAG, "InMobi  onAdLoadFailed for banner");
+                Log.d(TAG, "InMobi  onAdLoadFailed for banner");
                 boolean isNoAd = inMobiAdRequestStatus.getStatusCode() == InMobiAdRequestStatus.StatusCode.NO_FILL;
                 bannerAdapterListener.adRequestFailed(inMobiAdRequestStatus.getMessage() + "(" + inMobiAdRequestStatus.getStatusCode() + ")", isNoAd);
             }
 
             @Override
             public void onAdClicked(InMobiBanner inMobiBanner, Map<Object, Object> map) {
-                SASUtil.logDebug(TAG, "InMobi onAdClicked for banner");
+                Log.d(TAG, "InMobi onAdClicked for banner");
                 bannerAdapterListener.onAdClicked();
             }
 
             @Override
             public void onAdDisplayed(InMobiBanner inMobiBanner) {
-                SASUtil.logDebug(TAG, "InMobi onAdDisplayed for banner");
+                Log.d(TAG, "InMobi onAdDisplayed for banner");
                 bannerAdapterListener.onAdFullScreen();
             }
 
             @Override
             public void onAdDismissed(InMobiBanner inMobiBanner) {
-                SASUtil.logDebug(TAG, "InMobi onAdDismissed for banner");
+                Log.d(TAG, "InMobi onAdDismissed for banner");
                 bannerAdapterListener.onAdClosed();
             }
 
             @Override
             public void onUserLeftApplication(InMobiBanner inMobiBanner) {
-                SASUtil.logDebug(TAG, "InMobi onUserLeftApplication for banner");
+                Log.d(TAG, "InMobi onUserLeftApplication for banner");
             }
 
             @Override
             public void onRewardsUnlocked(InMobiBanner inMobiBanner, Map<Object, Object> map) {
-                SASUtil.logDebug(TAG, "InMobi onRewardsUnlocked for banner");
+                Log.d(TAG, "InMobi onRewardsUnlocked for banner");
             }
 
             @Override
             public void onRequestPayloadCreated(byte[] bytes) {
-                SASUtil.logDebug(TAG, "InMobi onRequestPayloadCreated for banner");
+                Log.d(TAG, "InMobi onRequestPayloadCreated for banner");
             }
 
             @Override
             public void onRequestPayloadCreationFailed(InMobiAdRequestStatus inMobiAdRequestStatus) {
-                SASUtil.logDebug(TAG, "InMobi onRequestPayloadCreationFailed for banner");
+                Log.d(TAG, "InMobi onRequestPayloadCreationFailed for banner");
             }
         };
 

@@ -2,6 +2,7 @@ package com.smartadserver.android.library.mediation.facebook;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.facebook.ads.Ad;
 import com.facebook.ads.AdError;
@@ -9,7 +10,7 @@ import com.facebook.ads.InterstitialAd;
 import com.facebook.ads.InterstitialAdListener;
 import com.smartadserver.android.library.mediation.SASMediationInterstitialAdapter;
 import com.smartadserver.android.library.mediation.SASMediationInterstitialAdapterListener;
-import com.smartadserver.android.library.util.SASUtil;
+
 
 import java.util.Map;
 
@@ -39,38 +40,38 @@ public class SASFacebookInterstitialAdapter extends SASFacebookAdapterBase imple
         InterstitialAdListener interstitialAdListener = new InterstitialAdListener() {
             @Override
             public void onError(Ad ad, AdError adError) {
-                SASUtil.logDebug(TAG, "Facebook onError for interstitial");
+                Log.d(TAG, "Facebook onError for interstitial");
                 boolean isNoAd = adError.getErrorCode() == AdError.NO_FILL_ERROR_CODE;
                 interstitialAdapterListener.adRequestFailed(adError.getErrorMessage(), isNoAd);
             }
 
             @Override
             public void onAdLoaded(Ad ad) {
-                SASUtil.logDebug(TAG, "Facebook onAdLoaded for interstitial");
+                Log.d(TAG, "Facebook onAdLoaded for interstitial");
                 interstitialAdapterListener.onInterstitialLoaded();
             }
 
             @Override
             public void onAdClicked(Ad ad) {
-                SASUtil.logDebug(TAG, "Facebook onAdClicked for interstitial");
+                Log.d(TAG, "Facebook onAdClicked for interstitial");
                 interstitialAdapterListener.onAdClicked();
             }
 
             @Override
             public void onLoggingImpression(Ad ad) {
-                SASUtil.logDebug(TAG, "Facebook onLoggingImpression for interstitial");
+                Log.d(TAG, "Facebook onLoggingImpression for interstitial");
             }
 
             // interstitial only methods
             @Override
             public void onInterstitialDisplayed(Ad ad) {
-                SASUtil.logDebug(TAG, "Facebook onInterstitialDisplayed for interstitial");
+                Log.d(TAG, "Facebook onInterstitialDisplayed for interstitial");
                 interstitialAdapterListener.onInterstitialShown();
             }
 
             @Override
             public void onInterstitialDismissed(Ad ad) {
-                SASUtil.logDebug(TAG, "Facebook onInterstitialDismissed for interstitial");
+                Log.d(TAG, "Facebook onInterstitialDismissed for interstitial");
                 interstitialAdapterListener.onAdClosed();
             }
         };
@@ -94,7 +95,7 @@ public class SASFacebookInterstitialAdapter extends SASFacebookAdapterBase imple
 
     @Override
     public void onDestroy() {
-        SASUtil.logDebug(TAG, "Facebook onDestroy for interstitial");
+        Log.d(TAG, "Facebook onDestroy for interstitial");
         if (interstitialAdView != null) {
             interstitialAdView.destroy();
         }

@@ -4,12 +4,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.inmobi.sdk.InMobiSdk;
-import com.smartadserver.android.library.util.SASConfiguration;
-import com.smartadserver.android.library.util.SASConstants;
-import com.smartadserver.android.library.util.SASUtil;
+import com.smartadserver.android.library.util.SASLibraryInfo;
+import com.smartadserver.android.library.util.location.SASLocationManager;
+
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,7 +41,7 @@ public class SASInMobiAdapterBase {
 
             inMobiParametersMap = new HashMap<String, String>();
             inMobiParametersMap.put("tp", "c_smartadserver");
-            inMobiParametersMap.put("tp-ver", SASConstants.SDK_VERSION);
+            inMobiParametersMap.put("tp-ver", SASLibraryInfo.getSharedInstance().getVersion());
 
             initInMobiDone = true;
         }
@@ -103,7 +103,7 @@ public class SASInMobiAdapterBase {
 
         // pass geolocation if available
         Location location = null;
-        location = SASConfiguration.getSharedInstance().getAutomaticLocation();
+        location = SASLocationManager.getSharedInstance().getLocation();
         if (location != null) {
             InMobiSdk.setLocation(location);
         }
@@ -128,7 +128,7 @@ public class SASInMobiAdapterBase {
         try {
             placementID = Long.parseLong(inMobiParams[1]);
         } catch (Exception e) {
-            SASUtil.logDebug(TAG, "InMobi Invalid Placement format");
+            Log.d(TAG, "InMobi Invalid Placement format");
         }
 
         return placementID;

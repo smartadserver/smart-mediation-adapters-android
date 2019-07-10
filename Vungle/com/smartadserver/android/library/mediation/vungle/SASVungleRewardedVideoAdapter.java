@@ -4,11 +4,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.smartadserver.android.library.mediation.SASMediationRewardedVideoAdapter;
 import com.smartadserver.android.library.mediation.SASMediationRewardedVideoAdapterListener;
-import com.smartadserver.android.library.util.SASConfiguration;
-import com.smartadserver.android.library.util.SASUtil;
+
 import com.vungle.warren.AdConfig;
 import com.vungle.warren.InitCallback;
 import com.vungle.warren.LoadAdCallback;
@@ -39,19 +39,19 @@ public class SASVungleRewardedVideoAdapter implements SASMediationRewardedVideoA
      */
     @Override
     public void requestRewardedVideoAd(@NonNull Context context, @NonNull String serverParametersString, @NonNull Map clientParameters, @NonNull final SASMediationRewardedVideoAdapterListener rewardedVideoAdapterListener) {
-        SASUtil.logDebug(TAG, "SASVungleRewardedVideoAdapter requestAd");
+        Log.d(TAG, "SASVungleRewardedVideoAdapter requestAd");
 
         // Instantiate Vungle load ad callback
         final LoadAdCallback vungleLoadAdCallback = new LoadAdCallback() {
             @Override
             public void onAdLoad(String s) {
-                SASUtil.logDebug(TAG, "Vungle LoadAdCallback onAdLoad");
+                Log.d(TAG, "Vungle LoadAdCallback onAdLoad");
                 rewardedVideoAdapterListener.onRewardedVideoLoaded();
             }
 
             @Override
             public void onError(String s, Throwable throwable) {
-                SASUtil.logDebug(TAG, "Vungle LoadAdCallback onError");
+                Log.d(TAG, "Vungle LoadAdCallback onError");
 
                 // check if the error is due to a no ad
                 boolean isNoAd = false;
@@ -68,13 +68,13 @@ public class SASVungleRewardedVideoAdapter implements SASMediationRewardedVideoA
         vunglePlayAdCallback = new PlayAdCallback() {
             @Override
             public void onAdStart(String s) {
-                SASUtil.logDebug(TAG, "Vungle PlayAdCallback onAdStart");
+                Log.d(TAG, "Vungle PlayAdCallback onAdStart");
                 rewardedVideoAdapterListener.onRewardedVideoShown();
             }
 
             @Override
             public void onAdEnd(String s, boolean completed, boolean isClicked) {
-                SASUtil.logDebug(TAG, "Vungle PlayAdCallback onAdEnd");
+                Log.d(TAG, "Vungle PlayAdCallback onAdEnd");
 
                 if (isClicked) {
                     rewardedVideoAdapterListener.onAdClicked();
@@ -89,7 +89,7 @@ public class SASVungleRewardedVideoAdapter implements SASMediationRewardedVideoA
 
             @Override
             public void onError(String s, Throwable throwable) {
-                SASUtil.logDebug(TAG, "Vungle PlayAdCallback onError");
+                Log.d(TAG, "Vungle PlayAdCallback onError");
                 rewardedVideoAdapterListener.onRewardedVideoFailedToShow(throwable.getMessage());
             }
         };
@@ -121,7 +121,7 @@ public class SASVungleRewardedVideoAdapter implements SASMediationRewardedVideoA
         Vungle.init(placementList, applicationID, context.getApplicationContext(), new InitCallback() {
             @Override
             public void onSuccess() {
-                SASUtil.logDebug(TAG, "Vungle InitCallback onSuccess");
+                Log.d(TAG, "Vungle InitCallback onSuccess");
 
                 // handle GDPR
                 if (GDPRApplies != null) {
@@ -143,13 +143,13 @@ public class SASVungleRewardedVideoAdapter implements SASMediationRewardedVideoA
 
             @Override
             public void onError(Throwable throwable) {
-                SASUtil.logDebug(TAG, "Vungle InitCallback onError");
+                Log.d(TAG, "Vungle InitCallback onError");
                 rewardedVideoAdapterListener.adRequestFailed(throwable.getMessage(), false);
             }
 
             @Override
             public void onAutoCacheAdAvailable(String s) {
-                SASUtil.logDebug(TAG, "Vungle InitCallback onAutoCacheAdAvailable");
+                Log.d(TAG, "Vungle InitCallback onAutoCacheAdAvailable");
             }
         });
     }

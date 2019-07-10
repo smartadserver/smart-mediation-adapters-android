@@ -3,6 +3,7 @@ package com.smartadserver.android.library.mediation.applovin;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 
 import com.applovin.nativeAds.AppLovinNativeAd;
@@ -12,7 +13,7 @@ import com.smartadserver.android.library.mediation.SASMediationNativeAdAdapter;
 import com.smartadserver.android.library.mediation.SASMediationNativeAdAdapterListener;
 import com.smartadserver.android.library.mediation.SASMediationNativeAdContent;
 import com.smartadserver.android.library.model.SASNativeVideoAdElement;
-import com.smartadserver.android.library.util.SASUtil;
+
 
 import java.util.List;
 import java.util.Map;
@@ -23,7 +24,7 @@ import java.util.Map;
 public class SASAppLovinNativeAdAdapter extends SASAppLovinAdapterBase implements SASMediationNativeAdAdapter {
 
     // tag for logging purposes
-    private static final String TAG = "SASAppLovinRewardedVideoAdapter";
+    private static final String TAG = SASAppLovinNativeAdAdapter.class.getSimpleName();
 
     /**
      * Implementation of {@link SASMediationNativeAdContent} AppLovin to Smart native ad wrapper
@@ -195,7 +196,7 @@ public class SASAppLovinNativeAdAdapter extends SASAppLovinAdapterBase implement
         sdk.getNativeAdService().loadNativeAds(1, new AppLovinNativeAdLoadListener() {
             @Override
             public void onNativeAdsLoaded(final List list) {
-                SASUtil.logDebug(TAG, "Applovin onNativeAdsLoaded");
+                Log.d(TAG, "Applovin onNativeAdsLoaded");
 
                 nativeAdAdapterListener.onNativeAdLoaded(new ApplovinNativeAdContent((AppLovinNativeAd) list.get(0)) {
                     @Override
@@ -208,7 +209,7 @@ public class SASAppLovinNativeAdAdapter extends SASAppLovinAdapterBase implement
 
             @Override
             public void onNativeAdsFailedToLoad(final int errorCode) {
-                SASUtil.logDebug(TAG, "Applovin onNativeAdsFailedToLoad (error:" + errorCode + ")");
+                Log.d(TAG, "Applovin onNativeAdsFailedToLoad (error:" + errorCode + ")");
                 boolean isNoAd = errorCode == AppLovinErrorCodes.NO_FILL;
                 nativeAdAdapterListener.adRequestFailed("errorCode:" + errorCode, isNoAd);
             }

@@ -3,6 +3,7 @@ package com.smartadserver.android.library.mediation.mopub;
 import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.mopub.common.MediationSettings;
 import com.mopub.common.MoPub;
@@ -17,7 +18,7 @@ import com.mopub.mobileads.MoPubRewardedVideos;
 import com.smartadserver.android.library.mediation.SASMediationRewardedVideoAdapter;
 import com.smartadserver.android.library.mediation.SASMediationRewardedVideoAdapterListener;
 import com.smartadserver.android.library.model.SASReward;
-import com.smartadserver.android.library.util.SASUtil;
+
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -46,7 +47,7 @@ public class SASMoPubRewardedVideoAdapter implements SASMediationRewardedVideoAd
     @Override
     public void requestRewardedVideoAd(@NonNull final Context context, @NonNull final String serverParametersString, @NonNull final Map clientParameters,
                                        @NonNull final SASMediationRewardedVideoAdapterListener rewardedVideoAdapterListener) {
-        SASUtil.logDebug(TAG, "SASMoPubRewardedVideoAdapter adRequest");
+        Log.d(TAG, "SASMoPubRewardedVideoAdapter adRequest");
 
         // To request an interstitial using MoPub, the context have to be an Activity.
         if (!(context instanceof Activity)) {
@@ -65,7 +66,7 @@ public class SASMoPubRewardedVideoAdapter implements SASMediationRewardedVideoAd
             SdkInitializationListener initializationListener = new SdkInitializationListener() {
                 @Override
                 public void onInitializationFinished() {
-                    SASUtil.logDebug(TAG, "MoPub onInitializationFinished");
+                    Log.d(TAG, "MoPub onInitializationFinished");
                     initMoPubDone = true;
                     // call requestBannerAd again, with SDK initialized
                     requestRewardedVideoAd(context,serverParametersString,clientParameters,rewardedVideoAdapterListener);
@@ -86,7 +87,7 @@ public class SASMoPubRewardedVideoAdapter implements SASMediationRewardedVideoAd
 
                     @Override
                     public void onConsentDialogLoadFailed(@NonNull MoPubErrorCode moPubErrorCode) {
-                        SASUtil.logDebug(TAG, "MoPub onConsentDialogLoadFailed");
+                        Log.d(TAG, "MoPub onConsentDialogLoadFailed");
                     }
                 });
             }
@@ -96,13 +97,13 @@ public class SASMoPubRewardedVideoAdapter implements SASMediationRewardedVideoAd
 
                 @Override
                 public void onRewardedVideoLoadSuccess(@NonNull String adUnitId) {
-                    SASUtil.logDebug(TAG, "RewardedVideoListener onRewardedVideoLoadSuccess");
+                    Log.d(TAG, "RewardedVideoListener onRewardedVideoLoadSuccess");
                     rewardedVideoAdapterListener.onRewardedVideoLoaded();
                 }
 
                 @Override
                 public void onRewardedVideoLoadFailure(@NonNull String adUnitId, @NonNull MoPubErrorCode errorCode) {
-                    SASUtil.logDebug(TAG, "RewardedVideoListener onRewardedVideoLoadFailure");
+                    Log.d(TAG, "RewardedVideoListener onRewardedVideoLoadFailure");
 
                     // check if this is due to a No Ad
                     boolean isNoAd = errorCode == MoPubErrorCode.NO_FILL || errorCode == MoPubErrorCode.NETWORK_NO_FILL;
@@ -111,7 +112,7 @@ public class SASMoPubRewardedVideoAdapter implements SASMediationRewardedVideoAd
 
                 @Override
                 public void onRewardedVideoStarted(@NonNull String adUnitId) {
-                    SASUtil.logDebug(TAG, "RewardedVideoListener onRewardedVideoStarted");
+                    Log.d(TAG, "RewardedVideoListener onRewardedVideoStarted");
                     rewardedVideoAdapterListener.onRewardedVideoShown();
 
                     if (needToShowConsentDialog && personalInfoManager != null) {
@@ -121,25 +122,25 @@ public class SASMoPubRewardedVideoAdapter implements SASMediationRewardedVideoAd
 
                 @Override
                 public void onRewardedVideoPlaybackError(@NonNull String adUnitId, @NonNull MoPubErrorCode errorCode) {
-                    SASUtil.logDebug(TAG, "RewardedVideoListener onRewardedVideoPlaybackError");
+                    Log.d(TAG, "RewardedVideoListener onRewardedVideoPlaybackError");
                     rewardedVideoAdapterListener.onRewardedVideoFailedToShow(errorCode.toString());
                 }
 
                 @Override
                 public void onRewardedVideoClicked(@NonNull String adUnitId) {
-                    SASUtil.logDebug(TAG, "RewardedVideoListener onRewardedVideoClicked");
+                    Log.d(TAG, "RewardedVideoListener onRewardedVideoClicked");
                     rewardedVideoAdapterListener.onAdClicked();
                 }
 
                 @Override
                 public void onRewardedVideoClosed(@NonNull String adUnitId) {
-                    SASUtil.logDebug(TAG, "RewardedVideoListener onRewardedVideoClosed");
+                    Log.d(TAG, "RewardedVideoListener onRewardedVideoClosed");
                     rewardedVideoAdapterListener.onAdClosed();
                 }
 
                 @Override
                 public void onRewardedVideoCompleted(@NonNull Set<String> adUnitIds, @NonNull MoPubReward reward) {
-                    SASUtil.logDebug(TAG, "RewardedVideoListener onRewardedVideoCompleted");
+                    Log.d(TAG, "RewardedVideoListener onRewardedVideoCompleted");
 
                     // notify Smart SDK of earned reward
                     rewardedVideoAdapterListener.onReward(new SASReward(reward.getLabel(), reward.getAmount()));

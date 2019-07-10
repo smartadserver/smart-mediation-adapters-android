@@ -2,6 +2,7 @@ package com.smartadserver.android.library.mediation.google;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.MobileAds;
@@ -14,6 +15,7 @@ import com.smartadserver.android.library.mediation.SASMediationRewardedVideoAdap
 import com.smartadserver.android.library.model.SASReward;
 import com.smartadserver.android.library.util.SASUtil;
 
+
 import java.util.Map;
 
 /**
@@ -22,7 +24,7 @@ import java.util.Map;
 public class SASGoogleMobileAdsRewardedVideoAdapter extends SASGoogleMobileAdsAdapterBase implements SASMediationRewardedVideoAdapter {
 
     // tag for logging purposes
-    private static final String TAG = "SASGoogleMobileAdsRewardedVideoAdapter";
+    private static final String TAG = SASGoogleMobileAdsRewardedVideoAdapter.class.getSimpleName();
 
     // Google mobile ads rewarded video manager singleton instance
     RewardedVideoAd rewardedVideoAd;
@@ -52,30 +54,30 @@ public class SASGoogleMobileAdsRewardedVideoAdapter extends SASGoogleMobileAdsAd
 
             @Override
             public void onRewardedVideoAdLoaded() {
-                SASUtil.logDebug(TAG, "Google mobile ads onRewardedVideoAdLoaded for rewarded video");
+                Log.d(TAG, "Google mobile ads onRewardedVideoAdLoaded for rewarded video");
                 rewardedVideoAdapterListener.onRewardedVideoLoaded();
             }
 
             @Override
             public void onRewardedVideoAdOpened() {
-                SASUtil.logDebug(TAG, "Google mobile ads onRewardedVideoAdOpened for rewarded video");
+                Log.d(TAG, "Google mobile ads onRewardedVideoAdOpened for rewarded video");
                 rewardedVideoAdapterListener.onRewardedVideoShown();
             }
 
             @Override
             public void onRewardedVideoStarted() {
-                SASUtil.logDebug(TAG, "Google mobile ads onRewardedVideoStarted for interstitial");
+                Log.d(TAG, "Google mobile ads onRewardedVideoStarted for interstitial");
             }
 
             @Override
             public void onRewardedVideoAdClosed() {
-                SASUtil.logDebug(TAG, "Google mobile ads onRewardedVideoAdClosed for interstitial");
+                Log.d(TAG, "Google mobile ads onRewardedVideoAdClosed for interstitial");
                 rewardedVideoAdapterListener.onAdClosed();
             }
 
             @Override
             public void onRewarded(RewardItem rewardItem) {
-                SASUtil.logDebug(TAG, "Google mobile ads onRewarded for rewarded video : label:" + rewardItem.getType() + " amount:" + rewardItem.getAmount());
+                Log.d(TAG, "Google mobile ads onRewarded for rewarded video : label:" + rewardItem.getType() + " amount:" + rewardItem.getAmount());
 
                 // notify Smart SDK of earned reward
                 rewardedVideoAdapterListener.onReward(new SASReward(rewardItem.getType(), rewardItem.getAmount()));
@@ -83,20 +85,20 @@ public class SASGoogleMobileAdsRewardedVideoAdapter extends SASGoogleMobileAdsAd
 
             @Override
             public void onRewardedVideoAdLeftApplication() {
-                SASUtil.logDebug(TAG, "Google mobile ads onRewardedVideoAdLeftApplication for interstitial");
+                Log.d(TAG, "Google mobile ads onRewardedVideoAdLeftApplication for interstitial");
                 rewardedVideoAdapterListener.onAdClicked();
             }
 
             @Override
             public void onRewardedVideoAdFailedToLoad(int errorCode) {
-                SASUtil.logDebug(TAG, "Google mobile ads rewarded video ad onRewardedVideoAdFailedToLoad (error code:" + errorCode + ")");
+                Log.d(TAG, "Google mobile ads rewarded video ad onRewardedVideoAdFailedToLoad (error code:" + errorCode + ")");
                 boolean isNoAd = errorCode == AdRequest.ERROR_CODE_NO_FILL;
                 rewardedVideoAdapterListener.adRequestFailed("Error code:" + errorCode, isNoAd);
             }
 
             @Override
             public void onRewardedVideoCompleted() {
-                SASUtil.logDebug(TAG, "Google mobile ads onRewardedVideoCompleted for rewarded video");
+                Log.d(TAG, "Google mobile ads onRewardedVideoCompleted for rewarded video");
             }
 
         };

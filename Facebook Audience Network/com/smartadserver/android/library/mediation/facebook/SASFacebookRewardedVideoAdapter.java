@@ -2,6 +2,7 @@ package com.smartadserver.android.library.mediation.facebook;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.facebook.ads.Ad;
 import com.facebook.ads.AdError;
@@ -10,7 +11,7 @@ import com.facebook.ads.RewardedVideoAdListener;
 import com.smartadserver.android.library.mediation.SASMediationRewardedVideoAdapter;
 import com.smartadserver.android.library.mediation.SASMediationRewardedVideoAdapterListener;
 import com.smartadserver.android.library.model.SASReward;
-import com.smartadserver.android.library.util.SASUtil;
+
 
 import java.util.Map;
 
@@ -42,39 +43,39 @@ public class SASFacebookRewardedVideoAdapter extends SASFacebookAdapterBase impl
         RewardedVideoAdListener rewardedVideoAdListener = new RewardedVideoAdListener() {
             @Override
             public void onRewardedVideoCompleted() {
-                SASUtil.logDebug(TAG, "Facebook onRewardedVideoCompleted for rewarded video");
+                Log.d(TAG, "Facebook onRewardedVideoCompleted for rewarded video");
                 rewardedVideoAdapterListener.onReward(null);
             }
 
             @Override
             public void onError(Ad ad, AdError adError) {
-                SASUtil.logDebug(TAG, "Facebook onError for rewarded video");
+                Log.d(TAG, "Facebook onError for rewarded video");
                 boolean isNoAd = adError.getErrorCode() == AdError.NO_FILL_ERROR_CODE;
                 rewardedVideoAdapterListener.adRequestFailed(adError.getErrorMessage(), isNoAd);
             }
 
             @Override
             public void onAdLoaded(Ad ad) {
-                SASUtil.logDebug(TAG, "Facebook ad onAdLoaded for rewarded video");
+                Log.d(TAG, "Facebook ad onAdLoaded for rewarded video");
                 rewardedVideoAdapterListener.onRewardedVideoLoaded();
             }
 
             @Override
             public void onAdClicked(Ad ad) {
-                SASUtil.logDebug(TAG, "Facebook ad onAdClicked for rewarded video");
+                Log.d(TAG, "Facebook ad onAdClicked for rewarded video");
                 rewardedVideoAdapterListener.onAdClicked();
 
             }
 
             @Override
             public void onLoggingImpression(Ad ad) {
-                SASUtil.logDebug(TAG, "Facebook ad onLoggingImpression for rewarded video");
+                Log.d(TAG, "Facebook ad onLoggingImpression for rewarded video");
                 rewardedVideoAdapterListener.onRewardedVideoShown();
             }
 
             @Override
             public void onRewardedVideoClosed() {
-                SASUtil.logDebug(TAG, "Facebook onRewardedVideoClosed for rewarded video");
+                Log.d(TAG, "Facebook onRewardedVideoClosed for rewarded video");
                 rewardedVideoAdapterListener.onAdClosed();
             }
         };
@@ -98,7 +99,7 @@ public class SASFacebookRewardedVideoAdapter extends SASFacebookAdapterBase impl
 
     @Override
     public void onDestroy() {
-        SASUtil.logDebug(TAG, "Facebook onDestroy for interstitial");
+        Log.d(TAG, "Facebook onDestroy for interstitial");
         if (rewardedVideoAd != null) {
             rewardedVideoAd.destroy();
         }

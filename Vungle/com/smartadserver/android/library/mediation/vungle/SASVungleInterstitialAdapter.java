@@ -4,11 +4,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.smartadserver.android.library.mediation.SASMediationInterstitialAdapter;
 import com.smartadserver.android.library.mediation.SASMediationInterstitialAdapterListener;
-import com.smartadserver.android.library.util.SASConfiguration;
-import com.smartadserver.android.library.util.SASUtil;
+
 import com.vungle.warren.AdConfig;
 import com.vungle.warren.InitCallback;
 import com.vungle.warren.LoadAdCallback;
@@ -41,19 +41,19 @@ public class SASVungleInterstitialAdapter implements SASMediationInterstitialAda
      */
     @Override
     public void requestInterstitialAd(@NonNull Context context, @NonNull String serverParameterString, @NonNull Map clientParameters, @NonNull final SASMediationInterstitialAdapterListener interstitialAdapterListener) {
-        SASUtil.logDebug(TAG, "SASVungleInterstitialAdapter requestAd");
+        Log.d(TAG, "SASVungleInterstitialAdapter requestAd");
 
         // Instantiate Vungle load ad callback
         final LoadAdCallback vungleLoadAdCallback = new LoadAdCallback() {
             @Override
             public void onAdLoad(String s) {
-                SASUtil.logDebug(TAG, "Vungle LoadAdCallback onAdLoad");
+                Log.d(TAG, "Vungle LoadAdCallback onAdLoad");
                 interstitialAdapterListener.onInterstitialLoaded();
             }
 
             @Override
             public void onError(String s, Throwable throwable) {
-                SASUtil.logDebug(TAG, "Vungle LoadadCallback onError");
+                Log.d(TAG, "Vungle LoadadCallback onError");
 
                 // check if the error is due to a no ad.
                 boolean isNoAd = false;
@@ -70,13 +70,13 @@ public class SASVungleInterstitialAdapter implements SASMediationInterstitialAda
         vunglePlayAdCallback = new PlayAdCallback() {
             @Override
             public void onAdStart(String s) {
-                SASUtil.logDebug(TAG, "Vungle PlayAdCallback onAdStart");
+                Log.d(TAG, "Vungle PlayAdCallback onAdStart");
                 interstitialAdapterListener.onInterstitialShown();
             }
 
             @Override
             public void onAdEnd(String s, boolean completed, boolean isClicked) {
-                SASUtil.logDebug(TAG, "Vungle PlayAdCallback onAdEnd");
+                Log.d(TAG, "Vungle PlayAdCallback onAdEnd");
 
                 if (isClicked) {
                     interstitialAdapterListener.onAdClicked();
@@ -87,7 +87,7 @@ public class SASVungleInterstitialAdapter implements SASMediationInterstitialAda
 
             @Override
             public void onError(String s, Throwable throwable) {
-                SASUtil.logDebug(TAG, "Vungle PlayAdCallback onError");
+                Log.d(TAG, "Vungle PlayAdCallback onError");
                 interstitialAdapterListener.onInterstitialFailedToShow(throwable.getMessage());
             }
         };
@@ -120,7 +120,7 @@ public class SASVungleInterstitialAdapter implements SASMediationInterstitialAda
         Vungle.init(placementList, applicationID, context.getApplicationContext(), new InitCallback() {
             @Override
             public void onSuccess() {
-                SASUtil.logDebug(TAG, "Vungle InitCallback onSuccess");
+                Log.d(TAG, "Vungle InitCallback onSuccess");
 
                 // handle GDPR
                 if (GDPRApplies != null) {
@@ -142,13 +142,13 @@ public class SASVungleInterstitialAdapter implements SASMediationInterstitialAda
 
             @Override
             public void onError(Throwable throwable) {
-                SASUtil.logDebug(TAG, "Vungle InitCallback onError");
+                Log.d(TAG, "Vungle InitCallback onError");
                 interstitialAdapterListener.adRequestFailed(throwable.getMessage(), false);
             }
 
             @Override
             public void onAutoCacheAdAvailable(String s) {
-                SASUtil.logDebug(TAG, "Vungle InitCallback onAutoCacheAdAvailable");
+                Log.d(TAG, "Vungle InitCallback onAutoCacheAdAvailable");
             }
         });
     }

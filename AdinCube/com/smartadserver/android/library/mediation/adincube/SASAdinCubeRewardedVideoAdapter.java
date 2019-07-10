@@ -3,13 +3,14 @@ package com.smartadserver.android.library.mediation.adincube;
 import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.adincube.sdk.AdinCube;
 import com.adincube.sdk.AdinCubeRewardedEventListener;
 import com.adincube.sdk.AdinCubeUserConsentEventListener;
 import com.smartadserver.android.library.mediation.SASMediationRewardedVideoAdapter;
 import com.smartadserver.android.library.mediation.SASMediationRewardedVideoAdapterListener;
-import com.smartadserver.android.library.util.SASUtil;
+
 
 import java.util.Map;
 
@@ -23,7 +24,7 @@ public class SASAdinCubeRewardedVideoAdapter extends SASAdinCubeAdapterBase impl
     @Override
     public void requestRewardedVideoAd(@NonNull Context context, @NonNull String serverParametersString, @NonNull Map<String, String> clientParameters,
                                        @NonNull final SASMediationRewardedVideoAdapterListener rewardedVideoAdapterListener) {
-        SASUtil.logDebug(TAG, "SASAdinCubeRewardedVideoAdapter requestAd");
+        Log.d(TAG, "SASAdinCubeRewardedVideoAdapter requestAd");
 
         // AdInCube interstitial require that context be an Activity
         if (!(context instanceof Activity)) {
@@ -41,31 +42,31 @@ public class SASAdinCubeRewardedVideoAdapter extends SASAdinCubeAdapterBase impl
 
             @Override
             public void onAdFetched() {
-                SASUtil.logDebug(TAG, "AdinCube onAdFetched");
+                Log.d(TAG, "AdinCube onAdFetched");
                 rewardedVideoAdapterListener.onRewardedVideoLoaded();
             }
 
             @Override
             public void onFetchError(String s) {
-                SASUtil.logDebug(TAG, "AdinCube onFetchError");
+                Log.d(TAG, "AdinCube onFetchError");
                 rewardedVideoAdapterListener.adRequestFailed(s, true);
             }
 
             @Override
             public void onAdShown() {
-                SASUtil.logDebug(TAG, "AdinCube onAdShown");
+                Log.d(TAG, "AdinCube onAdShown");
                 rewardedVideoAdapterListener.onRewardedVideoShown();
             }
 
             @Override
             public void onError(String s) {
-                SASUtil.logDebug(TAG, "AdinCube onError");
+                Log.d(TAG, "AdinCube onError");
                 rewardedVideoAdapterListener.onRewardedVideoFailedToShow(s);
             }
 
             @Override
             public void onAdCompleted() {
-                SASUtil.logDebug(TAG, "AdinCube onAdCompleted");
+                Log.d(TAG, "AdinCube onAdCompleted");
 
                 // notify Smart SDK of earned reward
                 rewardedVideoAdapterListener.onReward(null);
@@ -73,13 +74,13 @@ public class SASAdinCubeRewardedVideoAdapter extends SASAdinCubeAdapterBase impl
 
             @Override
             public void onAdClicked() {
-                SASUtil.logDebug(TAG, "AdinCube onAdClicked");
+                Log.d(TAG, "AdinCube onAdClicked");
                 rewardedVideoAdapterListener.onAdClicked();
             }
 
             @Override
             public void onAdHidden() {
-                SASUtil.logDebug(TAG, "AdinCube onAdHidden");
+                Log.d(TAG, "AdinCube onAdHidden");
                 rewardedVideoAdapterListener.onAdClosed();
             }
         };
@@ -94,19 +95,19 @@ public class SASAdinCubeRewardedVideoAdapter extends SASAdinCubeAdapterBase impl
             AdinCube.UserConsent.setEventListener(new AdinCubeUserConsentEventListener() {
                 @Override
                 public void onAccepted() {
-                    SASUtil.logDebug(TAG, "AdinCube rewarded GDPR onAccepted");
+                    Log.d(TAG, "AdinCube rewarded GDPR onAccepted");
                     showRewardedIfReady();
                 }
 
                 @Override
                 public void onDeclined() {
-                    SASUtil.logDebug(TAG, "AdinCube rewarded GDPR onDeclined");
+                    Log.d(TAG, "AdinCube rewarded GDPR onDeclined");
                     showRewardedIfReady();
                 }
 
                 @Override
                 public void onError(String s) {
-                    SASUtil.logDebug(TAG, "AdinCube rewarded GDPR onError: " + s);
+                    Log.d(TAG, "AdinCube rewarded GDPR onError: " + s);
                     showRewardedIfReady();
                 }
             });

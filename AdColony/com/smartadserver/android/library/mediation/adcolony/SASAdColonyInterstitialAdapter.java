@@ -3,6 +3,7 @@ package com.smartadserver.android.library.mediation.adcolony;
 import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 
 import com.adcolony.sdk.AdColony;
@@ -12,6 +13,7 @@ import com.adcolony.sdk.AdColonyZone;
 import com.smartadserver.android.library.mediation.SASMediationInterstitialAdapter;
 import com.smartadserver.android.library.mediation.SASMediationInterstitialAdapterListener;
 import com.smartadserver.android.library.util.SASUtil;
+
 
 import java.util.Map;
 
@@ -56,7 +58,7 @@ public class SASAdColonyInterstitialAdapter extends SASAdColonyAdapterBase imple
         AdColonyInterstitialListener listener = new AdColonyInterstitialListener() {
             @Override
             public void onRequestFilled(AdColonyInterstitial ad) {
-                SASUtil.logDebug(TAG, "AdColony onRequestFilled for interstitial");
+                Log.d(TAG, "AdColony onRequestFilled for interstitial");
 
                 adColonyInterstitial = ad;
 
@@ -65,13 +67,13 @@ public class SASAdColonyInterstitialAdapter extends SASAdColonyAdapterBase imple
 
             @Override
             public void onRequestNotFilled(AdColonyZone zone) {
-                SASUtil.logDebug(TAG, "AdColony onRequestNotFilled for interstitial. Zone :" + zone);
+                Log.d(TAG, "AdColony onRequestNotFilled for interstitial. Zone :" + zone);
                 interstitialAdapterListener.adRequestFailed("Cannot load interstitial from AdColony!", true);
             }
 
             @Override
             public void onExpiring(AdColonyInterstitial ad) {
-                SASUtil.logDebug(TAG, "AdColony onExpiring for interstitial");
+                Log.d(TAG, "AdColony onExpiring for interstitial");
 
                 // If the interstitial is expiring, we need to get a new one.
                 // This can be problematic if the developer uses several appID for the same app since
@@ -83,29 +85,29 @@ public class SASAdColonyInterstitialAdapter extends SASAdColonyAdapterBase imple
 
             @Override
             public void onOpened(AdColonyInterstitial ad) {
-                SASUtil.logDebug(TAG, "AdColony onOpened for interstitial");
+                Log.d(TAG, "AdColony onOpened for interstitial");
                 interstitialAdapterListener.onInterstitialShown();
             }
 
             @Override
             public void onClosed(AdColonyInterstitial ad) {
-                SASUtil.logDebug(TAG, "AdColony onClosed for interstitial");
+                Log.d(TAG, "AdColony onClosed for interstitial");
                 interstitialAdapterListener.onAdClosed();
             }
 
             @Override
             public void onIAPEvent(AdColonyInterstitial ad, String product_id, int engagement_type) {
-                SASUtil.logDebug(TAG, "AdColony onIAPEvent for interstitial");
+                Log.d(TAG, "AdColony onIAPEvent for interstitial");
             }
 
             @Override
             public void onLeftApplication(AdColonyInterstitial ad) {
-                SASUtil.logDebug(TAG, "AdColony onLeftApplication for interstitial");
+                Log.d(TAG, "AdColony onLeftApplication for interstitial");
             }
 
             @Override
             public void onClicked(AdColonyInterstitial ad) {
-                SASUtil.logDebug(TAG, "AdColony onClicked for interstitial");
+                Log.d(TAG, "AdColony onClicked for interstitial");
                 interstitialAdapterListener.onAdClicked();
             }
         };
@@ -126,7 +128,7 @@ public class SASAdColonyInterstitialAdapter extends SASAdColonyAdapterBase imple
 
     @Override
     public void onDestroy() {
-        SASUtil.logDebug(TAG, "AdColony onDestroy() for interstitial");
+        Log.d(TAG, "AdColony onDestroy() for interstitial");
         if (adColonyInterstitial != null) {
             adColonyInterstitial.destroy();
             adColonyInterstitial = null;

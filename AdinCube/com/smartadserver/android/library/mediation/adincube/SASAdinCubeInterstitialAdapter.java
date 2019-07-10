@@ -3,13 +3,14 @@ package com.smartadserver.android.library.mediation.adincube;
 import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.adincube.sdk.AdinCube;
 import com.adincube.sdk.AdinCubeInterstitialEventListener;
 import com.adincube.sdk.AdinCubeUserConsentEventListener;
 import com.smartadserver.android.library.mediation.SASMediationInterstitialAdapter;
 import com.smartadserver.android.library.mediation.SASMediationInterstitialAdapterListener;
-import com.smartadserver.android.library.util.SASUtil;
+
 
 import java.util.Map;
 
@@ -40,7 +41,7 @@ public class SASAdinCubeInterstitialAdapter extends SASAdinCubeAdapterBase imple
     @Override
     public void requestInterstitialAd(@NonNull Context context, @NonNull String serverParametersString, @NonNull Map<String, String> clientParameters,
                                       @NonNull final SASMediationInterstitialAdapterListener interstitialAdapterListener) {
-        SASUtil.logDebug(TAG, "SASAdinCubeInterstitialAdapter requestAd");
+        Log.d(TAG, "SASAdinCubeInterstitialAdapter requestAd");
 
 
         // AdInCube interstitial require that context be an Activity
@@ -58,20 +59,20 @@ public class SASAdinCubeInterstitialAdapter extends SASAdinCubeAdapterBase imple
         AdinCubeInterstitialEventListener interstitialEventListener = new AdinCubeInterstitialEventListener() {
             @Override
             public void onAdCached() {
-                SASUtil.logDebug(TAG, "AdinCube onAdCached");
+                Log.d(TAG, "AdinCube onAdCached");
                 interstitialAdapterListener.onInterstitialLoaded();
                 adRequestSucceed = true;
             }
 
             @Override
             public void onAdShown() {
-                SASUtil.logDebug(TAG, "AdinCube ad onAdShown");
+                Log.d(TAG, "AdinCube ad onAdShown");
                 interstitialAdapterListener.onInterstitialShown();
             }
 
             @Override
             public void onError(String s) {
-                SASUtil.logDebug(TAG, "AdinCube interstitial onError");
+                Log.d(TAG, "AdinCube interstitial onError");
                 if (adRequestSucceed) {
                     interstitialAdapterListener.onInterstitialFailedToShow(s);
                 } else {
@@ -82,13 +83,13 @@ public class SASAdinCubeInterstitialAdapter extends SASAdinCubeAdapterBase imple
 
             @Override
             public void onAdClicked() {
-                SASUtil.logDebug(TAG, "AdinCube interstitial onAdClicked");
+                Log.d(TAG, "AdinCube interstitial onAdClicked");
                 interstitialAdapterListener.onAdClicked();
             }
 
             @Override
             public void onAdHidden() {
-                SASUtil.logDebug(TAG, "AdinCube onAdHidden");
+                Log.d(TAG, "AdinCube onAdHidden");
                 interstitialAdapterListener.onAdClosed();
             }
         };
@@ -105,19 +106,19 @@ public class SASAdinCubeInterstitialAdapter extends SASAdinCubeAdapterBase imple
             AdinCube.UserConsent.setEventListener(new AdinCubeUserConsentEventListener() {
                 @Override
                 public void onAccepted() {
-                    SASUtil.logDebug(TAG, "AdinCube rewarded GDPR onAccepted");
+                    Log.d(TAG, "AdinCube rewarded GDPR onAccepted");
                     showInterstitialIfReady();
                 }
 
                 @Override
                 public void onDeclined() {
-                    SASUtil.logDebug(TAG, "AdinCube rewarded GDPR onDeclined");
+                    Log.d(TAG, "AdinCube rewarded GDPR onDeclined");
                     showInterstitialIfReady();
                 }
 
                 @Override
                 public void onError(String s) {
-                    SASUtil.logDebug(TAG, "AdinCube rewarded GDPR onError: " + s);
+                    Log.d(TAG, "AdinCube rewarded GDPR onError: " + s);
                     showInterstitialIfReady();
                 }
             });

@@ -3,6 +3,7 @@ package com.smartadserver.android.library.mediation.applovin;
 import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.applovin.adview.AppLovinIncentivizedInterstitial;
 import com.applovin.sdk.AppLovinAd;
@@ -15,8 +16,7 @@ import com.applovin.sdk.AppLovinErrorCodes;
 import com.smartadserver.android.library.mediation.SASMediationRewardedVideoAdapter;
 import com.smartadserver.android.library.mediation.SASMediationRewardedVideoAdapterListener;
 import com.smartadserver.android.library.model.SASReward;
-import com.smartadserver.android.library.ui.SASAdView;
-import com.smartadserver.android.library.util.SASUtil;
+
 
 import java.util.Map;
 
@@ -26,7 +26,7 @@ import java.util.Map;
 public class SASAppLovinRewardedVideoAdapter extends SASAppLovinAdapterBase implements SASMediationRewardedVideoAdapter {
 
     // tag for logging purposes
-    private static final String TAG = "SASAppLovinRewardedVideoAdapter";
+    private static final String TAG = SASAppLovinRewardedVideoAdapter.class.getSimpleName();
 
     private AppLovinIncentivizedInterstitial incentivizedInterstitial;
 
@@ -66,35 +66,35 @@ public class SASAppLovinRewardedVideoAdapter extends SASAppLovinAdapterBase impl
 
             @Override
             public void adClicked(AppLovinAd appLovinAd) {
-                SASUtil.logDebug(TAG, "AppLovin adClicked for rewarded video");
+                Log.d(TAG, "AppLovin adClicked for rewarded video");
                 rewardedVideoAdapterListener.onAdClicked();
             }
 
             @Override
             public void adDisplayed(AppLovinAd appLovinAd) {
-                SASUtil.logDebug(TAG, "AppLovin adDisplayed for rewarded video");
+                Log.d(TAG, "AppLovin adDisplayed for rewarded video");
                 rewardedVideoAdapterListener.onRewardedVideoShown();
             }
 
             @Override
             public void adHidden(AppLovinAd appLovinAd) {
-                SASUtil.logDebug(TAG, "AppLovin adHidden for rewarded video");
+                Log.d(TAG, "AppLovin adHidden for rewarded video");
                 rewardedVideoAdapterListener.onAdClosed();
             }
 
             @Override
             public void videoPlaybackBegan(AppLovinAd appLovinAd) {
-                SASUtil.logDebug(TAG, "AppLovin videoPlaybackBegan for rewarded video");
+                Log.d(TAG, "AppLovin videoPlaybackBegan for rewarded video");
             }
 
             @Override
             public void videoPlaybackEnded(AppLovinAd appLovinAd, double percentage, boolean fullyWatched) {
-                SASUtil.logDebug(TAG, "AppLovin videoPlaybackEnded for rewarded video. Percentage:" + percentage + " completed:" + fullyWatched);
+                Log.d(TAG, "AppLovin videoPlaybackEnded for rewarded video. Percentage:" + percentage + " completed:" + fullyWatched);
             }
 
             @Override
             public void userRewardVerified(AppLovinAd appLovinAd, Map map) {
-                SASUtil.logDebug(TAG, "AppLovin userRewardVerified for rewarded interstitial");
+                Log.d(TAG, "AppLovin userRewardVerified for rewarded interstitial");
 
                 String currencyName = (String) map.get("currency");
                 // For example, "5" or "5.00" if you've specified an amount in the UI.
@@ -112,17 +112,17 @@ public class SASAppLovinRewardedVideoAdapter extends SASAppLovinAdapterBase impl
 
             @Override
             public void userOverQuota(AppLovinAd appLovinAd, Map map) {
-                SASUtil.logDebug(TAG, "AppLovin userOverQuota for rewarded interstitial");
+                Log.d(TAG, "AppLovin userOverQuota for rewarded interstitial");
             }
 
             @Override
             public void userRewardRejected(AppLovinAd appLovinAd, Map map) {
-                SASUtil.logDebug(TAG, "AppLovin userRewardRejected for rewarded interstitial");
+                Log.d(TAG, "AppLovin userRewardRejected for rewarded interstitial");
             }
 
             @Override
             public void validationRequestFailed(AppLovinAd appLovinAd, int responseCode) {
-                SASUtil.logDebug(TAG, "AppLovin validationRequestFailed for rewarded interstitial");
+                Log.d(TAG, "AppLovin validationRequestFailed for rewarded interstitial");
                 if (responseCode == AppLovinErrorCodes.INCENTIVIZED_USER_CLOSED_VIDEO) {
                     // Your user exited the video prematurely. It's up to you if you'd still like to grant
                     // a reward in this case. Most developers choose not to. Note that this case can occur
@@ -140,7 +140,7 @@ public class SASAppLovinRewardedVideoAdapter extends SASAppLovinAdapterBase impl
 
             @Override
             public void userDeclinedToViewAd(AppLovinAd appLovinAd) {
-                SASUtil.logDebug(TAG, "AppLovin userDeclinedToViewAd for rewarded interstitial");
+                Log.d(TAG, "AppLovin userDeclinedToViewAd for rewarded interstitial");
                 rewardedVideoAdapterListener.onAdClosed();
             }
         };
@@ -149,14 +149,14 @@ public class SASAppLovinRewardedVideoAdapter extends SASAppLovinAdapterBase impl
         incentivizedInterstitial.preload(new AppLovinAdLoadListener() {
             @Override
             public void adReceived(AppLovinAd ad) {
-                SASUtil.logDebug(TAG, "AppLovin adReceived for rewarded interstitial");
+                Log.d(TAG, "AppLovin adReceived for rewarded interstitial");
                 rewardedVideoAdapterListener.onRewardedVideoLoaded();
 
             }
 
             @Override
             public void failedToReceiveAd(int errorCode) {
-                SASUtil.logDebug(TAG, "AppLovin failedToReceiveAd for rewarded interstitial (error:" + errorCode + ")");
+                Log.d(TAG, "AppLovin failedToReceiveAd for rewarded interstitial (error:" + errorCode + ")");
                 boolean isNoAd = errorCode == AppLovinErrorCodes.NO_FILL;
                 rewardedVideoAdapterListener.adRequestFailed("errorCode:" + errorCode, isNoAd);
             }

@@ -2,6 +2,7 @@ package com.smartadserver.android.library.mediation.inmobi;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.inmobi.ads.InMobiAdRequestStatus;
 import com.inmobi.ads.InMobiInterstitial;
@@ -11,6 +12,7 @@ import com.smartadserver.android.library.mediation.SASMediationInterstitialAdapt
 import com.smartadserver.android.library.mediation.SASMediationInterstitialAdapterListener;
 import com.smartadserver.android.library.util.SASUtil;
 
+
 import java.util.Map;
 
 /**
@@ -18,7 +20,7 @@ import java.util.Map;
  */
 public class SASInMobiInterstitialAdapter extends SASInMobiAdapterBase implements SASMediationInterstitialAdapter {
 
-    private static final String TAG = "SASInMobiInterstitialAdapter";
+    private static final String TAG = SASInMobiInterstitialAdapter.class.getSimpleName();
 
     private InMobiInterstitial inMobiInterstitial;
 
@@ -35,14 +37,14 @@ public class SASInMobiInterstitialAdapter extends SASInMobiAdapterBase implement
             @Override
             public void onAdLoadSucceeded(InMobiInterstitial inMobiInterstitial) {
                 super.onAdLoadSucceeded(inMobiInterstitial);
-                SASUtil.logDebug(TAG, "InMobi onAdLoadSucceeded for interstitial");
+                Log.d(TAG, "InMobi onAdLoadSucceeded for interstitial");
                 interstitialAdapterListener.onInterstitialLoaded();
             }
 
             @Override
             public void onAdLoadFailed(InMobiInterstitial inMobiInterstitial, InMobiAdRequestStatus inMobiAdRequestStatus) {
                 super.onAdLoadFailed(inMobiInterstitial, inMobiAdRequestStatus);
-                SASUtil.logDebug(TAG, "InMobi onAdLoadFailed for interstitial");
+                Log.d(TAG, "InMobi onAdLoadFailed for interstitial");
 
                 boolean isNoFill = inMobiAdRequestStatus.getStatusCode() == InMobiAdRequestStatus.StatusCode.NO_FILL;
                 interstitialAdapterListener.adRequestFailed(inMobiAdRequestStatus.getMessage(), isNoFill);
@@ -51,65 +53,65 @@ public class SASInMobiInterstitialAdapter extends SASInMobiAdapterBase implement
             @Override
             public void onAdReceived(InMobiInterstitial inMobiInterstitial) {
                 super.onAdReceived(inMobiInterstitial);
-                SASUtil.logDebug(TAG, "InMobi onAdReceived for interstitial");
+                Log.d(TAG, "InMobi onAdReceived for interstitial");
             }
 
             @Override
             public void onAdClicked(InMobiInterstitial inMobiInterstitial, Map<Object, Object> map) {
                 super.onAdClicked(inMobiInterstitial, map);
-                SASUtil.logDebug(TAG, "InMobi onAdClicked for interstitial");
+                Log.d(TAG, "InMobi onAdClicked for interstitial");
                 interstitialAdapterListener.onAdClicked();
             }
 
             @Override
             public void onAdWillDisplay(InMobiInterstitial inMobiInterstitial) {
                 super.onAdWillDisplay(inMobiInterstitial);
-                SASUtil.logDebug(TAG, "InMobi onAdWillDisplay for interstitial");
+                Log.d(TAG, "InMobi onAdWillDisplay for interstitial");
             }
 
             @Override
             public void onAdDisplayed(InMobiInterstitial inMobiInterstitial) {
                 super.onAdDisplayed(inMobiInterstitial);
-                SASUtil.logDebug(TAG, "InMobi onAdDisplayed for interstitial");
+                Log.d(TAG, "InMobi onAdDisplayed for interstitial");
                 interstitialAdapterListener.onInterstitialShown();
             }
 
             @Override
             public void onAdDisplayFailed(InMobiInterstitial inMobiInterstitial) {
                 super.onAdDisplayFailed(inMobiInterstitial);
-                SASUtil.logDebug(TAG, "InMobi onAdDisplayFailed for interstitial");
+                Log.d(TAG, "InMobi onAdDisplayFailed for interstitial");
                 interstitialAdapterListener.onInterstitialFailedToShow("no reason available");
             }
 
             @Override
             public void onAdDismissed(InMobiInterstitial inMobiInterstitial) {
                 super.onAdDismissed(inMobiInterstitial);
-                SASUtil.logDebug(TAG, "InMobi onAdDismissed for interstitial");
+                Log.d(TAG, "InMobi onAdDismissed for interstitial");
                 interstitialAdapterListener.onAdClosed();
             }
 
             @Override
             public void onUserLeftApplication(InMobiInterstitial inMobiInterstitial) {
                 super.onUserLeftApplication(inMobiInterstitial);
-                SASUtil.logDebug(TAG, "InMobi onUserLeftApplication for interstitial");
+                Log.d(TAG, "InMobi onUserLeftApplication for interstitial");
             }
 
             @Override
             public void onRewardsUnlocked(InMobiInterstitial inMobiInterstitial, Map<Object, Object> map) {
                 super.onRewardsUnlocked(inMobiInterstitial, map);
-                SASUtil.logDebug(TAG, "InMobi onRewardsUnlocked for interstitial");
+                Log.d(TAG, "InMobi onRewardsUnlocked for interstitial");
             }
 
             @Override
             public void onRequestPayloadCreated(byte[] bytes) {
                 super.onRequestPayloadCreated(bytes);
-                SASUtil.logDebug(TAG, "InMobi onRequestPayloadCreated for interstitial");
+                Log.d(TAG, "InMobi onRequestPayloadCreated for interstitial");
             }
 
             @Override
             public void onRequestPayloadCreationFailed(InMobiAdRequestStatus inMobiAdRequestStatus) {
                 super.onRequestPayloadCreationFailed(inMobiAdRequestStatus);
-                SASUtil.logDebug(TAG, "InMobi onRequestPayloadCreated for interstitial");
+                Log.d(TAG, "InMobi onRequestPayloadCreated for interstitial");
             }
         };
 

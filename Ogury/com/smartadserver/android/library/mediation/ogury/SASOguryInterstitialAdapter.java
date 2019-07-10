@@ -3,10 +3,11 @@ package com.smartadserver.android.library.mediation.ogury;
 import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.smartadserver.android.library.mediation.SASMediationInterstitialAdapter;
 import com.smartadserver.android.library.mediation.SASMediationInterstitialAdapterListener;
-import com.smartadserver.android.library.util.SASUtil;
+
 
 import java.util.Map;
 
@@ -33,7 +34,7 @@ public class SASOguryInterstitialAdapter implements SASMediationInterstitialAdap
      */
     @Override
     public void requestInterstitialAd(@NonNull Context context, @NonNull String serverParametersString, @NonNull Map<String, String> clientParameters, @NonNull final SASMediationInterstitialAdapterListener interstitialAdapterListener) {
-        SASUtil.logDebug(TAG, "SASOguryInterstitialAdapter adRequest");
+        Log.d(TAG, "SASOguryInterstitialAdapter adRequest");
 
         if (!(context instanceof Activity)) {
             interstitialAdapterListener.adRequestFailed("Ogury ad mediation requires the context to be an Activity", false);
@@ -50,42 +51,42 @@ public class SASOguryInterstitialAdapter implements SASMediationInterstitialAdap
         PresageInterstitialCallback presageInterstitialCallback = new PresageInterstitialCallback() {
             @Override
             public void onAdAvailable() {
-                SASUtil.logDebug(TAG, "presageInterstitialCallback onAdAvailable");
+                Log.d(TAG, "presageInterstitialCallback onAdAvailable");
             }
 
             @Override
             public void onAdNotAvailable() {
-                SASUtil.logDebug(TAG, "presageInterstitialCallback onAdNotAvailable");
+                Log.d(TAG, "presageInterstitialCallback onAdNotAvailable");
                 interstitialAdapterListener.adRequestFailed("Ogury ad not available", true);
             }
 
             @Override
             public void onAdLoaded() {
-                SASUtil.logDebug(TAG, "presageInterstitialCallback onAdLoaded");
+                Log.d(TAG, "presageInterstitialCallback onAdLoaded");
                 interstitialAdapterListener.onInterstitialLoaded();
             }
 
             @Override
             public void onAdNotLoaded() {
-                SASUtil.logDebug(TAG, "presageInterstitialCallback onAdNotLoaded");
+                Log.d(TAG, "presageInterstitialCallback onAdNotLoaded");
                 interstitialAdapterListener.adRequestFailed("Ogury ad not loaded", false);
             }
 
             @Override
             public void onAdDisplayed() {
-                SASUtil.logDebug(TAG, "presageInterstitialCallback onAdDisplayed");
+                Log.d(TAG, "presageInterstitialCallback onAdDisplayed");
                 interstitialAdapterListener.onInterstitialShown();
             }
 
             @Override
             public void onAdClosed() {
-                SASUtil.logDebug(TAG, "presageInterstitialCallback onAdClosed");
+                Log.d(TAG, "presageInterstitialCallback onAdClosed");
                 interstitialAdapterListener.onAdClosed();
             }
 
             @Override
             public void onAdError(int i) {
-                SASUtil.logDebug(TAG, "presageInterstitialCallback onAdError: " + i);
+                Log.d(TAG, "presageInterstitialCallback onAdError: " + i);
 
                 /**
                  * From Ogury documentation

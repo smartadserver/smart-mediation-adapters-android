@@ -6,7 +6,7 @@ import android.util.Log;
 
 import com.smartadserver.android.library.mediation.SASMediationInterstitialAdapter;
 import com.smartadserver.android.library.mediation.SASMediationInterstitialAdapterListener;
-import com.smartadserver.android.library.util.SASUtil;
+
 import com.tapjoy.TJActionRequest;
 import com.tapjoy.TJConnectListener;
 import com.tapjoy.TJError;
@@ -39,7 +39,7 @@ public class SASTapjoyInterstitialAdapter implements SASMediationInterstitialAda
     @Override
     public void requestInterstitialAd(@NonNull final Context context, @NonNull String serverParametersString,
                                       @NonNull Map<String, String> clientParameters, @NonNull final SASMediationInterstitialAdapterListener interstitialAdapterListener) {
-        SASUtil.logDebug(TAG, "SASTapjoyInterstitialAdapter adRequest");
+        Log.d(TAG, "SASTapjoyInterstitialAdapter adRequest");
 
         // Retrieve placement info -- Here serverParametersString is "SDKKey/placementName"
         String[] placementInfo = serverParametersString.split("/");
@@ -71,7 +71,7 @@ public class SASTapjoyInterstitialAdapter implements SASMediationInterstitialAda
         final TJPlacementListener placementListener = new TJPlacementListener() {
             @Override
             public void onRequestSuccess(TJPlacement tjPlacement) {
-                SASUtil.logDebug(TAG, "placementListener onRequestSuccess");
+                Log.d(TAG, "placementListener onRequestSuccess");
                 // check if the content is available. If not, we have a no ad.
                 if (!tjPlacement.isContentAvailable()) {
                     interstitialAdapterListener.adRequestFailed("Request succeed but content is not available (noad)", true);
@@ -80,36 +80,36 @@ public class SASTapjoyInterstitialAdapter implements SASMediationInterstitialAda
 
             @Override
             public void onRequestFailure(TJPlacement tjPlacement, TJError tjError) {
-                SASUtil.logDebug(TAG, "placementListener onRequestFailure");
+                Log.d(TAG, "placementListener onRequestFailure");
                 interstitialAdapterListener.adRequestFailed(tjError.message, false);
             }
 
             @Override
             public void onContentReady(TJPlacement tjPlacement) {
-                SASUtil.logDebug(TAG, "placementListener onContentReady");
+                Log.d(TAG, "placementListener onContentReady");
                 interstitialAdapterListener.onInterstitialLoaded();
             }
 
             @Override
             public void onContentShow(TJPlacement tjPlacement) {
-                SASUtil.logDebug(TAG, "placementListener onContentShow");
+                Log.d(TAG, "placementListener onContentShow");
                 // call the listener only when the video start to avoid counting pixel if the video have an error and does not start
             }
 
             @Override
             public void onContentDismiss(TJPlacement tjPlacement) {
-                SASUtil.logDebug(TAG, "placementListener onContentDismiss");
+                Log.d(TAG, "placementListener onContentDismiss");
                 interstitialAdapterListener.onAdClosed();
             }
 
             @Override
             public void onPurchaseRequest(TJPlacement tjPlacement, TJActionRequest tjActionRequest, String s) {
-                SASUtil.logDebug(TAG, "placementListener onPurchaseRequest");
+                Log.d(TAG, "placementListener onPurchaseRequest");
             }
 
             @Override
             public void onRewardRequest(TJPlacement tjPlacement, TJActionRequest tjActionRequest, String s, int i) {
-                SASUtil.logDebug(TAG, "placementListener onRewardRequest");
+                Log.d(TAG, "placementListener onRewardRequest");
             }
         };
 
@@ -117,19 +117,19 @@ public class SASTapjoyInterstitialAdapter implements SASMediationInterstitialAda
         final TJPlacementVideoListener placementVideoListener = new TJPlacementVideoListener() {
             @Override
             public void onVideoStart(TJPlacement tjPlacement) {
-                SASUtil.logDebug(TAG, "placementVideoListener onVideoStart");
+                Log.d(TAG, "placementVideoListener onVideoStart");
                 interstitialAdapterListener.onInterstitialShown();
             }
 
             @Override
             public void onVideoError(TJPlacement tjPlacement, String s) {
-                SASUtil.logDebug(TAG, "placementVideoListener onVideoError");
+                Log.d(TAG, "placementVideoListener onVideoError");
                 interstitialAdapterListener.onInterstitialFailedToShow(s);
             }
 
             @Override
             public void onVideoComplete(TJPlacement tjPlacement) {
-                SASUtil.logDebug(TAG, "placementVideoListener onVideoComplete");
+                Log.d(TAG, "placementVideoListener onVideoComplete");
             }
         };
 
@@ -137,7 +137,7 @@ public class SASTapjoyInterstitialAdapter implements SASMediationInterstitialAda
         Tapjoy.connect(context, SDKKey, null, new TJConnectListener() {
             @Override
             public void onConnectSuccess() {
-                SASUtil.logDebug(TAG, "Tapjoy onConnectSuccess");
+                Log.d(TAG, "Tapjoy onConnectSuccess");
                 tjPlacement = TJPlacementManager.createPlacement(context, placementName, false, placementListener);
                 tjPlacement.setVideoListener(placementVideoListener);
 
@@ -146,7 +146,7 @@ public class SASTapjoyInterstitialAdapter implements SASMediationInterstitialAda
 
             @Override
             public void onConnectFailure() {
-                SASUtil.logDebug(TAG, "Tapjoy onConnectFailure");
+                Log.d(TAG, "Tapjoy onConnectFailure");
                 interstitialAdapterListener.adRequestFailed("The Tapjor SDK failed to connect", false);
             }
         });

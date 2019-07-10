@@ -2,6 +2,7 @@ package com.smartadserver.android.library.mediation.applovin;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.applovin.adview.AppLovinInterstitialAd;
 import com.applovin.adview.AppLovinInterstitialAdDialog;
@@ -14,8 +15,7 @@ import com.applovin.sdk.AppLovinAdVideoPlaybackListener;
 import com.applovin.sdk.AppLovinErrorCodes;
 import com.smartadserver.android.library.mediation.SASMediationInterstitialAdapter;
 import com.smartadserver.android.library.mediation.SASMediationInterstitialAdapterListener;
-import com.smartadserver.android.library.ui.SASAdView;
-import com.smartadserver.android.library.util.SASUtil;
+
 
 import java.util.Map;
 
@@ -25,7 +25,7 @@ import java.util.Map;
 public class SASAppLovinInterstitialAdapter extends SASAppLovinAdapterBase implements SASMediationInterstitialAdapter {
 
     // tag for logging purposes
-    private static final String TAG = "SASAppLovinInterstitialAdapter";
+    private static final String TAG = SASAppLovinInterstitialAdapter.class.getSimpleName();
 
     // AppLovin needed Objects
     AppLovinAd appLovinAd = null;
@@ -53,7 +53,7 @@ public class SASAppLovinInterstitialAdapter extends SASAppLovinAdapterBase imple
         AppLovinAdClickListener adClickListener = new AppLovinAdClickListener() {
             @Override
             public void adClicked(AppLovinAd appLovinAd) {
-                SASUtil.logDebug(TAG, "AppLovin adClicked for Interstitial");
+                Log.d(TAG, "AppLovin adClicked for Interstitial");
                 interstitialAdapterListener.onAdClicked();
             }
         };
@@ -62,13 +62,13 @@ public class SASAppLovinInterstitialAdapter extends SASAppLovinAdapterBase imple
         AppLovinAdDisplayListener adDisplayListener = new AppLovinAdDisplayListener() {
             @Override
             public void adDisplayed(AppLovinAd appLovinAd) {
-                SASUtil.logDebug(TAG, "AppLovin adDisplayed for Interstitial");
+                Log.d(TAG, "AppLovin adDisplayed for Interstitial");
                 interstitialAdapterListener.onInterstitialShown();
             }
 
             @Override
             public void adHidden(AppLovinAd appLovinAd) {
-                SASUtil.logDebug(TAG, "AppLovin adHidden for Interstitial");
+                Log.d(TAG, "AppLovin adHidden for Interstitial");
                 interstitialAdapterListener.onAdClosed();
             }
         };
@@ -77,12 +77,12 @@ public class SASAppLovinInterstitialAdapter extends SASAppLovinAdapterBase imple
         AppLovinAdVideoPlaybackListener adVideoPlaybackListener = new AppLovinAdVideoPlaybackListener() {
             @Override
             public void videoPlaybackBegan(AppLovinAd appLovinAd) {
-                SASUtil.logDebug(TAG, "AppLovin videoPlaybackBegan for Interstitial");
+                Log.d(TAG, "AppLovin videoPlaybackBegan for Interstitial");
             }
 
             @Override
             public void videoPlaybackEnded(AppLovinAd appLovinAd, double percentage, boolean fullyWatched) {
-                SASUtil.logDebug(TAG, "AppLovin videoPlaybackEnded for Interstitial. Percentage:" + percentage + " completed:" + fullyWatched);
+                Log.d(TAG, "AppLovin videoPlaybackEnded for Interstitial. Percentage:" + percentage + " completed:" + fullyWatched);
             }
         };
 
@@ -96,7 +96,7 @@ public class SASAppLovinInterstitialAdapter extends SASAppLovinAdapterBase imple
             @Override
             public void adReceived(AppLovinAd ad) {
                 appLovinAd = ad;
-                SASUtil.logDebug(TAG, "AppLovin adReceived for interstitial");
+                Log.d(TAG, "AppLovin adReceived for interstitial");
                 interstitialAdapterListener.onInterstitialLoaded();
 
             }
@@ -104,7 +104,7 @@ public class SASAppLovinInterstitialAdapter extends SASAppLovinAdapterBase imple
             @Override
             public void failedToReceiveAd(int errorCode) {
                 // Look at AppLovinErrorCodes.java for list of error codes
-                SASUtil.logDebug(TAG, "AppLovin failedToReceiveAd for interstitial (error:" + errorCode + ")");
+                Log.d(TAG, "AppLovin failedToReceiveAd for interstitial (error:" + errorCode + ")");
                 boolean isNoAd = errorCode == AppLovinErrorCodes.NO_FILL;
                 interstitialAdapterListener.adRequestFailed("errorCode:" + errorCode, isNoAd);
             }

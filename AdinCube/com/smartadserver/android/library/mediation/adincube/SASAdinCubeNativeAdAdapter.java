@@ -3,6 +3,7 @@ package com.smartadserver.android.library.mediation.adincube;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -19,6 +20,7 @@ import com.smartadserver.android.library.mediation.SASMediationNativeAdAdapterLi
 import com.smartadserver.android.library.model.SASNativeVideoAdElement;
 import com.smartadserver.android.library.ui.SASAdChoicesView;
 import com.smartadserver.android.library.util.SASUtil;
+
 
 import java.util.List;
 import java.util.Map;
@@ -45,7 +47,7 @@ public class SASAdinCubeNativeAdAdapter extends SASAdinCubeAdapterBase implement
     @Override
     public void requestNativeAd(@NonNull Context context, @NonNull String serverParametersString, @NonNull Map<String, String> clientParameters,
                                 @NonNull final SASMediationNativeAdAdapterListener nativeAdAdapterListener) {
-        SASUtil.logDebug(TAG, "SASAdinCubeNativeAdAdapter requestNativeAd");
+        Log.d(TAG, "SASAdinCubeNativeAdAdapter requestNativeAd");
 
         configureAdRequest(context, serverParametersString, clientParameters);
 
@@ -60,7 +62,7 @@ public class SASAdinCubeNativeAdAdapter extends SASAdinCubeAdapterBase implement
         AdinCubeNativeEventListener nativeEventListener = new AdinCubeNativeEventListener() {
             @Override
             public void onAdLoaded(List<NativeAd> list) {
-                SASUtil.logDebug(TAG, "onAdLoaded");
+                Log.d(TAG, "onAdLoaded");
 
                 final NativeAd nativeAd = list.get(0);
 
@@ -213,7 +215,7 @@ public class SASAdinCubeNativeAdAdapter extends SASAdinCubeAdapterBase implement
                                 @Override
                                 public void setVisibility(int i) {
                                     super.setVisibility(i);
-                                    SASUtil.logDebug(TAG, "AdInCube AdChoicesView setVisibility:" + i);
+                                    Log.d(TAG, "AdInCube AdChoicesView setVisibility:" + i);
                                 }
                             };
 
@@ -235,13 +237,13 @@ public class SASAdinCubeNativeAdAdapter extends SASAdinCubeAdapterBase implement
 
             @Override
             public void onLoadError(String s) {
-                SASUtil.logDebug(TAG, "onLoadError");
+                Log.d(TAG, "onLoadError");
                 nativeAdAdapterListener.adRequestFailed(s, true);
             }
 
             @Override
             public void onAdClicked(NativeAd nativeAd) {
-                SASUtil.logDebug(TAG, "onAdClicked");
+                Log.d(TAG, "onAdClicked");
                 nativeAdAdapterListener.onAdClicked();
             }
         };

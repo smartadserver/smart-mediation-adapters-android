@@ -3,6 +3,7 @@ package com.smartadserver.android.library.mediation.mopub;
 import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.mopub.common.MoPub;
 import com.mopub.common.SdkConfiguration;
@@ -13,7 +14,7 @@ import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubInterstitial;
 import com.smartadserver.android.library.mediation.SASMediationInterstitialAdapter;
 import com.smartadserver.android.library.mediation.SASMediationInterstitialAdapterListener;
-import com.smartadserver.android.library.util.SASUtil;
+
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -44,7 +45,7 @@ public class SASMoPubInterstitialAdapter implements SASMediationInterstitialAdap
      */
     @Override
     public void requestInterstitialAd(@NonNull final Context context, @NonNull final String serverParametersString, @NonNull final Map clientParameters, @NonNull final SASMediationInterstitialAdapterListener interstitialAdapterListener) {
-        SASUtil.logDebug(TAG, "SASMoPubInterstitialAdapter adRequest");
+        Log.d(TAG, "SASMoPubInterstitialAdapter adRequest");
 
         // To request an interstitial using MoPub, the context have to be an Activity.
         if (!(context instanceof Activity)) {
@@ -60,7 +61,7 @@ public class SASMoPubInterstitialAdapter implements SASMediationInterstitialAdap
             SdkInitializationListener initializationListener = new SdkInitializationListener() {
                 @Override
                 public void onInitializationFinished() {
-                    SASUtil.logDebug(TAG, "MoPub onInitializationFinished");
+                    Log.d(TAG, "MoPub onInitializationFinished");
                     initMoPubDone = true;
                     // call requestBannerAd again, with SDK initialized
                     requestInterstitialAd(context,serverParametersString,clientParameters,interstitialAdapterListener);
@@ -81,7 +82,7 @@ public class SASMoPubInterstitialAdapter implements SASMediationInterstitialAdap
 
                     @Override
                     public void onConsentDialogLoadFailed(@NonNull MoPubErrorCode moPubErrorCode) {
-                        SASUtil.logDebug(TAG, "MoPub onConsentDialogLoadFailed");
+                        Log.d(TAG, "MoPub onConsentDialogLoadFailed");
                     }
                 });
             }
@@ -90,13 +91,13 @@ public class SASMoPubInterstitialAdapter implements SASMediationInterstitialAdap
             MoPubInterstitial.InterstitialAdListener interstitialAdListener = new MoPubInterstitial.InterstitialAdListener() {
                 @Override
                 public void onInterstitialLoaded(MoPubInterstitial interstitial) {
-                    SASUtil.logDebug(TAG, "InterstitialAdListener onInterstitialLoaded");
+                    Log.d(TAG, "InterstitialAdListener onInterstitialLoaded");
                     interstitialAdapterListener.onInterstitialLoaded();
                 }
 
                 @Override
                 public void onInterstitialFailed(MoPubInterstitial interstitial, MoPubErrorCode errorCode) {
-                    SASUtil.logDebug(TAG, "InterstitialAdListener onInterstitialFailed");
+                    Log.d(TAG, "InterstitialAdListener onInterstitialFailed");
 
                     // check if this is due to a No Ad
                     boolean isNoAd = errorCode == MoPubErrorCode.NO_FILL || errorCode == MoPubErrorCode.NETWORK_NO_FILL;
@@ -105,7 +106,7 @@ public class SASMoPubInterstitialAdapter implements SASMediationInterstitialAdap
 
                 @Override
                 public void onInterstitialShown(MoPubInterstitial interstitial) {
-                    SASUtil.logDebug(TAG, "InterstitialAdListener onInterstitialShown");
+                    Log.d(TAG, "InterstitialAdListener onInterstitialShown");
                     interstitialAdapterListener.onInterstitialShown();
 
                     if (needToShowConsentDialog && personalInfoManager != null) {
@@ -115,13 +116,13 @@ public class SASMoPubInterstitialAdapter implements SASMediationInterstitialAdap
 
                 @Override
                 public void onInterstitialClicked(MoPubInterstitial interstitial) {
-                    SASUtil.logDebug(TAG, "InterstitialAdListener onInterstitialClicked");
+                    Log.d(TAG, "InterstitialAdListener onInterstitialClicked");
                     interstitialAdapterListener.onAdClicked();
                 }
 
                 @Override
                 public void onInterstitialDismissed(MoPubInterstitial interstitial) {
-                    SASUtil.logDebug(TAG, "InterstitialAdListener onInterstitialDismissed");
+                    Log.d(TAG, "InterstitialAdListener onInterstitialDismissed");
                     interstitialAdapterListener.onAdClosed();
                     moPubInterstitial.destroy();
                 }
@@ -144,7 +145,7 @@ public class SASMoPubInterstitialAdapter implements SASMediationInterstitialAdap
 
     @Override
     public void onDestroy() {
-        SASUtil.logDebug(TAG, "MoPub onDestroy for interstitial");
+        Log.d(TAG, "MoPub onDestroy for interstitial");
         if (moPubInterstitial != null) {
             moPubInterstitial.destroy();
             moPubInterstitial = null;

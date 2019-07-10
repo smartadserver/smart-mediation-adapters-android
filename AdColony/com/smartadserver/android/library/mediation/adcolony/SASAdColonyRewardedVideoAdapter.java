@@ -3,6 +3,7 @@ package com.smartadserver.android.library.mediation.adcolony;
 import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.adcolony.sdk.AdColony;
 import com.adcolony.sdk.AdColonyInterstitial;
@@ -14,6 +15,7 @@ import com.smartadserver.android.library.mediation.SASMediationRewardedVideoAdap
 import com.smartadserver.android.library.mediation.SASMediationRewardedVideoAdapterListener;
 import com.smartadserver.android.library.model.SASReward;
 import com.smartadserver.android.library.util.SASUtil;
+
 
 import java.util.Map;
 
@@ -58,7 +60,7 @@ public class SASAdColonyRewardedVideoAdapter extends SASAdColonyAdapterBase impl
         AdColonyInterstitialListener listener = new AdColonyInterstitialListener() {
             @Override
             public void onRequestFilled(AdColonyInterstitial ad) {
-                SASUtil.logDebug(TAG, "AdColony onRequestFilled for rewarded video");
+                Log.d(TAG, "AdColony onRequestFilled for rewarded video");
 
                 adColonyInterstitial = ad;
                 rewardedVideoAdapterListener.onRewardedVideoLoaded();
@@ -66,13 +68,13 @@ public class SASAdColonyRewardedVideoAdapter extends SASAdColonyAdapterBase impl
 
             @Override
             public void onRequestNotFilled(AdColonyZone zone) {
-                SASUtil.logDebug(TAG, "AdColony onRequestNotFilled for rewarded video. Zone :" + zone);
+                Log.d(TAG, "AdColony onRequestNotFilled for rewarded video. Zone :" + zone);
                 rewardedVideoAdapterListener.adRequestFailed("Cannot load rewarded video from AdColony!", true);
             }
 
             @Override
             public void onExpiring(AdColonyInterstitial ad) {
-                SASUtil.logDebug(TAG, "AdColony onExpiring for rewarded video");
+                Log.d(TAG, "AdColony onExpiring for rewarded video");
 
                 // If the interstitial is expiring, we need to get a new one.
                 // This can be problematic if the developer uses several appID for the same app since
@@ -84,29 +86,29 @@ public class SASAdColonyRewardedVideoAdapter extends SASAdColonyAdapterBase impl
 
             @Override
             public void onOpened(AdColonyInterstitial ad) {
-                SASUtil.logDebug(TAG, "AdColony onOpened for rewarded video");
+                Log.d(TAG, "AdColony onOpened for rewarded video");
                 rewardedVideoAdapterListener.onRewardedVideoShown();
             }
 
             @Override
             public void onClosed(AdColonyInterstitial ad) {
-                SASUtil.logDebug(TAG, "AdColony onClosed for rewarded video");
+                Log.d(TAG, "AdColony onClosed for rewarded video");
                 rewardedVideoAdapterListener.onAdClosed();
             }
 
             @Override
             public void onIAPEvent(AdColonyInterstitial ad, String product_id, int engagement_type) {
-                SASUtil.logDebug(TAG, "AdColony onIAPEvent for rewarded video");
+                Log.d(TAG, "AdColony onIAPEvent for rewarded video");
             }
 
             @Override
             public void onLeftApplication(AdColonyInterstitial ad) {
-                SASUtil.logDebug(TAG, "AdColony onLeftApplication for rewarded video");
+                Log.d(TAG, "AdColony onLeftApplication for rewarded video");
             }
 
             @Override
             public void onClicked(AdColonyInterstitial ad) {
-                SASUtil.logDebug(TAG, "AdColony onClicked for rewarded video");
+                Log.d(TAG, "AdColony onClicked for rewarded video");
                 rewardedVideoAdapterListener.onAdClicked();
             }
         };
@@ -118,7 +120,7 @@ public class SASAdColonyRewardedVideoAdapter extends SASAdColonyAdapterBase impl
                 String currency = adColonyReward.getRewardName();
                 int amount = adColonyReward.getRewardAmount();
 
-                SASUtil.logDebug(TAG, "AdColony onReward for rewarded video: label:" + currency + " amount:" + amount);
+                Log.d(TAG, "AdColony onReward for rewarded video: label:" + currency + " amount:" + amount);
 
                 if (amount > 0) {
                     rewardedVideoAdapterListener.onReward(new SASReward(currency, amount));
@@ -142,7 +144,7 @@ public class SASAdColonyRewardedVideoAdapter extends SASAdColonyAdapterBase impl
 
     @Override
     public void onDestroy() {
-        SASUtil.logDebug(TAG, "AdColony onDestroy() for rewarded video");
+        Log.d(TAG, "AdColony onDestroy() for rewarded video");
         if (adColonyInterstitial != null) {
             adColonyInterstitial.destroy();
             adColonyInterstitial = null;

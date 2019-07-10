@@ -2,16 +2,17 @@ package com.smartadserver.android.library.mediation.inmobi;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.inmobi.ads.InMobiAdRequestStatus;
 import com.inmobi.ads.InMobiInterstitial;
 import com.inmobi.ads.listeners.InterstitialAdEventListener;
 import com.smartadserver.android.library.exception.SASAdDisplayException;
-import com.smartadserver.android.library.mediation.SASMediationInterstitialAdapter;
 import com.smartadserver.android.library.mediation.SASMediationRewardedVideoAdapter;
 import com.smartadserver.android.library.mediation.SASMediationRewardedVideoAdapterListener;
 import com.smartadserver.android.library.model.SASReward;
 import com.smartadserver.android.library.util.SASUtil;
+
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -22,7 +23,7 @@ import java.util.Map;
  */
 public class SASInMobiRewardedVideoAdapter extends SASInMobiAdapterBase implements SASMediationRewardedVideoAdapter {
 
-    private static final String TAG = "SASInMobiRewardedVideoAdapter";
+    private static final String TAG = SASInMobiRewardedVideoAdapter.class.getSimpleName();
 
     private InMobiInterstitial inMobiInterstitial;
 
@@ -43,14 +44,14 @@ public class SASInMobiRewardedVideoAdapter extends SASInMobiAdapterBase implemen
             @Override
             public void onAdLoadSucceeded(InMobiInterstitial inMobiInterstitial) {
                 super.onAdLoadSucceeded(inMobiInterstitial);
-                SASUtil.logDebug(TAG, "InMobi onAdLoadSucceeded for rewarded video");
+                Log.d(TAG, "InMobi onAdLoadSucceeded for rewarded video");
                 rewardedVideoAdapterListener.onRewardedVideoLoaded();
             }
 
             @Override
             public void onAdLoadFailed(InMobiInterstitial inMobiInterstitial, InMobiAdRequestStatus inMobiAdRequestStatus) {
                 super.onAdLoadFailed(inMobiInterstitial, inMobiAdRequestStatus);
-                SASUtil.logDebug(TAG, "InMobi onAdLoadFailed for rewarded video");
+                Log.d(TAG, "InMobi onAdLoadFailed for rewarded video");
 
                 boolean isNoFill = inMobiAdRequestStatus.getStatusCode() == InMobiAdRequestStatus.StatusCode.NO_FILL;
                 rewardedVideoAdapterListener.adRequestFailed(inMobiAdRequestStatus.getMessage(), isNoFill);
@@ -59,40 +60,40 @@ public class SASInMobiRewardedVideoAdapter extends SASInMobiAdapterBase implemen
             @Override
             public void onAdReceived(InMobiInterstitial inMobiInterstitial) {
                 super.onAdReceived(inMobiInterstitial);
-                SASUtil.logDebug(TAG, "InMobi onAdReceived for rewarded video");
+                Log.d(TAG, "InMobi onAdReceived for rewarded video");
             }
 
             @Override
             public void onAdClicked(InMobiInterstitial inMobiInterstitial, Map<Object, Object> map) {
                 super.onAdClicked(inMobiInterstitial, map);
-                SASUtil.logDebug(TAG, "InMobi onAdClicked for rewarded video");
+                Log.d(TAG, "InMobi onAdClicked for rewarded video");
                 rewardedVideoAdapterListener.onAdClicked();
             }
 
             @Override
             public void onAdWillDisplay(InMobiInterstitial inMobiInterstitial) {
                 super.onAdWillDisplay(inMobiInterstitial);
-                SASUtil.logDebug(TAG, "InMobi onAdWillDisplay for rewarded video");
+                Log.d(TAG, "InMobi onAdWillDisplay for rewarded video");
             }
 
             @Override
             public void onAdDisplayed(InMobiInterstitial inMobiInterstitial) {
                 super.onAdDisplayed(inMobiInterstitial);
-                SASUtil.logDebug(TAG, "InMobi onAdDisplayed for rewarded video");
+                Log.d(TAG, "InMobi onAdDisplayed for rewarded video");
                 rewardedVideoAdapterListener.onRewardedVideoShown();
             }
 
             @Override
             public void onAdDisplayFailed(InMobiInterstitial inMobiInterstitial) {
                 super.onAdDisplayFailed(inMobiInterstitial);
-                SASUtil.logDebug(TAG, "InMobi onAdDisplayFailed for rewarded video");
+                Log.d(TAG, "InMobi onAdDisplayFailed for rewarded video");
                 rewardedVideoAdapterListener.onRewardedVideoFailedToShow("no reason available");
             }
 
             @Override
             public void onAdDismissed(InMobiInterstitial inMobiInterstitial) {
                 super.onAdDismissed(inMobiInterstitial);
-                SASUtil.logDebug(TAG, "InMobi onAdDismissed for rewarded video");
+                Log.d(TAG, "InMobi onAdDismissed for rewarded video");
 
                 // fire rewards
                 for (SASReward reward : rewards) {
@@ -106,13 +107,13 @@ public class SASInMobiRewardedVideoAdapter extends SASInMobiAdapterBase implemen
             @Override
             public void onUserLeftApplication(InMobiInterstitial inMobiInterstitial) {
                 super.onUserLeftApplication(inMobiInterstitial);
-                SASUtil.logDebug(TAG, "InMobi onUserLeftApplication for rewarded video");
+                Log.d(TAG, "InMobi onUserLeftApplication for rewarded video");
             }
 
             @Override
             public void onRewardsUnlocked(InMobiInterstitial inMobiInterstitial, Map<Object, Object> map) {
                 super.onRewardsUnlocked(inMobiInterstitial, map);
-                SASUtil.logDebug(TAG, "InMobi onRewardsUnlocked for rewarded video");
+                Log.d(TAG, "InMobi onRewardsUnlocked for rewarded video");
 
                 rewards = new ArrayList<>();
                 for (Object key : map.keySet()) {
@@ -120,7 +121,7 @@ public class SASInMobiRewardedVideoAdapter extends SASInMobiAdapterBase implemen
                     try {
                         rewards.add(new SASReward(key.toString(), Double.parseDouble(value)));
                     } catch (Exception e) {
-                        SASUtil.logDebug(TAG, "Unparsable reward for key: " + key + " and value: " + value);
+                        Log.d(TAG, "Unparsable reward for key: " + key + " and value: " + value);
                     }
                 }
             }
@@ -128,13 +129,13 @@ public class SASInMobiRewardedVideoAdapter extends SASInMobiAdapterBase implemen
             @Override
             public void onRequestPayloadCreated(byte[] bytes) {
                 super.onRequestPayloadCreated(bytes);
-                SASUtil.logDebug(TAG, "InMobi onRequestPayloadCreated for rewarded video");
+                Log.d(TAG, "InMobi onRequestPayloadCreated for rewarded video");
             }
 
             @Override
             public void onRequestPayloadCreationFailed(InMobiAdRequestStatus inMobiAdRequestStatus) {
                 super.onRequestPayloadCreationFailed(inMobiAdRequestStatus);
-                SASUtil.logDebug(TAG, "InMobi onRequestPayloadCreated for rewarded video");
+                Log.d(TAG, "InMobi onRequestPayloadCreated for rewarded video");
             }
         };
 

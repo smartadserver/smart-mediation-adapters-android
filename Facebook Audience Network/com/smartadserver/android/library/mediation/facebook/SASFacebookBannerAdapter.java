@@ -3,6 +3,7 @@ package com.smartadserver.android.library.mediation.facebook;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.WindowManager;
 
 import com.facebook.ads.Ad;
@@ -13,7 +14,7 @@ import com.facebook.ads.AdView;
 import com.smartadserver.android.library.mediation.SASMediationAdapter;
 import com.smartadserver.android.library.mediation.SASMediationBannerAdapter;
 import com.smartadserver.android.library.mediation.SASMediationBannerAdapterListener;
-import com.smartadserver.android.library.util.SASUtil;
+
 
 import java.util.Map;
 
@@ -57,26 +58,26 @@ public class SASFacebookBannerAdapter extends SASFacebookAdapterBase implements 
         AdListener bannerListener = new AdListener() {
             @Override
             public void onError(Ad ad, AdError adError) {
-                SASUtil.logDebug(TAG, "Facebook onError for banner");
+                Log.d(TAG, "Facebook onError for banner");
                 boolean isNoAd = adError.getErrorCode() == AdError.NO_FILL_ERROR_CODE;
                 bannerAdapterListener.adRequestFailed(adError.getErrorMessage(), isNoAd);
             }
 
             @Override
             public void onAdLoaded(Ad ad) {
-                SASUtil.logDebug(TAG, "Facebook onAdLoaded for banner");
+                Log.d(TAG, "Facebook onAdLoaded for banner");
                 bannerAdapterListener.onBannerLoaded(bannerView);
             }
 
             @Override
             public void onAdClicked(Ad ad) {
-                SASUtil.logDebug(TAG, "Facebook onAdClicked for banner");
+                Log.d(TAG, "Facebook onAdClicked for banner");
                 bannerAdapterListener.onAdClicked();
             }
 
             @Override
             public void onLoggingImpression(Ad ad) {
-                SASUtil.logDebug(TAG, "Facebook onLoggingImpression for banner");
+                Log.d(TAG, "Facebook onLoggingImpression for banner");
             }
         };
 
@@ -105,7 +106,7 @@ public class SASFacebookBannerAdapter extends SASFacebookAdapterBase implements 
 
     @Override
     public void onDestroy() {
-        SASUtil.logDebug(TAG, "Facebook onDestroy for banner ");
+        Log.d(TAG, "Facebook onDestroy for banner ");
         if (bannerView != null) {
             bannerView.destroy();
         }

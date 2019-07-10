@@ -2,6 +2,7 @@ package com.smartadserver.android.library.mediation.mopub;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.ViewGroup;
 
 import com.mopub.common.MoPub;
@@ -14,7 +15,7 @@ import com.mopub.mobileads.MoPubView;
 import com.smartadserver.android.library.mediation.SASMediationBannerAdapter;
 import com.smartadserver.android.library.mediation.SASMediationBannerAdapterListener;
 import com.smartadserver.android.library.util.SASConfiguration;
-import com.smartadserver.android.library.util.SASUtil;
+
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -42,7 +43,7 @@ public class SASMoPubBannerAdapter implements SASMediationBannerAdapter {
     public void requestBannerAd(@NonNull final Context context, @NonNull final String serverParametersString, @NonNull final Map<String, String> clientParameters,
                                 @NonNull final SASMediationBannerAdapterListener bannerAdapterListener) {
 
-        SASUtil.logDebug(TAG, "SASMoPubBannerAdapter requestAd");
+        Log.d(TAG, "SASMoPubBannerAdapter requestAd");
 
         // Init MoPub SDK -- Here serverParametersString is the MoPub Ad unit id
         if (!initMoPubDone) {
@@ -52,7 +53,7 @@ public class SASMoPubBannerAdapter implements SASMediationBannerAdapter {
             SdkInitializationListener initializationListener = new SdkInitializationListener() {
                 @Override
                 public void onInitializationFinished() {
-                    SASUtil.logDebug(TAG, "MoPub onInitializationFinished");
+                    Log.d(TAG, "MoPub onInitializationFinished");
                     initMoPubDone = true;
                     // call requestBannerAd again, with SDK initialized
                     requestBannerAd(context, serverParametersString, clientParameters, bannerAdapterListener);
@@ -62,7 +63,7 @@ public class SASMoPubBannerAdapter implements SASMediationBannerAdapter {
             MoPub.initializeSdk(context, sdkConfiguration, initializationListener);
         } else {
             // Pass geolocation if available
-            MoPub.setLocationAwareness(SASConfiguration.getSharedInstance().isAutomaticLocationAllowed() ?
+            MoPub.setLocationAwareness(SASConfiguration.getSharedInstance().isAutomaticLocationDetectionAllowed() ?
                     MoPub.LocationAwareness.NORMAL :
                     MoPub.LocationAwareness.DISABLED);
 
@@ -77,7 +78,7 @@ public class SASMoPubBannerAdapter implements SASMediationBannerAdapter {
 
                     @Override
                     public void onConsentDialogLoadFailed(@NonNull MoPubErrorCode moPubErrorCode) {
-                        SASUtil.logDebug(TAG, "MoPub onConsentDialogLoadFailed : " + moPubErrorCode.toString());
+                        Log.d(TAG, "MoPub onConsentDialogLoadFailed : " + moPubErrorCode.toString());
                     }
                 });
             }
@@ -86,13 +87,13 @@ public class SASMoPubBannerAdapter implements SASMediationBannerAdapter {
             MoPubView.BannerAdListener bannerAdListener = new MoPubView.BannerAdListener() {
                 @Override
                 public void onBannerLoaded(MoPubView banner) {
-                    SASUtil.logDebug(TAG, "BannerAdListener onBannerLoaded");
+                    Log.d(TAG, "BannerAdListener onBannerLoaded");
                     bannerAdapterListener.onBannerLoaded(banner);
                 }
 
                 @Override
                 public void onBannerFailed(MoPubView banner, MoPubErrorCode errorCode) {
-                    SASUtil.logDebug(TAG, "BannerAdListener onBannerFailed");
+                    Log.d(TAG, "BannerAdListener onBannerFailed");
 
                     // check if this is due to a no ad
                     boolean isNoAd = errorCode == MoPubErrorCode.NO_FILL || errorCode == MoPubErrorCode.NETWORK_NO_FILL;
@@ -101,19 +102,19 @@ public class SASMoPubBannerAdapter implements SASMediationBannerAdapter {
 
                 @Override
                 public void onBannerClicked(MoPubView banner) {
-                    SASUtil.logDebug(TAG, "BannerAdListener onBannerClicked");
+                    Log.d(TAG, "BannerAdListener onBannerClicked");
                     bannerAdapterListener.onAdClicked();
                 }
 
                 @Override
                 public void onBannerExpanded(MoPubView banner) {
-                    SASUtil.logDebug(TAG, "BannerAdListener onBannerExpanded");
+                    Log.d(TAG, "BannerAdListener onBannerExpanded");
                     bannerAdapterListener.onAdFullScreen();
                 }
 
                 @Override
                 public void onBannerCollapsed(MoPubView banner) {
-                    SASUtil.logDebug(TAG, "BannerAdListener onBannerCollapse");
+                    Log.d(TAG, "BannerAdListener onBannerCollapse");
                     bannerAdapterListener.onAdClosed();
                 }
             };
@@ -142,7 +143,7 @@ public class SASMoPubBannerAdapter implements SASMediationBannerAdapter {
 
     @Override
     public void onDestroy() {
-        SASUtil.logDebug(TAG, "MoPub onDestroy for banner");
+        Log.d(TAG, "MoPub onDestroy for banner");
         if (bannerAdView != null) {
             bannerAdView.destroy();
             bannerAdView = null;

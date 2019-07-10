@@ -2,6 +2,7 @@ package com.smartadserver.android.library.mediation.google;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -11,6 +12,7 @@ import com.smartadserver.android.library.mediation.SASMediationInterstitialAdapt
 import com.smartadserver.android.library.mediation.SASMediationInterstitialAdapterListener;
 import com.smartadserver.android.library.util.SASUtil;
 
+
 import java.util.Map;
 
 /**
@@ -19,7 +21,7 @@ import java.util.Map;
 public class SASGoogleMobileAdsInterstitialAdapter extends SASGoogleMobileAdsAdapterBase implements SASMediationInterstitialAdapter {
 
     // tag for logging purposes
-    private static final String TAG = "SASGoogleMobileAdsBannerAdapter";
+    private static final String TAG = SASGoogleMobileAdsBannerAdapter.class.getSimpleName();
 
     // Google mobile ads interstitial ad
     InterstitialAd interstitialAd;
@@ -45,30 +47,30 @@ public class SASGoogleMobileAdsInterstitialAdapter extends SASGoogleMobileAdsAda
         AdListener interstitialAdListener = new AdListener() {
 
             public void onAdClosed() {
-                SASUtil.logDebug(TAG, "Google mobile ads onAdClosed for interstitial");
+                Log.d(TAG, "Google mobile ads onAdClosed for interstitial");
                 interstitialAdapterListener.onAdClosed();
             }
 
             public void onAdFailedToLoad(int errorCode) {
-                SASUtil.logDebug(TAG, "Google mobile ads onAdFailedToLoad for interstitial (error code:" + errorCode + ")");
+                Log.d(TAG, "Google mobile ads onAdFailedToLoad for interstitial (error code:" + errorCode + ")");
                 boolean isNoAd = errorCode == AdRequest.ERROR_CODE_NO_FILL;
                 interstitialAdapterListener.adRequestFailed("Google mobile ads ad loading error code " + errorCode, isNoAd);
             }
 
             public void onAdLeftApplication() {
-                SASUtil.logDebug(TAG, "Google mobile ads onAdLeftApplication for interstitial");
+                Log.d(TAG, "Google mobile ads onAdLeftApplication for interstitial");
                 interstitialAdapterListener.onAdClicked();
                 interstitialAdapterListener.onAdLeftApplication();
             }
 
             public void onAdOpened() {
-                SASUtil.logDebug(TAG, "Google mobile ads onAdOpened for interstitial");
+                Log.d(TAG, "Google mobile ads onAdOpened for interstitial");
                 interstitialAdapterListener.onInterstitialShown();
 
             }
 
             public void onAdLoaded() {
-                SASUtil.logDebug(TAG, "Google mobile ads ad onAdLoaded for interstitial");
+                Log.d(TAG, "Google mobile ads ad onAdLoaded for interstitial");
                 interstitialAdapterListener.onInterstitialLoaded();
             }
         };
