@@ -48,9 +48,10 @@ class SASAdinCubeAdapterBase {
         // one time init
         if (!initAdinCubeDone) {
             initAdinCubeDone = true;
-
-            // init AdInCube -- Here the serverParametersString is the application ID
-            AdinCube.setAppKey(serverParametersString);
+            // Now Adincube template could return appID or appID|bannerSizeID
+            String appID = serverParametersString.split("\\|")[0];
+            // init AdInCube
+            AdinCube.setAppKey(appID);
         }
     }
 

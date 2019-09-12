@@ -71,8 +71,9 @@ public class SASAdinCubeBannerAdapter extends SASAdinCubeAdapterBase implements 
             }
         };
 
+
         // create AdInCubeBanner instance, set the listener and load ad
-        bannerView = AdinCube.Banner.createView(context, AdinCube.Banner.Size.BANNER_AUTO);
+        bannerView = AdinCube.Banner.createView(context, getBannerSize(serverParametersString));
         AdinCube.Banner.setEventListener(bannerView, bannerEventListener);
         bannerView.setAutoDestroyOnDetach(false);
         bannerView.load();
@@ -85,6 +86,28 @@ public class SASAdinCubeBannerAdapter extends SASAdinCubeAdapterBase implements 
         if (bannerView != null) {
             bannerView.destroy();
             bannerView = null;
+        }
+    }
+
+    private AdinCube.Banner.Size getBannerSize(@NonNull String serverParametersString) {
+        String[] parameters = serverParametersString.split("\\|");
+        int bannerSizeIndex = 0;
+        if (parameters.length > 1) {
+            bannerSizeIndex = Integer.parseInt(parameters[1]);
+        }
+        switch (bannerSizeIndex) {
+            case 1:
+                Log.d(TAG, "AdinCube banner size: BANNER_320x50");
+                return AdinCube.Banner.Size.BANNER_320x50;
+            case 2:
+                Log.d(TAG, "AdinCube banner size: BANNER_300x250");
+                return AdinCube.Banner.Size.BANNER_300x250;
+            case 3:
+                Log.d(TAG, "AdinCube banner size: BANNER_728x90");
+                return AdinCube.Banner.Size.BANNER_728x90;
+            default:
+                Log.d(TAG, "AdinCube banner size: BANNER_AUTO");
+                return AdinCube.Banner.Size.BANNER_AUTO;
         }
     }
 }
