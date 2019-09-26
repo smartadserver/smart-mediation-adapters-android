@@ -25,12 +25,12 @@ Then in the _build.gradle_ of to your application module, you can now import the
 
 For instance you can import _InMobi_ and _Tapjoy_ like so:
 
-    implementation('com.smartadserver.android.mediation:smart-display-sdk-with-inmobi:7.2.0.0')
-    implementation('com.smartadserver.android.mediation:smart-display-sdk-with-vungle:7.2.0.0')
+    implementation('com.smartadserver.android.mediation:smart-display-sdk-with-inmobi:7.1.2.0')
+    implementation('com.smartadserver.android.mediation:smart-display-sdk-with-vungle:7.1.2.0')
 
 > **Note on version numbers:**
 >
-> The latest version is: **7.2.0.0**
+> The latest version is: **7.2.0.1**
 >
 > If you import several third party adapters using _Gradle_, you must use the **same version number for all of them**.
 >
@@ -45,7 +45,7 @@ Available adapters are:
 | ```smart-display-sdk-with-adincube``` | 2.6.3 | Cannot be installed alongside the other adapters | ```maven { url 'http://repository.adincube.com/maven'}``` |
 | ```smart-display-sdk-with-applovin``` | 9.3.0 | _n/a_ | _n/a_ |
 | ```smart-display-sdk-with-facebookaudiencenetwork``` | 4.99.1 | _n/a_ | _n/a_ |
-| ```smart-display-sdk-with-googlemobileads``` | 17.1.3 | _n/a_ | _n/a_ |
+| ```smart-display-sdk-with-googlemobileads``` | 18.2.0 | _n/a_ | _n/a_ |
 | ```smart-display-sdk-with-inmobi``` | 7.2.0 | _n/a_ | _n/a_ |
 | ```smart-display-sdk-with-mopub``` | 5.6.0 | _n/a_ | ```maven { url 'https://s3.amazonaws.com/moat-sdk-builds' }``` |
 | ```smart-display-sdk-with-ogury``` | 3.0.13 | _Ogury_ AAR library **must be manually imported** | _n/a_ |

@@ -7,6 +7,8 @@ import android.util.Log;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
+import com.google.android.gms.ads.doubleclick.PublisherInterstitialAd;
 import com.smartadserver.android.library.exception.SASAdDisplayException;
 import com.smartadserver.android.library.mediation.SASMediationInterstitialAdapter;
 import com.smartadserver.android.library.mediation.SASMediationInterstitialAdapterListener;
@@ -24,7 +26,7 @@ public class SASGoogleMobileAdsInterstitialAdapter extends SASGoogleMobileAdsAda
     private static final String TAG = SASGoogleMobileAdsBannerAdapter.class.getSimpleName();
 
     // Google mobile ads interstitial ad
-    InterstitialAd interstitialAd;
+    Object interstitialAd;
 
     /**
      * Requests a mediated interstitial ad asynchronously
@@ -40,11 +42,59 @@ public class SASGoogleMobileAdsInterstitialAdapter extends SASGoogleMobileAdsAda
     public void requestInterstitialAd(@NonNull Context context, @NonNull String serverParametersString, @NonNull Map<String, String> clientParameters,
                                       @NonNull final SASMediationInterstitialAdapterListener interstitialAdapterListener) {
 
-        // create Google mobile ad request
-        AdRequest adRequest = configureAdRequest(context, serverParametersString, clientParameters);
+        GoogleMobileAds gma = initGoogleMobileAds(context, serverParametersString);
 
-        // create Google mobile ads  listener that will intercept ad mob interstitial events and call appropriate SASMediationInterstitialAdapterListener counterpart methods
-        AdListener interstitialAdListener = new AdListener() {
+        String adUnitID = getAdUnitID(serverParametersString);
+
+        if (GoogleMobileAds.ADMOB == gma) {
+            // create Google mobile ad request
+            AdRequest adRequest = configureAdRequest(context, serverParametersString, clientParameters);
+
+            // create Google mobile ads  listener that will intercept ad mob interstitial events and call appropriate SASMediationInterstitialAdapterListener counterpart methods
+            AdListener interstitialAdListener = createAdListener(interstitialAdapterListener);
+
+            // create Google mobile ads interstitial ad object
+            InterstitialAd adMobInterstitialAd = new InterstitialAd(context);
+
+            // set adUnitId (from serverParametersString)
+            adMobInterstitialAd.setAdUnitId(adUnitID);
+
+            // set AdListener on the interstitial
+            adMobInterstitialAd.setAdListener(interstitialAdListener);
+
+            // perform ad request
+            adMobInterstitialAd.loadAd(adRequest);
+
+            interstitialAd = adMobInterstitialAd;
+
+        } else if (GoogleMobileAds.AD_MANAGER == gma) {
+            // create Google mobile ad request
+            PublisherAdRequest publisherAdRequest = configurePublisherAdRequest(context, serverParametersString, clientParameters);
+
+            // create Google mobile ads  listener that will intercept ad mob interstitial events and call appropriate SASMediationInterstitialAdapterListener counterpart methods
+            AdListener interstitialAdListener = createAdListener(interstitialAdapterListener);
+
+            // create Google mobile ads interstitial ad object
+            PublisherInterstitialAd publisherInterstitialAd = new PublisherInterstitialAd(context);
+
+            // set adUnitId (from serverParametersString)
+            publisherInterstitialAd.setAdUnitId(adUnitID);
+
+            // set AdListener on the interstitial
+            publisherInterstitialAd.setAdListener(interstitialAdListener);
+
+            // perform ad request
+            publisherInterstitialAd.loadAd(publisherAdRequest);
+
+            interstitialAd = publisherInterstitialAd;
+        }
+
+
+
+    }
+
+    private AdListener createAdListener(SASMediationInterstitialAdapterListener interstitialAdapterListener) {
+        return new AdListener() {
 
             public void onAdClosed() {
                 Log.d(TAG, "Google mobile ads onAdClosed for interstitial");
@@ -74,19 +124,27 @@ public class SASGoogleMobileAdsInterstitialAdapter extends SASGoogleMobileAdsAda
                 interstitialAdapterListener.onInterstitialLoaded();
             }
         };
+    }
 
-        // create Google mobile ads interstitial ad object
-        interstitialAd = new InterstitialAd(context);
+    private boolean isInterstitialAdLoaded() {
+        if (interstitialAd != null) {
+            if (interstitialAd instanceof InterstitialAd) {
+                return ((InterstitialAd) interstitialAd).isLoaded();
+            } else if (interstitialAd instanceof PublisherInterstitialAd) {
+                return ((PublisherInterstitialAd) interstitialAd).isLoaded();
+            }
+        }
+        return false;
+    }
 
-        // set adUnitId (from serverParametersString)
-        interstitialAd.setAdUnitId(serverParametersString.split("\\|")[1]);
-
-        // set AdListener on the interstitial
-        interstitialAd.setAdListener(interstitialAdListener);
-
-        // perform ad request
-        interstitialAd.loadAd(adRequest);
-
+    private void showInterstitialAd() {
+        if (interstitialAd != null) {
+            if (interstitialAd instanceof InterstitialAd) {
+                ((InterstitialAd) interstitialAd).show();
+            } else if (interstitialAd instanceof PublisherInterstitialAd) {
+                ((PublisherInterstitialAd) interstitialAd).show();
+            }
+        }
     }
 
     /**
@@ -111,9 +169,9 @@ public class SASGoogleMobileAdsInterstitialAdapter extends SASGoogleMobileAdsAda
             @Override
             public void run() {
                 try {
-                    if (interstitialAd.isLoaded()) {
+                    if (isInterstitialAdLoaded()) {
                         // regular interstitial case
-                        interstitialAd.show();
+                        showInterstitialAd();
                     } else {
                         throw new Exception("No Google mobile ads interstitial ad loaded !");
                     }

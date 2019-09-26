@@ -9,6 +9,8 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.reward.RewardItem;
 import com.google.android.gms.ads.reward.RewardedVideoAd;
 import com.google.android.gms.ads.reward.RewardedVideoAdListener;
+import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
+
 import com.smartadserver.android.library.exception.SASAdDisplayException;
 import com.smartadserver.android.library.mediation.SASMediationRewardedVideoAdapter;
 import com.smartadserver.android.library.mediation.SASMediationRewardedVideoAdapterListener;
@@ -42,8 +44,9 @@ public class SASGoogleMobileAdsRewardedVideoAdapter extends SASGoogleMobileAdsAd
                                        @NonNull Map<String, String> clientParameters, final @NonNull SASMediationRewardedVideoAdapterListener rewardedVideoAdapterListener) {
 
 
-        // create rewarded ad request
-        AdRequest adRequest = configureAdRequest(context, serverParametersString, clientParameters);
+        GoogleMobileAds gma = initGoogleMobileAds(context, serverParametersString);
+
+        String adUnitID = getAdUnitID(serverParametersString);
 
         // Get Google mobile ads rewarded video manager instance
         rewardedVideoAd = MobileAds.getRewardedVideoAdInstance(context);
@@ -106,11 +109,16 @@ public class SASGoogleMobileAdsRewardedVideoAdapter extends SASGoogleMobileAdsAd
         // set the rewarded video listener on the singleton
         rewardedVideoAd.setRewardedVideoAdListener(rewardedVideoListener);
 
-        // make ad call
-        String adUnitID = serverParametersString.split("\\|")[1];
-//        adUnitID = "ca-app-pub-3940256099942544/5224354917"; // USE FOR TESTING ONLY (Google mobile ads sample ID)
-        rewardedVideoAd.loadAd(adUnitID, adRequest);
-
+        if (GoogleMobileAds.ADMOB == gma) {
+            // create rewarded ad request
+            AdRequest adRequest = configureAdRequest(context, serverParametersString, clientParameters);
+            // make ad call
+            rewardedVideoAd.loadAd(adUnitID, adRequest);
+        } else if (GoogleMobileAds.AD_MANAGER == gma) {
+            // create rewarded publisher ad request
+            PublisherAdRequest publisherAdRequest = configurePublisherAdRequest(context, serverParametersString, clientParameters);
+            rewardedVideoAd.loadAd(adUnitID, publisherAdRequest);
+        }
     }
 
     /**

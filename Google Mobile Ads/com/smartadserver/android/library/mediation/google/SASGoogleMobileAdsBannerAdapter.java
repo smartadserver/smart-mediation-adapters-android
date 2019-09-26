@@ -3,10 +3,14 @@ package com.smartadserver.android.library.mediation.google;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.view.View;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
+import com.google.android.gms.ads.doubleclick.PublisherAdView;
 import com.smartadserver.android.library.mediation.SASMediationBannerAdapter;
 import com.smartadserver.android.library.mediation.SASMediationBannerAdapterListener;
 
@@ -22,7 +26,8 @@ public class SASGoogleMobileAdsBannerAdapter extends SASGoogleMobileAdsAdapterBa
     private static final String TAG = SASGoogleMobileAdsBannerAdapter.class.getSimpleName();
 
     // Google mobile ads banner view instance
-    AdView googleBanner;
+    View adView;
+
 
     /**
      * Requests a mediated banner ad asynchronously
@@ -38,16 +43,54 @@ public class SASGoogleMobileAdsBannerAdapter extends SASGoogleMobileAdsAdapterBa
     public void requestBannerAd(@NonNull Context context, @NonNull String serverParametersString, @NonNull Map<String, String> clientParameters,
                                 @NonNull final SASMediationBannerAdapterListener bannerAdapterListener) {
 
-        // create google ad request
-        AdRequest adRequest = configureAdRequest(context, serverParametersString, clientParameters);
+        String adUnitID = serverParametersString.split("\\|")[1];
 
-        // Create Google AdView and configure it.
-        googleBanner = new AdView(context);
-        googleBanner.setAdUnitId(serverParametersString.split("\\|")[1]);
-        googleBanner.setAdSize(getAppropriateAdSizeFromVisualSize(context, clientParameters));
+        GoogleMobileAds gma = initGoogleMobileAds(context, serverParametersString);
 
+        if (GoogleMobileAds.ADMOB == gma) {
+            // create google ad request
+            AdRequest adRequest = configureAdRequest(context, serverParametersString, clientParameters);
+
+            // Create Google AdView and configure it.
+            AdView adMobView = new AdView(context);
+            adMobView.setAdUnitId(adUnitID);
+            adMobView.setAdSize(getAppropriateAdSizeFromVisualSize(context, clientParameters));
+
+            AdListener adListener =  createAdListener(bannerAdapterListener, adMobView);
+
+            // set listener on banner
+            adMobView.setAdListener(adListener);
+
+            // perform ad request
+            adMobView.loadAd(adRequest);
+
+            adView = adMobView;
+
+        } else if (GoogleMobileAds.AD_MANAGER == gma) {
+            // create google publisher ad request
+            PublisherAdRequest publisherAdRequest = new PublisherAdRequest.Builder().build();
+
+            PublisherAdView adManagerView = new PublisherAdView(context);
+            adManagerView.setAdUnitId(adUnitID);
+
+            AdSize adSize = getAppropriateAdSizeFromVisualSize(context, clientParameters);
+            adManagerView.setAdSizes(adSize);
+
+            AdListener adListener =  createAdListener(bannerAdapterListener, adManagerView);
+
+            // set listener on banner
+            adManagerView.setAdListener(adListener);
+
+            // perform ad request
+            adManagerView.loadAd(publisherAdRequest);
+
+            adView = adManagerView;
+        }
+    }
+
+    private AdListener createAdListener(SASMediationBannerAdapterListener bannerAdapterListener, View adView) {
         // create Google banner listener that will intercept ad mob banner events and call appropriate SASMediationBannerAdapterListener counterpart methods
-        AdListener bannerAdListener = new AdListener() {
+        return new AdListener() {
 
             public void onAdClosed() {
                 Log.d(TAG, "Google mobile ads onAdClosed for banner");
@@ -72,22 +115,21 @@ public class SASGoogleMobileAdsBannerAdapter extends SASGoogleMobileAdsAdapterBa
 
             public void onAdLoaded() {
                 Log.d(TAG, "Google mobile ads onAdLoaded for banner");
-                bannerAdapterListener.onBannerLoaded(googleBanner);
+                bannerAdapterListener.onBannerLoaded(adView);
             }
         };
 
-        // set listener on banner
-        googleBanner.setAdListener(bannerAdListener);
-
-        // perform ad request
-        googleBanner.loadAd(adRequest);
     }
 
     @Override
     public void onDestroy() {
         Log.d(TAG, "Google mobile ads onDestroy for banner");
-        if (googleBanner != null) {
-            googleBanner.destroy();
+        if (adView != null) {
+            if (adView instanceof AdView) {
+                ((AdView) adView).destroy();
+            } else if (adView instanceof  PublisherAdView) {
+                ((PublisherAdView)adView).destroy();
+            }
         }
     }
 }
