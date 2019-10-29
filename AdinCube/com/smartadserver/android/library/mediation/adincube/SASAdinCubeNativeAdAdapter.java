@@ -49,7 +49,7 @@ public class SASAdinCubeNativeAdAdapter extends SASAdinCubeAdapterBase implement
                                 @NonNull final SASMediationNativeAdAdapterListener nativeAdAdapterListener) {
         Log.d(TAG, "SASAdinCubeNativeAdAdapter requestNativeAd");
 
-        configureAdRequest(context, serverParametersString, clientParameters);
+        configureAdRequest(context, serverParametersString);
 
         onClickListener = new View.OnClickListener() {
             @Override

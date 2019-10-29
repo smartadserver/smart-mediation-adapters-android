@@ -25,12 +25,12 @@ Then in the _build.gradle_ of to your application module, you can now import the
 
 For instance you can import _InMobi_ and _Tapjoy_ like so:
 
-    implementation('com.smartadserver.android.mediation:smart-display-sdk-with-inmobi:7.2.1.0')
-    implementation('com.smartadserver.android.mediation:smart-display-sdk-with-vungle:7.2.1.0')
+    implementation('com.smartadserver.android.mediation:smart-display-sdk-with-inmobi:7.2.1.1')
+    implementation('com.smartadserver.android.mediation:smart-display-sdk-with-vungle:7.2.1.1')
 
 > **Note on version numbers:**
 >
-> The latest version is: **7.2.1.0**
+> The latest version is: **7.2.1.1**
 >
 > If you import several third party adapters using _Gradle_, you must use the **same version number for all of them**.
 >
@@ -42,7 +42,7 @@ Available adapters are:
 | Package name | Supported SDK version | Comments | Maven repository |
 | ------------ | --------------------- | -------- | ---------------- |
 | ```smart-display-sdk-with-adcolony``` | 3.3.8 | _n/a_ | ```maven { url 'https://adcolony.bintray.com/AdColony' }``` |
-| ```smart-display-sdk-with-adincube``` | 2.6.3 | Cannot be installed alongside the other adapters | ```maven { url 'http://repository.adincube.com/maven'}``` |
+| ```smart-display-sdk-with-adincube``` | 2.9.4 | Cannot be installed alongside the other adapters | ```maven { url 'http://repository.adincube.com/maven'}``` |
 | ```smart-display-sdk-with-applovin``` | 9.3.0 | _n/a_ | _n/a_ |
 | ```smart-display-sdk-with-facebookaudiencenetwork``` | 4.99.1 | _n/a_ | _n/a_ |
 | ```smart-display-sdk-with-googlemobileads``` | 18.2.0 | _n/a_ | _n/a_ |

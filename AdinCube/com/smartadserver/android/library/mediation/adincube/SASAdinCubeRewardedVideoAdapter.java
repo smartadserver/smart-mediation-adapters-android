@@ -35,7 +35,7 @@ public class SASAdinCubeRewardedVideoAdapter extends SASAdinCubeAdapterBase impl
 
         activity = (Activity) context;
 
-        configureAdRequest(context, serverParametersString, clientParameters);
+        configureAdRequest(context, serverParametersString);
 
         // create AdInCube rewarded video listener to catch events
         AdinCubeRewardedEventListener rewardedEventListener = new AdinCubeRewardedEventListener() {
@@ -91,31 +91,7 @@ public class SASAdinCubeRewardedVideoAdapter extends SASAdinCubeAdapterBase impl
 
     @Override
     public void showRewardedVideoAd() throws Exception {
-        if (needToShowConsentDialog && !consentWasShown) {
-            AdinCube.UserConsent.setEventListener(new AdinCubeUserConsentEventListener() {
-                @Override
-                public void onAccepted() {
-                    Log.d(TAG, "AdinCube rewarded GDPR onAccepted");
-                    showRewardedIfReady();
-                }
-
-                @Override
-                public void onDeclined() {
-                    Log.d(TAG, "AdinCube rewarded GDPR onDeclined");
-                    showRewardedIfReady();
-                }
-
-                @Override
-                public void onError(String s) {
-                    Log.d(TAG, "AdinCube rewarded GDPR onError: " + s);
-                    showRewardedIfReady();
-                }
-            });
-
-            showConsentDialogIfNeeded(activity);
-        } else {
-            showRewardedIfReady();
-        }
+        showRewardedIfReady();
     }
 
     private void showRewardedIfReady() {

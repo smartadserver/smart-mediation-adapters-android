@@ -38,7 +38,7 @@ public class SASAdinCubeBannerAdapter extends SASAdinCubeAdapterBase implements 
                                 @NonNull final SASMediationBannerAdapterListener bannerAdapterListener) {
         Log.d(TAG, "SASAdinCubeBannerAdapter requestAd");
 
-        configureAdRequest(context, serverParametersString, clientParameters);
+        configureAdRequest(context, serverParametersString);
 
         // create AdInCube banner listener to catch events
         AdinCubeBannerEventListener bannerEventListener = new AdinCubeBannerEventListener() {

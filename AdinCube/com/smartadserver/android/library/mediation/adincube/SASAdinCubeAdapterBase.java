@@ -1,20 +1,21 @@
 package com.smartadserver.android.library.mediation.adincube;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.adincube.sdk.AdinCube;
-import com.smartadserver.android.library.mediation.SASMediationAdapter;
-
-import java.util.Map;
 
 /**
  * Mediation adapter base class that will handle initialization and GDPR for all AdinCube adapters
  */
-class SASAdinCubeAdapterBase {
+public class SASAdinCubeAdapterBase {
+
+    @Nullable
+    private static String iabString = null;
+
+    @Nullable
+    private static String[] nonIabVendorAcceptedArray = null;
 
     // parameter key for required AdinCube application ID
     protected static final String APPLICATION_ID_KEY = "applicationID";
@@ -22,28 +23,28 @@ class SASAdinCubeAdapterBase {
     // static flag for AdInCube SDK initialization
     protected static boolean initAdinCubeDone = false;
 
-    // GDPR state variable
-    boolean needToShowConsentDialog = false;
-    static boolean consentWasShown = false;
+    @Nullable
+    public static String getIabString() {
+        return iabString;
+    }
 
+    @Nullable
+    public static String[] getNonIabVendorAcceptedArray() {
+        return nonIabVendorAcceptedArray;
+    }
 
-    synchronized void showConsentDialogIfNeeded(@NonNull Context context) {
-        if (context instanceof Activity && needToShowConsentDialog && !consentWasShown) {
-            AdinCube.UserConsent.ask((Activity) context);
-            consentWasShown = true;
-        }
+    public static void setIabString(@Nullable String iabString) {
+        SASAdinCubeAdapterBase.iabString = iabString;
+    }
+
+    public static void setNonIabVendorAcceptedArray(@Nullable String[] nonIabVendorAcceptedArray) {
+        SASAdinCubeAdapterBase.nonIabVendorAcceptedArray = nonIabVendorAcceptedArray;
     }
 
     /**
      * Common configuration code for all formats
      */
-    protected void configureAdRequest(Context context, String serverParametersString, Map<String, String> clientParameters) {
-
-        // reset state variable
-        needToShowConsentDialog = false;
-
-        // handle GDPR consent
-        handleGDPRConsent(context, clientParameters.get(SASMediationAdapter.GDPR_APPLIES_KEY));
+    protected void configureAdRequest(@NonNull Context context, @NonNull String serverParametersString) {
 
         // one time init
         if (!initAdinCubeDone) {
@@ -53,51 +54,22 @@ class SASAdinCubeAdapterBase {
             // init AdInCube
             AdinCube.setAppKey(appID);
         }
-    }
 
-    protected void handleGDPRConsent(@NonNull Context context, @NonNull String GDPRApplies) {
-        // GDPR consent
-        // Due to the fact that AdinCube is not IAB compliant, it does not accept IAB Consent String, but only a
-        // binary consent status.
-        // Smart advises app developers to store the binary consent in the 'Smart_advertisingConsentStatus' key
-        // in NSUserDefault, therefore this adapter will retrieve it from this key.
-        // Adapt the code below if your app don't follow this convention.
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        final String smartConsentStatus = sharedPreferences.getString("Smart_advertisingConsentStatus", null);
-
-        if (smartConsentStatus != null) {
-            // binary consent available
-
-            // GDPR flag with false default value
-            boolean GDPRAccepted = false;
-
-            // check if GDPR does NOT apply
-            if ("false".equalsIgnoreCase(GDPRApplies)) {
-                GDPRAccepted = true;
-            } else {
-                // check if we have the consent if GDPR applies
-                GDPRAccepted = "1".equals(smartConsentStatus);
-            }
-
-            // now pass "consent" to AdinCube
-            if (GDPRAccepted) {
-                AdinCube.UserConsent.setAccepted(context);
-            } else {
-                AdinCube.UserConsent.setDeclined(context);
-            }
-
-        } else {
-            // AdinCube managed consent -> uncomment if you want to let AdinCube ask for the consent.
-//                needToShowConsentDialog = true;
-//                if (sasAdView instanceof SASInterstitialManager.InterstitialView) {
-//                    // need to defer consent dialog just before interstitial or rewarded video show()
-//                } else {
-//                    // banner or native case, present immediately
-//                    showConsentDialogIfNeeded(context);
-//                }
-
-            // fallback solution : do not present consent, assume declined (comment if you want Adincube to manage the consent)
-            AdinCube.UserConsent.setDeclined(context);
+        // The adapter will automatically handles consent forwarding to AdinCube if:
+        // - you have provided 'iabString' & 'nonIabVendorAcceptedArray' to SASAdinCubeAdapterBase (formatted as described in the Ogury's documentation)
+        // - your application is whitelisted by Ogury.
+        //
+        // You can find more information in Ogury's documentation:
+        // https://intelligentmonetization.ogury.co/dashboard/#/docs/android/gradle?networks=26226be#third-party-consent
+        if (getIabString() != null && getNonIabVendorAcceptedArray() != null) {
+            AdinCube.UserConsent.External.setConsent(context, getIabString(), getNonIabVendorAcceptedArray());
         }
+
+        // Note:
+        // If you don't provide 'iabString' & 'nonIabVendorAcceptedArray' or if you aren't whitelisted by Ogury, you
+        // will need to use 'Ogury Choice Manager' and you will need to implement it by yourself.
+        //
+        // You can find more information about 'Ogury Choice Manager' in Ogury's documentation:
+        // https://intelligentmonetization.ogury.co/dashboard/#/docs/android/gradle?networks=26226be#ogury-choice-manager
     }
 }

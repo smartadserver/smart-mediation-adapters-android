@@ -23,10 +23,10 @@ public class SASAdinCubeInterstitialAdapter extends SASAdinCubeAdapterBase imple
     private static final String TAG = SASAdinCubeInterstitialAdapter.class.getSimpleName();
 
     // store if the request has succeed or not, to differentiate ad request error and ad show error.
-    boolean adRequestSucceed = false;
+    private boolean adRequestSucceed = false;
 
     // the Activity needed by the AdInCube interstitial
-    Activity activity;
+    private Activity activity;
 
     /**
      * Requests a mediated interstitial ad asynchronously
@@ -53,7 +53,7 @@ public class SASAdinCubeInterstitialAdapter extends SASAdinCubeAdapterBase imple
 
         activity = (Activity) context;
 
-        configureAdRequest(context, serverParametersString, clientParameters);
+        configureAdRequest(context, serverParametersString);
 
         // create AdInCube interstitial listener to catch events
         AdinCubeInterstitialEventListener interstitialEventListener = new AdinCubeInterstitialEventListener() {
@@ -102,31 +102,7 @@ public class SASAdinCubeInterstitialAdapter extends SASAdinCubeAdapterBase imple
 
     @Override
     public void showInterstitial() throws Exception {
-        if (needToShowConsentDialog && !consentWasShown) {
-            AdinCube.UserConsent.setEventListener(new AdinCubeUserConsentEventListener() {
-                @Override
-                public void onAccepted() {
-                    Log.d(TAG, "AdinCube rewarded GDPR onAccepted");
-                    showInterstitialIfReady();
-                }
-
-                @Override
-                public void onDeclined() {
-                    Log.d(TAG, "AdinCube rewarded GDPR onDeclined");
-                    showInterstitialIfReady();
-                }
-
-                @Override
-                public void onError(String s) {
-                    Log.d(TAG, "AdinCube rewarded GDPR onError: " + s);
-                    showInterstitialIfReady();
-                }
-            });
-
-            showConsentDialogIfNeeded(activity);
-        } else {
-            showInterstitialIfReady();
-        }
+        showInterstitialIfReady();
     }
 
     private void showInterstitialIfReady() {
