@@ -23,14 +23,14 @@ First declare the _Smart_ repository in the main _build.gradle_ file of your pro
 
 Then in the _build.gradle_ of to your application module, you can now import the adapters you need. Any dependency will be automatically fetched (_Smart Display SDK_, third party SDK, …).
 
-For instance you can import _InMobi_ and _Tapjoy_ like so:
+For instance you can import _InMobi_ and _Tapjoy_ as follows:
 
-    implementation('com.smartadserver.android.mediation:smart-display-sdk-with-inmobi:7.3.0.0')
-    implementation('com.smartadserver.android.mediation:smart-display-sdk-with-vungle:7.3.0.0')
+    implementation('com.smartadserver.android.mediation:smart-display-sdk-with-inmobi:7.3.1.0')
+    implementation('com.smartadserver.android.mediation:smart-display-sdk-with-vungle:7.3.1.0')
 
 > **Note on version numbers:**
 >
-> The latest version is: **7.3.0.0**
+> The latest version is: **7.3.1.0**
 >
 > If you import several third party adapters using _Gradle_, you must use the **same version number for all of them**.
 >
@@ -50,7 +50,7 @@ Available adapters are:
 | ```smart-display-sdk-with-mopub``` | 5.6.0 | _n/a_ | ```maven { url 'https://s3.amazonaws.com/moat-sdk-builds' }``` |
 | ```smart-display-sdk-with-ogury``` | 3.0.13 | _Ogury_ AAR library **must be manually imported** | _n/a_ |
 | ```smart-display-sdk-with-tapjoy``` | 12.0.0 | _n/a_ | _n/a_ |
-| ```smart-display-sdk-with-vungle``` | 6.3.17 | _n/a_ | ```maven { url 'https://jitpack.io' }``` |
+| ```smart-display-sdk-with-vungle``` | 6.4.11 | _n/a_ | ```maven { url 'https://jitpack.io' }``` |
 
 ## Manual installation
 
