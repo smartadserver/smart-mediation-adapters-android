@@ -130,36 +130,4 @@ class SASGoogleMobileAdsAdapterBase {
     }
 
 
-    /**
-     * Compute an ad size in DP given ad view size in pixels (in clientParameters)
-     */
-    protected AdSize getAppropriateAdSizeFromVisualSize(Context context, Map<String, String> clientParameters) {
-
-        // retrieve ad view width and height from clientParameters
-        int widthInPx = Integer.parseInt(clientParameters.get(SASMediationAdapter.AD_VIEW_WIDTH_KEY));
-        int heightInPx = Integer.parseInt(clientParameters.get(SASMediationAdapter.AD_VIEW_HEIGHT_KEY));
-
-        // get Android metrics
-        DisplayMetrics metrics = new DisplayMetrics();
-        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        windowManager.getDefaultDisplay().getMetrics(metrics);
-
-        // compute ad view size in dp
-        int width = (int) Math.ceil (widthInPx / metrics.density);
-        int height = (int) Math.ceil (heightInPx / metrics.density);
-
-        // Use the smallest AdSize that will properly contain the adView
-        if (AdSize.BANNER.getWidth() <= width && AdSize.BANNER.getHeight() <= height) {
-            return AdSize.BANNER;
-        } else if (AdSize.MEDIUM_RECTANGLE.getWidth() <= width && AdSize.MEDIUM_RECTANGLE.getHeight() <= height) {
-            return AdSize.MEDIUM_RECTANGLE;
-        } else if (AdSize.FULL_BANNER.getWidth() <= width && AdSize.FULL_BANNER.getHeight() <= height) {
-            return AdSize.FULL_BANNER;
-        } else if (AdSize.LEADERBOARD.getWidth() <= width && AdSize.LEADERBOARD.getHeight() <= height) {
-            return AdSize.LEADERBOARD;
-        } else {
-            return AdSize.SMART_BANNER;
-        }
-    }
-
 }

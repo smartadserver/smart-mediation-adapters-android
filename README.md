@@ -25,12 +25,12 @@ Then in the _build.gradle_ of to your application module, you can now import the
 
 For instance you can import _InMobi_ and _Tapjoy_ as follows:
 
-    implementation('com.smartadserver.android.mediation:smart-display-sdk-with-inmobi:7.3.2.0')
-    implementation('com.smartadserver.android.mediation:smart-display-sdk-with-vungle:7.3.2.0')
+    implementation('com.smartadserver.android.mediation:smart-display-sdk-with-inmobi:7.4.0.1')
+    implementation('com.smartadserver.android.mediation:smart-display-sdk-with-vungle:7.4.0.1')
 
 > **Note on version numbers:**
 >
-> The latest version is: **7.3.2.0**
+> The latest version is: **7.4.0.1**
 >
 > If you import several third party adapters using _Gradle_, you must use the **same version number for all of them**.
 >

@@ -46,6 +46,7 @@ public class SASGoogleMobileAdsBannerAdapter extends SASGoogleMobileAdsAdapterBa
         String adUnitID = serverParametersString.split("\\|")[1];
 
         GoogleMobileAds gma = initGoogleMobileAds(context, serverParametersString);
+        AdSize adSize = getAdSize(serverParametersString);
 
         if (GoogleMobileAds.ADMOB == gma) {
             // create google ad request
@@ -54,7 +55,7 @@ public class SASGoogleMobileAdsBannerAdapter extends SASGoogleMobileAdsAdapterBa
             // Create Google AdView and configure it.
             AdView adMobView = new AdView(context);
             adMobView.setAdUnitId(adUnitID);
-            adMobView.setAdSize(getAppropriateAdSizeFromVisualSize(context, clientParameters));
+            adMobView.setAdSize(adSize);
 
             AdListener adListener =  createAdListener(bannerAdapterListener, adMobView);
 
@@ -72,8 +73,6 @@ public class SASGoogleMobileAdsBannerAdapter extends SASGoogleMobileAdsAdapterBa
 
             PublisherAdView adManagerView = new PublisherAdView(context);
             adManagerView.setAdUnitId(adUnitID);
-
-            AdSize adSize = getAppropriateAdSizeFromVisualSize(context, clientParameters);
             adManagerView.setAdSizes(adSize);
 
             AdListener adListener =  createAdListener(bannerAdapterListener, adManagerView);
@@ -120,6 +119,29 @@ public class SASGoogleMobileAdsBannerAdapter extends SASGoogleMobileAdsAdapterBa
         };
 
     }
+
+
+    /**
+     * Utility method to get Banner Size from serverParametersString
+     */
+    protected AdSize getAdSize(String serverParametersString) {
+        String[] parameters = serverParametersString.split("\\|");
+        int bannerSizeIndex = 0;
+        if (parameters.length > 2) {
+            // Extracting banner size
+            bannerSizeIndex = Integer.parseInt(parameters[2]);
+        }
+        switch (bannerSizeIndex) {
+            case 1:
+                return AdSize.MEDIUM_RECTANGLE;
+            case 2:
+                return AdSize.LEADERBOARD;
+        }
+        return AdSize.BANNER;
+    }
+
+
+
 
     @Override
     public void onDestroy() {
