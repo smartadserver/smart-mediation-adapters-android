@@ -25,12 +25,12 @@ Then in the _build.gradle_ of to your application module, you can now import the
 
 For instance you can import _InMobi_ and _Tapjoy_ as follows:
 
-    implementation('com.smartadserver.android.mediation:smart-display-sdk-with-inmobi:7.4.1.0')
-    implementation('com.smartadserver.android.mediation:smart-display-sdk-with-vungle:7.4.1.0')
+    implementation('com.smartadserver.android.mediation:smart-display-sdk-with-inmobi:7.6.0.0')
+    implementation('com.smartadserver.android.mediation:smart-display-sdk-with-vungle:7.6.0.0')
 
 > **Note on version numbers:**
 >
-> The latest version is: **7.4.1.0**
+> The latest version is: **7.6.0.0**
 >
 > If you import several third party adapters using _Gradle_, you must use the **same version number for all of them**.
 >
@@ -58,6 +58,6 @@ You can still install the adapters manually if needed:
 
 1. First make sure you have installed the __Smart Display SDK__. More information [here](http://documentation.smartadserver.com/DisplaySDK/android/gettingstarted.html).
 
-2. Copy and paste the classes of the adapter(s) you need to your project sources. Note that some adapter classes have a base class, do not forget to copy it as well.
+2. Copy and paste the classes of the adapter(s) you need to your project sources. Note that some adapter classes have a base class, do not forget to copy it as well. __Beware__ of the fact that the adapter classes are located in a folder structure consistent with their declared package names __and__ the class name sent in the mediation ad sent by __Smart__ delivery. For the whole mediation flow to work properly, you __must__ leave this folder structure untouched when copying it in your project. Typically, you should copy the com/ root folder containing the classes directly in one of the source folders of your Android project, for instance src/main/Java. If that com/ folder already exists, simply merge it with the one containing the adapters. Failing to do so will prevent the SDK from properly instantiating the adapters when it receives a mediation ad, and the ad call will then fail.
 
 3. Make sure to integrate the SDK corresponding to the chosen adapter(s).
