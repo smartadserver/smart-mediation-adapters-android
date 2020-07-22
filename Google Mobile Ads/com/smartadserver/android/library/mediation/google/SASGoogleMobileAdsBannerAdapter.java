@@ -136,6 +136,8 @@ public class SASGoogleMobileAdsBannerAdapter extends SASGoogleMobileAdsAdapterBa
                 return AdSize.MEDIUM_RECTANGLE;
             case 2:
                 return AdSize.LEADERBOARD;
+            case 3:
+                return AdSize.LARGE_BANNER;
         }
         return AdSize.BANNER;
     }
