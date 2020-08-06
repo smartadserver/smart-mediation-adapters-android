@@ -45,7 +45,7 @@ Available adapters are:
 | ```smart-display-sdk-with-adincube``` | 2.9.4 | Cannot be installed alongside the other adapters | ```maven { url 'http://repository.adincube.com/maven'}``` |
 | ```smart-display-sdk-with-applovin``` | 9.3.0 | _n/a_ | _n/a_ |
 | ```smart-display-sdk-with-facebookaudiencenetwork``` | 4.99.1 | _n/a_ | _n/a_ |
-| ```smart-display-sdk-with-googlemobileads``` | 18.3.0 | _n/a_ | _n/a_ |
+| ```smart-display-sdk-with-googlemobileads``` | 19.3.0 | _n/a_ | _n/a_ |
 | ```smart-display-sdk-with-inmobi``` | 7.2.0 | _n/a_ | _n/a_ |
 | ```smart-display-sdk-with-mopub``` | 5.6.0 | _n/a_ | ```maven { url 'https://s3.amazonaws.com/moat-sdk-builds' }``` |
 | ```smart-display-sdk-with-ogury``` | 3.0.13 | _Ogury_ AAR library **must be manually imported** | _n/a_ |
