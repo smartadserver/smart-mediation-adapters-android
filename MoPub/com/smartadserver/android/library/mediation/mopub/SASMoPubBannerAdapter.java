@@ -1,7 +1,7 @@
 package com.smartadserver.android.library.mediation.mopub;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
 import android.view.ViewGroup;
 
@@ -17,7 +17,6 @@ import com.smartadserver.android.library.mediation.SASMediationBannerAdapterList
 import com.smartadserver.android.library.util.SASConfiguration;
 
 
-import java.util.ArrayList;
 import java.util.Map;
 
 /**

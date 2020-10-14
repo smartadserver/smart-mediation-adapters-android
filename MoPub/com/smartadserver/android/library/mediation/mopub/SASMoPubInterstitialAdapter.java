@@ -2,7 +2,7 @@ package com.smartadserver.android.library.mediation.mopub;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
 
 import com.mopub.common.MoPub;
@@ -16,7 +16,6 @@ import com.smartadserver.android.library.mediation.SASMediationInterstitialAdapt
 import com.smartadserver.android.library.mediation.SASMediationInterstitialAdapterListener;
 
 
-import java.util.ArrayList;
 import java.util.Map;
 
 /**

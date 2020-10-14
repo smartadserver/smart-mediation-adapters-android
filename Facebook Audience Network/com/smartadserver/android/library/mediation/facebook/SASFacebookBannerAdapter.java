@@ -1,7 +1,7 @@
 package com.smartadserver.android.library.mediation.facebook;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.WindowManager;

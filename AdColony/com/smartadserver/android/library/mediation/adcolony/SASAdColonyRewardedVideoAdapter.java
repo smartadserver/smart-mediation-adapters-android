@@ -2,7 +2,7 @@ package com.smartadserver.android.library.mediation.adcolony;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
 
 import com.adcolony.sdk.AdColony;
@@ -14,7 +14,6 @@ import com.adcolony.sdk.AdColonyZone;
 import com.smartadserver.android.library.mediation.SASMediationRewardedVideoAdapter;
 import com.smartadserver.android.library.mediation.SASMediationRewardedVideoAdapterListener;
 import com.smartadserver.android.library.model.SASReward;
-import com.smartadserver.android.library.util.SASUtil;
 
 
 import java.util.Map;

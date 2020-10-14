@@ -1,7 +1,7 @@
 package com.smartadserver.android.library.mediation.tapjoy;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
 
 import com.smartadserver.android.library.mediation.SASMediationInterstitialAdapter;
@@ -15,7 +15,6 @@ import com.tapjoy.TJPlacementListener;
 import com.tapjoy.TJPlacementManager;
 import com.tapjoy.TJPlacementVideoListener;
 import com.tapjoy.Tapjoy;
-import com.tapjoy.TapjoyErrorMessage;
 
 import java.util.Map;
 
