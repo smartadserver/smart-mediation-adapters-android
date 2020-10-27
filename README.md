@@ -42,7 +42,6 @@ Available adapters are:
 | Package name | Supported SDK version | Comments | Maven repository |
 | ------------ | --------------------- | -------- | ---------------- |
 | ```smart-display-sdk-with-adcolony``` | 3.3.8 | _n/a_ | ```maven { url 'https://adcolony.bintray.com/AdColony' }``` |
-| ```smart-display-sdk-with-adincube``` | 2.9.4 | Cannot be installed alongside the other adapters | ```maven { url 'http://repository.adincube.com/maven'}``` |
 | ```smart-display-sdk-with-applovin``` | 9.3.0 | _n/a_ | _n/a_ |
 | ```smart-display-sdk-with-facebookaudiencenetwork``` | 4.99.1 | _n/a_ | _n/a_ |
 | ```smart-display-sdk-with-googlemobileads``` | 19.3.0 | _n/a_ | _n/a_ |
