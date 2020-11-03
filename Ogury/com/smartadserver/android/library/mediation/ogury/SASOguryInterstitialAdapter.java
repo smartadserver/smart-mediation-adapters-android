@@ -50,7 +50,7 @@ public class SASOguryInterstitialAdapter extends SASOguryAdapterBase implements 
 
         // Instantiate the Presage interstitial
         AdConfig adConfig = new AdConfig(getAdUnitID(serverParametersString));
-        presageInterstitial = new PresageInterstitial((Activity) context, adConfig);
+        presageInterstitial = new PresageInterstitial(context, adConfig);
         presageInterstitial.setInterstitialCallback(this);
         presageInterstitial.load();
 

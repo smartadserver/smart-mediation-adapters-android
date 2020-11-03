@@ -54,7 +54,7 @@ public class SASOguryOptinVideoAdapter extends SASOguryAdapterBase implements SA
 
         // Instantiate the Presage Optin video manager
         AdConfig adConfig = new AdConfig(getAdUnitID(serverParametersString));
-        optinVideo = new PresageOptinVideo((Activity) context, adConfig);
+        optinVideo = new PresageOptinVideo(context, adConfig);
         optinVideo.setOptinVideoCallback(this);
         optinVideo.load();
     }
