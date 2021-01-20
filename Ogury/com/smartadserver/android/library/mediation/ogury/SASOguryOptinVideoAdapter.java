@@ -91,7 +91,8 @@ public class SASOguryOptinVideoAdapter extends SASOguryAdapterBase implements SA
     @Override
     public void onDestroy() {
         if (optinVideo != null) {
-            optinVideo.setOptinVideoCallback(null);
+            // workaround for Ogury not supporting nullification of callback
+            //optinVideo.setOptinVideoCallback(null);
             optinVideo = null;
         }
     }

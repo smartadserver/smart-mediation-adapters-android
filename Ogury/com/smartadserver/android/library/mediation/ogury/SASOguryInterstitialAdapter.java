@@ -77,9 +77,10 @@ public class SASOguryInterstitialAdapter extends SASOguryAdapterBase implements 
 
     @Override
     public void onDestroy() {
-        if (presageInterstitial != null) {
-            presageInterstitial.setInterstitialCallback(null);
-        }
+        // workaround for Ogury not supporting nullification of callback
+//        if (presageInterstitial != null) {
+//            presageInterstitial.setInterstitialCallback(null);
+//        }
         presageInterstitial = null;
     }
 }
