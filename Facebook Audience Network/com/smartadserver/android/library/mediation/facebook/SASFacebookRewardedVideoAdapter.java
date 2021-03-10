@@ -80,12 +80,8 @@ public class SASFacebookRewardedVideoAdapter extends SASFacebookAdapterBase impl
             }
         };
 
-        // set interstitial listener on interstitial
-        rewardedVideoAd.setAdListener(rewardedVideoAdListener);
-
-        // perform ad request
-        rewardedVideoAd.loadAd();
-
+        // perform ad request with listener
+        rewardedVideoAd.loadAd(rewardedVideoAd.buildLoadAdConfig().withAdListener(rewardedVideoAdListener).build());
     }
 
     @Override

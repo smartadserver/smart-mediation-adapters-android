@@ -76,11 +76,8 @@ public class SASFacebookInterstitialAdapter extends SASFacebookAdapterBase imple
             }
         };
 
-        // set interstitial listener on interstitial
-        interstitialAdView.setAdListener(interstitialAdListener);
-
-        // perform ad request
-        interstitialAdView.loadAd();
+        // perform ad request with listener
+        interstitialAdView.loadAd(interstitialAdView.buildLoadAdConfig().withAdListener(interstitialAdListener).build());
 
     }
 

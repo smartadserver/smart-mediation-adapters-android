@@ -81,11 +81,8 @@ public class SASFacebookBannerAdapter extends SASFacebookAdapterBase implements 
             }
         };
 
-        // set listener on banner
-        bannerView.setAdListener(bannerListener);
-
-        // perform ad request
-        bannerView.loadAd();
+        // perform ad request with listener
+        bannerView.loadAd(bannerView.buildLoadAdConfig().withAdListener(bannerListener).build());
 
     }
 
