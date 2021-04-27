@@ -2,6 +2,8 @@ package com.smartadserver.android.library.mediation.applovin;
 
 import android.content.Context;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import android.util.Log;
 
 import com.applovin.adview.AppLovinInterstitialAd;
@@ -28,7 +30,9 @@ public class SASAppLovinInterstitialAdapter extends SASAppLovinAdapterBase imple
     private static final String TAG = SASAppLovinInterstitialAdapter.class.getSimpleName();
 
     // AppLovin needed Objects
+    @Nullable
     AppLovinAd appLovinAd = null;
+    @Nullable
     AppLovinInterstitialAdDialog interstitialAdDialog = null;
 
     /**
@@ -42,7 +46,9 @@ public class SASAppLovinInterstitialAdapter extends SASAppLovinAdapterBase imple
      *                                    this {@link com.smartadserver.android.library.mediation.SASMediationAdapter} to notify Smart SDK of events occurring
      */
     @Override
-    public void requestInterstitialAd(@NonNull Context context, @NonNull String serverParametersString, @NonNull Map<String, String> clientParameters,
+    public void requestInterstitialAd(@NonNull Context context,
+                                      @NonNull String serverParametersString,
+                                      @NonNull Map<String, Object> clientParameters,
                                       @NonNull final SASMediationInterstitialAdapterListener interstitialAdapterListener) {
 
         configureAdRequest(context, serverParametersString, clientParameters);

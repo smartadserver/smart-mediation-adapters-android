@@ -5,6 +5,7 @@ import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.smartadserver.android.library.mediation.SASMediationInterstitialAdapterListener;
 import com.smartadserver.android.library.mediation.SASMediationRewardedVideoAdapter;
@@ -26,6 +27,7 @@ public class SASOguryOptinVideoAdapter extends SASOguryAdapterBase implements SA
     static private final String TAG = SASOguryOptinVideoAdapter.class.getSimpleName();
 
     // Ogury optin video manager instance
+    @Nullable
     private PresageOptinVideo optinVideo;
 
     /**
@@ -39,15 +41,10 @@ public class SASOguryOptinVideoAdapter extends SASOguryAdapterBase implements SA
     @Override
     public void requestRewardedVideoAd(@NonNull Context context,
                                        @NonNull String serverParametersString,
-                                       @NonNull Map<String, String> clientParameters,
+                                       @NonNull Map<String, Object> clientParameters,
                                        @NonNull SASMediationRewardedVideoAdapterListener rewardedVideoAdapterListener) {
 
         Log.d(TAG, "SASOguryOptinVideoAdapter adRequest");
-
-        if (!(context instanceof Activity)) {
-            rewardedVideoAdapterListener.adRequestFailed("Ogury ad mediation requires the context to be an Activity for Optin Video format", false);
-            return;
-        }
 
         // common configuration
         configureAdRequest(context, serverParametersString, rewardedVideoAdapterListener);
@@ -69,13 +66,17 @@ public class SASOguryOptinVideoAdapter extends SASOguryAdapterBase implements SA
     @Override
     public void onAdLoaded() {
         super.onAdLoaded();
-        ((SASMediationRewardedVideoAdapterListener)mediationAdapterListener).onRewardedVideoLoaded();
+        if (mediationAdapterListener != null) {
+            ((SASMediationRewardedVideoAdapterListener) mediationAdapterListener).onRewardedVideoLoaded();
+        }
     }
 
     @Override
     public void onAdDisplayed() {
         super.onAdDisplayed();
-        ((SASMediationRewardedVideoAdapterListener)mediationAdapterListener).onRewardedVideoShown();
+        if (mediationAdapterListener != null) {
+            ((SASMediationRewardedVideoAdapterListener) mediationAdapterListener).onRewardedVideoShown();
+        }
     }
 
     @Override
@@ -84,7 +85,9 @@ public class SASOguryOptinVideoAdapter extends SASOguryAdapterBase implements SA
 
         // notify Smart SDK of earned reward, if reward is numerical
         try {
-            ((SASMediationRewardedVideoAdapterListener)mediationAdapterListener).onReward(new SASReward(rewardItem.getName(), Double.parseDouble(rewardItem.getValue())));
+            if (mediationAdapterListener != null) {
+                ((SASMediationRewardedVideoAdapterListener) mediationAdapterListener).onReward(new SASReward(rewardItem.getName(), Double.parseDouble(rewardItem.getValue())));
+            }
         } catch (NumberFormatException ignored) {}
     }
 

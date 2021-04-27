@@ -1,23 +1,29 @@
 package com.smartadserver.android.library.mediation.google;
 
+import android.app.Activity;
 import android.content.Context;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import android.util.Log;
 
+import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.reward.RewardItem;
-import com.google.android.gms.ads.reward.RewardedVideoAd;
-import com.google.android.gms.ads.reward.RewardedVideoAdListener;
-import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
+import com.google.android.gms.ads.FullScreenContentCallback;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.OnUserEarnedRewardListener;
+import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 
-import com.smartadserver.android.library.exception.SASAdDisplayException;
+import com.google.android.gms.ads.rewarded.RewardItem;
+import com.google.android.gms.ads.rewarded.RewardedAd;
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 import com.smartadserver.android.library.mediation.SASMediationRewardedVideoAdapter;
 import com.smartadserver.android.library.mediation.SASMediationRewardedVideoAdapterListener;
 import com.smartadserver.android.library.model.SASReward;
 import com.smartadserver.android.library.util.SASUtil;
 
 
+import java.lang.ref.WeakReference;
 import java.util.Map;
 
 /**
@@ -28,8 +34,14 @@ public class SASGoogleMobileAdsRewardedVideoAdapter extends SASGoogleMobileAdsAd
     // tag for logging purposes
     private static final String TAG = SASGoogleMobileAdsRewardedVideoAdapter.class.getSimpleName();
 
-    // Google mobile ads rewarded video manager singleton instance
-    RewardedVideoAd rewardedVideoAd;
+    // Google mobile ads rewarded ad
+    private RewardedAd mRewardedAd = null;
+
+    // WeakReference on Activity at loading time for future display
+    WeakReference<Activity> activityWeakReference = null;
+
+    SASMediationRewardedVideoAdapterListener rewardedVideoAdapterListener = null;
+
 
     /**
      * Requests a mediated rewarded video ad asynchronously.
@@ -40,85 +52,83 @@ public class SASGoogleMobileAdsRewardedVideoAdapter extends SASGoogleMobileAdsAd
      * @param rewardedVideoAdapterListener the {@link SASMediationRewardedVideoAdapterListener} provided to this {@link com.smartadserver.android.library.mediation.SASMediationAdapter} to notify the Smart SDK of events
      */
     @Override
-    public void requestRewardedVideoAd(@NonNull Context context, @NonNull String serverParametersString,
-                                       @NonNull Map<String, String> clientParameters, final @NonNull SASMediationRewardedVideoAdapterListener rewardedVideoAdapterListener) {
+    public void requestRewardedVideoAd(@NonNull Context context,
+                                       @NonNull String serverParametersString,
+                                       @NonNull Map<String, Object> clientParameters,
+                                       final @NonNull SASMediationRewardedVideoAdapterListener rewardedVideoAdapterListener) {
 
+        // reset any previous leftover (?) rewarded ad
+        mRewardedAd = null;
+
+        if (!(context instanceof Activity)) {
+            rewardedVideoAdapterListener.adRequestFailed("Google rewarded requires the Context to be an Activity for display", false);
+            return;
+        }
+
+        activityWeakReference = new WeakReference<>((Activity)context);
+
+        this.rewardedVideoAdapterListener = rewardedVideoAdapterListener;
 
         GoogleMobileAds gma = initGoogleMobileAds(context, serverParametersString);
 
         String adUnitID = getAdUnitID(serverParametersString);
 
-        // Get Google mobile ads rewarded video manager instance
-        rewardedVideoAd = MobileAds.getRewardedVideoAdInstance(context);
+        if (GoogleMobileAds.ADMOB == gma) {
+            // create rewarded ad request
+            AdRequest adRequest = configureAdRequest(context, serverParametersString, clientParameters);
+            // execute request
+            RewardedAd.load(context, adUnitID, adRequest, createRewardedAdLoadCallback(rewardedVideoAdapterListener));
+        } else if (GoogleMobileAds.AD_MANAGER == gma) {
+            // create rewarded publisher ad request
+            AdManagerAdRequest adManagerAdRequest = configureAdManagerAdRequest(context, serverParametersString, clientParameters);
+            // execute request
+            RewardedAd.load(context, adUnitID, adManagerAdRequest, createRewardedAdLoadCallback(rewardedVideoAdapterListener));
+        }
+    }
 
-        // create an Google mobile ads rewarded video ad listener that will intercept ad mob interstitial events and call
-        // appropriate SASMediationRewardedVideoAdapterListener counterpart methods
-        RewardedVideoAdListener rewardedVideoListener = new RewardedVideoAdListener() {
-
+    private RewardedAdLoadCallback createRewardedAdLoadCallback(SASMediationRewardedVideoAdapterListener rewardedVideoAdapterListener) {
+        return new RewardedAdLoadCallback() {
             @Override
-            public void onRewardedVideoAdLoaded() {
+            public void onAdLoaded(@NonNull RewardedAd rewardedAd) {
                 Log.d(TAG, "Google mobile ads onRewardedVideoAdLoaded for rewarded video");
+
+                mRewardedAd = rewardedAd;
+
+                mRewardedAd.setFullScreenContentCallback(new FullScreenContentCallback() {
+                    @Override
+                    public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
+                        super.onAdFailedToShowFullScreenContent(adError);
+                    }
+
+                    @Override
+                    public void onAdShowedFullScreenContent() {
+                        Log.d(TAG, "Google mobile ads onAdShowedFullScreenContent for rewarded");
+                        rewardedVideoAdapterListener.onRewardedVideoShown();
+                        mRewardedAd = null;
+                    }
+
+                    @Override
+                    public void onAdDismissedFullScreenContent() {
+                        Log.d(TAG, "Google mobile ads onAdDismissedFullScreenContent for rewarded");
+                        rewardedVideoAdapterListener.onAdClosed();
+                    }
+
+                    @Override
+                    public void onAdImpression() {
+                        Log.d(TAG, "Google mobile ads onAdImpression for rewarded");
+                    }
+                });
+
                 rewardedVideoAdapterListener.onRewardedVideoLoaded();
             }
 
             @Override
-            public void onRewardedVideoAdOpened() {
-                Log.d(TAG, "Google mobile ads onRewardedVideoAdOpened for rewarded video");
-                rewardedVideoAdapterListener.onRewardedVideoShown();
+            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                Log.d(TAG, "Google mobile ads onAdFailedToLoad for rewarded (error:" + loadAdError + ")");
+                boolean isNoAd = loadAdError.getCode() == AdRequest.ERROR_CODE_NO_FILL;
+                rewardedVideoAdapterListener.adRequestFailed("Google mobile ads rewarded sad loading error " + loadAdError, isNoAd);
             }
-
-            @Override
-            public void onRewardedVideoStarted() {
-                Log.d(TAG, "Google mobile ads onRewardedVideoStarted for interstitial");
-            }
-
-            @Override
-            public void onRewardedVideoAdClosed() {
-                Log.d(TAG, "Google mobile ads onRewardedVideoAdClosed for interstitial");
-                rewardedVideoAdapterListener.onAdClosed();
-            }
-
-            @Override
-            public void onRewarded(RewardItem rewardItem) {
-                Log.d(TAG, "Google mobile ads onRewarded for rewarded video : label:" + rewardItem.getType() + " amount:" + rewardItem.getAmount());
-
-                // notify Smart SDK of earned reward
-                rewardedVideoAdapterListener.onReward(new SASReward(rewardItem.getType(), rewardItem.getAmount()));
-            }
-
-            @Override
-            public void onRewardedVideoAdLeftApplication() {
-                Log.d(TAG, "Google mobile ads onRewardedVideoAdLeftApplication for interstitial");
-                rewardedVideoAdapterListener.onAdClicked();
-            }
-
-            @Override
-            public void onRewardedVideoAdFailedToLoad(int errorCode) {
-                Log.d(TAG, "Google mobile ads rewarded video ad onRewardedVideoAdFailedToLoad (error code:" + errorCode + ")");
-                boolean isNoAd = errorCode == AdRequest.ERROR_CODE_NO_FILL;
-                rewardedVideoAdapterListener.adRequestFailed("Error code:" + errorCode, isNoAd);
-            }
-
-            @Override
-            public void onRewardedVideoCompleted() {
-                Log.d(TAG, "Google mobile ads onRewardedVideoCompleted for rewarded video");
-            }
-
         };
-
-        // set the rewarded video listener on the singleton
-        rewardedVideoAd.setRewardedVideoAdListener(rewardedVideoListener);
-
-        if (GoogleMobileAds.ADMOB == gma) {
-            // create rewarded ad request
-            AdRequest adRequest = configureAdRequest(context, serverParametersString, clientParameters);
-            // make ad call
-            rewardedVideoAd.loadAd(adUnitID, adRequest);
-        } else if (GoogleMobileAds.AD_MANAGER == gma) {
-            // create rewarded publisher ad request
-            PublisherAdRequest publisherAdRequest = configurePublisherAdRequest(context, serverParametersString, clientParameters);
-            rewardedVideoAd.loadAd(adUnitID, publisherAdRequest);
-        }
     }
 
     /**
@@ -129,49 +139,35 @@ public class SASGoogleMobileAdsRewardedVideoAdapter extends SASGoogleMobileAdsAd
     @Override
     public void showRewardedVideoAd() throws Exception {
 
-        /**
-         * Methods of the Google mobile ads's InterstitialAd or RewardedVideoAd like isLoaded(), show()
-         * must be called on the Main Thread or they throw an exception.
-         *
-         * So execute them from the Main thread, but wait for the outcome, should they throw
-         * an exception (which will be stored in exceptions array)
-         */
-        final SASAdDisplayException[] exceptions = new SASAdDisplayException[1];
+        if (mRewardedAd == null) {
+            throw new Exception("No Google mobile ads rewarded ad loaded !");
+        }
 
-        Runnable runnable = new Runnable() {
+        final Activity activity = activityWeakReference != null ? activityWeakReference.get() : null;
+
+        if (activity == null) {
+            throw new Exception("Activity to display Google rewarded is null");
+        }
+
+        // launch rewarded ad display
+        SASUtil.getMainLooperHandler().post(new Runnable() {
             @Override
             public void run() {
-                try {
-                    if (rewardedVideoAd.isLoaded()) {
-                        rewardedVideoAd.show();
-                    } else {
-                        throw new Exception("No Google mobile ads rewarded video loaded !");
+                mRewardedAd.show(activity, new OnUserEarnedRewardListener() {
+                    @Override
+                    public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
+                        Log.d(TAG, "Google mobile ads onUserEarnedReward for rewarded ad : label:" + rewardItem.getType() + " amount:" + rewardItem.getAmount());
+
+                        // notify Smart SDK of earned reward
+                        rewardedVideoAdapterListener.onReward(new SASReward(rewardItem.getType(), rewardItem.getAmount()));
                     }
-                } catch (Exception e) {
-                    // catch potential Exception and create a SASAdDisplayException containing the message
-                    exceptions[0] = new SASAdDisplayException(e.getMessage());
-                }
-
-                synchronized (this) {
-                    this.notify();
-                }
+                });
             }
-        };
-
-        // synchronized block to wait runnable execution outcome
-        synchronized (runnable) {
-            SASUtil.getMainLooperHandler().post(runnable);
-            runnable.wait();
-        }
-
-        // if an exception was thrown, re-throw the exception
-        if (exceptions[0] != null) {
-            throw exceptions[0];
-        }
+        });
     }
 
     @Override
     public void onDestroy() {
-        // nothing to do
+        mRewardedAd = null;
     }
 }

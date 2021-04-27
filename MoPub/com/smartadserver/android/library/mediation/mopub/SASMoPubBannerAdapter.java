@@ -2,6 +2,8 @@ package com.smartadserver.android.library.mediation.mopub;
 
 import android.content.Context;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import android.util.Log;
 import android.view.ViewGroup;
 
@@ -12,6 +14,7 @@ import com.mopub.common.privacy.ConsentDialogListener;
 import com.mopub.common.privacy.PersonalInfoManager;
 import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubView;
+import com.smartadserver.android.library.mediation.SASMediationAdapter;
 import com.smartadserver.android.library.mediation.SASMediationBannerAdapter;
 import com.smartadserver.android.library.mediation.SASMediationBannerAdapterListener;
 import com.smartadserver.android.library.util.SASConfiguration;
@@ -28,6 +31,7 @@ public class SASMoPubBannerAdapter implements SASMediationBannerAdapter {
 
     private static boolean initMoPubDone = false;
 
+    @Nullable
     private MoPubView bannerAdView;
 
     /**
@@ -39,7 +43,9 @@ public class SASMoPubBannerAdapter implements SASMediationBannerAdapter {
      *                               this {@link com.smartadserver.android.library.mediation.SASMediationAdapter} to notify Smart SDK of events occurring
      */
     @Override
-    public void requestBannerAd(@NonNull final Context context, @NonNull final String serverParametersString, @NonNull final Map<String, String> clientParameters,
+    public void requestBannerAd(@NonNull final Context context,
+                                @NonNull final String serverParametersString,
+                                @NonNull final Map<String, Object> clientParameters,
                                 @NonNull final SASMediationBannerAdapterListener bannerAdapterListener) {
 
         Log.d(TAG, "SASMoPubBannerAdapter requestAd");
@@ -85,7 +91,7 @@ public class SASMoPubBannerAdapter implements SASMediationBannerAdapter {
             // Instantiate Banner Ad Listener
             MoPubView.BannerAdListener bannerAdListener = new MoPubView.BannerAdListener() {
                 @Override
-                public void onBannerLoaded(MoPubView banner) {
+                public void onBannerLoaded(@NonNull MoPubView banner) {
                     Log.d(TAG, "BannerAdListener onBannerLoaded");
                     bannerAdapterListener.onBannerLoaded(banner);
                 }
@@ -123,10 +129,18 @@ public class SASMoPubBannerAdapter implements SASMediationBannerAdapter {
             bannerAdView = new MoPubView(context);
             bannerAdView.setAdUnitId(serverParametersString);
 
-            // retrieve ad view height and width through clientParameters
-            int viewWidth = Integer.parseInt(clientParameters.get("adViewWidth"));
-            int viewHeight = Integer.parseInt(clientParameters.get("adViewHeight"));
-            ViewGroup.LayoutParams lParams = new ViewGroup.LayoutParams(viewWidth, viewHeight);
+            // retrieve ad view width and height from clientParameters
+            int width = 0;
+            try {
+                width = Integer.parseInt((String)clientParameters.get(SASMediationAdapter.AD_VIEW_WIDTH_KEY));
+            } catch (NumberFormatException ignored) {}
+
+            int height = 0;
+            try {
+                height = Integer.parseInt((String)clientParameters.get(SASMediationAdapter.AD_VIEW_HEIGHT_KEY));
+            } catch (NumberFormatException ignored) {}
+
+            ViewGroup.LayoutParams lParams = new ViewGroup.LayoutParams(width, height);
             bannerAdView.setLayoutParams(lParams);
 
             // set banner listener

@@ -2,6 +2,8 @@ package com.smartadserver.android.library.mediation.google;
 
 import android.content.Context;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import android.util.Log;
 import android.view.View;
 
@@ -9,8 +11,9 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
-import com.google.android.gms.ads.doubleclick.PublisherAdView;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.admanager.AdManagerAdRequest;
+import com.google.android.gms.ads.admanager.AdManagerAdView;
 import com.smartadserver.android.library.mediation.SASMediationBannerAdapter;
 import com.smartadserver.android.library.mediation.SASMediationBannerAdapterListener;
 
@@ -26,6 +29,7 @@ public class SASGoogleMobileAdsBannerAdapter extends SASGoogleMobileAdsAdapterBa
     private static final String TAG = SASGoogleMobileAdsBannerAdapter.class.getSimpleName();
 
     // Google mobile ads banner view instance
+    @Nullable
     View adView;
 
 
@@ -40,7 +44,9 @@ public class SASGoogleMobileAdsBannerAdapter extends SASGoogleMobileAdsAdapterBa
      *                               this {@link com.smartadserver.android.library.mediation.SASMediationAdapter} to notify Smart SDK of events occurring
      */
     @Override
-    public void requestBannerAd(@NonNull Context context, @NonNull String serverParametersString, @NonNull Map<String, String> clientParameters,
+    public void requestBannerAd(@NonNull Context context,
+                                @NonNull String serverParametersString,
+                                @NonNull Map<String, Object> clientParameters,
                                 @NonNull final SASMediationBannerAdapterListener bannerAdapterListener) {
 
         String adUnitID = serverParametersString.split("\\|")[1];
@@ -69,9 +75,9 @@ public class SASGoogleMobileAdsBannerAdapter extends SASGoogleMobileAdsAdapterBa
 
         } else if (GoogleMobileAds.AD_MANAGER == gma) {
             // create google publisher ad request
-            PublisherAdRequest publisherAdRequest = new PublisherAdRequest.Builder().build();
+            AdManagerAdRequest publisherAdRequest = new AdManagerAdRequest.Builder().build();
 
-            PublisherAdView adManagerView = new PublisherAdView(context);
+            AdManagerAdView adManagerView = new AdManagerAdView(context);
             adManagerView.setAdUnitId(adUnitID);
             adManagerView.setAdSizes(adSize);
 
@@ -91,27 +97,36 @@ public class SASGoogleMobileAdsBannerAdapter extends SASGoogleMobileAdsAdapterBa
         // create Google banner listener that will intercept ad mob banner events and call appropriate SASMediationBannerAdapterListener counterpart methods
         return new AdListener() {
 
+            @Override
             public void onAdClosed() {
                 Log.d(TAG, "Google mobile ads onAdClosed for banner");
                 bannerAdapterListener.onAdClosed();
             }
 
-            public void onAdFailedToLoad(int errorCode) {
-                Log.d(TAG, "Google mobile ads onAdFailedToLoad for banner (error code:" + errorCode + ")");
-                boolean isNoAd = errorCode == AdRequest.ERROR_CODE_NO_FILL;
-                bannerAdapterListener.adRequestFailed("Google mobile ads ad loading error code " + errorCode, isNoAd);
+            @Override
+            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                Log.d(TAG, "Google mobile ads onAdFailedToLoad for banner (error : " + loadAdError + ")");
+                boolean isNoAd = loadAdError.getCode() == AdRequest.ERROR_CODE_NO_FILL;
+                bannerAdapterListener.adRequestFailed("Google mobile ads banner ad loading error : " + loadAdError, isNoAd);
             }
 
-            public void onAdLeftApplication() {
-                Log.d(TAG, "Google mobile ads onAdLeftApplication for banner");
-                bannerAdapterListener.onAdClicked();
-                bannerAdapterListener.onAdLeftApplication();
+            @Override
+            public void onAdClicked() {
+                Log.d(TAG, "Google mobile ads onAdClicked for banner");
             }
 
+            @Override
+            public void onAdImpression() {
+                Log.d(TAG, "Google mobile ads onAdImpression for banner");
+            }
+
+            @Override
             public void onAdOpened() {
                 Log.d(TAG, "Google mobile ads onAdOpened for banner");
+                bannerAdapterListener.onAdClicked();
             }
 
+            @Override
             public void onAdLoaded() {
                 Log.d(TAG, "Google mobile ads onAdLoaded for banner");
                 bannerAdapterListener.onBannerLoaded(adView);
@@ -124,7 +139,8 @@ public class SASGoogleMobileAdsBannerAdapter extends SASGoogleMobileAdsAdapterBa
     /**
      * Utility method to get Banner Size from serverParametersString
      */
-    protected AdSize getAdSize(String serverParametersString) {
+    @NonNull
+    protected AdSize getAdSize(@NonNull String serverParametersString) {
         String[] parameters = serverParametersString.split("\\|");
         int bannerSizeIndex = 0;
         if (parameters.length > 2) {
@@ -151,8 +167,8 @@ public class SASGoogleMobileAdsBannerAdapter extends SASGoogleMobileAdsAdapterBa
         if (adView != null) {
             if (adView instanceof AdView) {
                 ((AdView) adView).destroy();
-            } else if (adView instanceof  PublisherAdView) {
-                ((PublisherAdView)adView).destroy();
+            } else if (adView instanceof  AdManagerAdView) {
+                ((AdManagerAdView)adView).destroy();
             }
         }
     }

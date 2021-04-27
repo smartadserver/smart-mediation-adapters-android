@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.ogury.cm.OguryChoiceManager;
 import com.ogury.cm.OguryChoiceManagerExternal;
@@ -20,7 +21,7 @@ public class SASOguryAdapterBase implements PresageInterstitialCallback {
 
     static private final String TAG = SASOguryAdapterBase.class.getSimpleName();
 
-    @NonNull
+    @Nullable
     protected SASMediationAdapterListener mediationAdapterListener;
 
     /**
@@ -61,7 +62,7 @@ public class SASOguryAdapterBase implements PresageInterstitialCallback {
      * Utility method to get Ogury AdUnit ID from serverParametersString
      */
     @NonNull
-    protected String getAdUnitID(String serverParametersString) {
+    protected String getAdUnitID(@NonNull String serverParametersString) {
         String[] parameters = serverParametersString.split("\\|");
         if (parameters.length > 1) {
             return parameters[1];
@@ -77,7 +78,9 @@ public class SASOguryAdapterBase implements PresageInterstitialCallback {
     @Override
     public void onAdNotAvailable() {
         Log.d(TAG, "Ogury callback onAdNotAvailable");
-        mediationAdapterListener.adRequestFailed("Ogury interstitial ad not available", true);
+        if (mediationAdapterListener != null) {
+            mediationAdapterListener.adRequestFailed("Ogury ad not available", true);
+        }
     }
 
     @Override
@@ -88,7 +91,9 @@ public class SASOguryAdapterBase implements PresageInterstitialCallback {
     @Override
     public void onAdNotLoaded() {
         Log.d(TAG, "Ogury callback onAdNotLoaded");
-        mediationAdapterListener.adRequestFailed("Ogury interstitial ad not loaded", false);
+        if (mediationAdapterListener != null) {
+            mediationAdapterListener.adRequestFailed("Ogury ad not loaded", false);
+        }
     }
 
     @Override
@@ -99,7 +104,9 @@ public class SASOguryAdapterBase implements PresageInterstitialCallback {
     @Override
     public void onAdClosed() {
         Log.d(TAG, "Ogury callback onAdClosed");
-        mediationAdapterListener.onAdClosed();
+        if (mediationAdapterListener != null) {
+            mediationAdapterListener.onAdClosed();
+        }
     }
 
     @Override
@@ -107,7 +114,7 @@ public class SASOguryAdapterBase implements PresageInterstitialCallback {
         Log.d(TAG, "Ogury callback onAdError: " + i);
 
         boolean isNoFill = true;
-        String errorMessage = "Ogury SASOguryInterstitialAdapter failed with error code " + i;
+        String errorMessage = "Ogury SASOguryAdapterBase failed with error code " + i;
 
         /**
          * From Ogury documentation
@@ -148,6 +155,9 @@ public class SASOguryAdapterBase implements PresageInterstitialCallback {
                 isNoFill = false;
                 break;
         }
-        mediationAdapterListener.adRequestFailed(errorMessage,isNoFill);
+
+        if (mediationAdapterListener != null) {
+            mediationAdapterListener.adRequestFailed(errorMessage, isNoFill);
+        }
     }
 }

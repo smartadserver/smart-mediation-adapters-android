@@ -5,6 +5,7 @@ import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.smartadserver.android.library.mediation.SASMediationInterstitialAdapter;
 import com.smartadserver.android.library.mediation.SASMediationInterstitialAdapterListener;
@@ -22,6 +23,7 @@ public class SASOguryInterstitialAdapter extends SASOguryAdapterBase implements 
     static private final String TAG = SASOguryInterstitialAdapter.class.getSimpleName();
 
     // Ogury Interstitial manager instance
+    @Nullable
     private PresageInterstitial presageInterstitial;
 
     /**
@@ -35,14 +37,9 @@ public class SASOguryInterstitialAdapter extends SASOguryAdapterBase implements 
     @Override
     public void requestInterstitialAd(@NonNull Context context,
                                       @NonNull String serverParametersString,
-                                      @NonNull Map<String, String> clientParameters,
+                                      @NonNull Map<String, Object> clientParameters,
                                       @NonNull final SASMediationInterstitialAdapterListener interstitialAdapterListener) {
         Log.d(TAG, "SASOguryInterstitialAdapter adRequest");
-
-        if (!(context instanceof Activity)) {
-            interstitialAdapterListener.adRequestFailed("Ogury ad mediation requires the context to be an Activity for Interstitial format", false);
-            return;
-        }
 
         // common configuration
         configureAdRequest(context, serverParametersString, interstitialAdapterListener);
@@ -59,13 +56,17 @@ public class SASOguryInterstitialAdapter extends SASOguryAdapterBase implements 
     @Override
     public void onAdLoaded() {
         super.onAdLoaded();
-        ((SASMediationInterstitialAdapterListener)mediationAdapterListener).onInterstitialLoaded();
+        if (mediationAdapterListener != null) {
+            ((SASMediationInterstitialAdapterListener) mediationAdapterListener).onInterstitialLoaded();
+        }
     }
 
     @Override
     public void onAdDisplayed() {
         super.onAdDisplayed();
-        ((SASMediationInterstitialAdapterListener)mediationAdapterListener).onInterstitialShown();
+        if (mediationAdapterListener != null) {
+            ((SASMediationInterstitialAdapterListener) mediationAdapterListener).onInterstitialShown();
+        }
     }
 
     @Override

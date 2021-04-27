@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.smartadserver.android.library.mediation.SASMediationRewardedVideoAdapter;
 import com.smartadserver.android.library.mediation.SASMediationRewardedVideoAdapterListener;
@@ -33,7 +34,7 @@ public class SASVungleRewardedVideoAdapter extends SASVungleAdapterBase implemen
     @Override
     public void requestRewardedVideoAd(@NonNull Context context,
                                        @NonNull String serverParametersString,
-                                       @NonNull Map<String, String> clientParameters,
+                                       @NonNull Map<String, Object> clientParameters,
                                        @NonNull final SASMediationRewardedVideoAdapterListener rewardedVideoAdapterListener) {
         Log.d(TAG, "SASVungleRewardedVideoAdapter requestAd");
 
@@ -45,7 +46,7 @@ public class SASVungleRewardedVideoAdapter extends SASVungleAdapterBase implemen
 
 
     @Override
-    public void onError(String s, VungleException exception) {
+    public void onError(@Nullable String s, @Nullable VungleException exception) {
         super.onError(s, exception);
 
         // check if this is a display error
@@ -54,7 +55,9 @@ public class SASVungleRewardedVideoAdapter extends SASVungleAdapterBase implemen
             if (exception != null && exception.getLocalizedMessage() != null) {
                 message = exception.getLocalizedMessage();
             }
-            ((SASMediationRewardedVideoAdapterListener) mediationAdapterListener).onRewardedVideoFailedToShow(message);
+            if (mediationAdapterListener != null) {
+                ((SASMediationRewardedVideoAdapterListener) mediationAdapterListener).onRewardedVideoFailedToShow(message);
+            }
         }
     }
 
@@ -68,23 +71,29 @@ public class SASVungleRewardedVideoAdapter extends SASVungleAdapterBase implemen
     }
 
     @Override
-    public void onAdLoad(String id) {
+    public void onAdLoad(@Nullable String id) {
         super.onAdLoad(id);
-        ((SASMediationRewardedVideoAdapterListener) mediationAdapterListener).onRewardedVideoLoaded();
+        if (mediationAdapterListener != null) {
+            ((SASMediationRewardedVideoAdapterListener) mediationAdapterListener).onRewardedVideoLoaded();
+        }
     }
 
     @Override
-    public void onAdRewarded(String id) {
+    public void onAdRewarded(@Nullable String id) {
         super.onAdRewarded(id);
-        // reward is provided at the template level, and managed by SDK directly
-        ((SASMediationRewardedVideoAdapterListener) mediationAdapterListener).onReward(null);
+        if (mediationAdapterListener != null) {
+            // reward is provided at the template level, and managed by SDK directly
+            ((SASMediationRewardedVideoAdapterListener) mediationAdapterListener).onReward(null);
+        }
     }
 
     @Override
-    public void onAdStart(String s) {
+    public void onAdStart(@Nullable String s) {
         super.onAdStart(s);
         rewardedVideoShown = true;
-        ((SASMediationRewardedVideoAdapterListener) mediationAdapterListener).onRewardedVideoShown();
+        if (mediationAdapterListener != null) {
+            ((SASMediationRewardedVideoAdapterListener) mediationAdapterListener).onRewardedVideoShown();
+        }
     }
 
     @Override

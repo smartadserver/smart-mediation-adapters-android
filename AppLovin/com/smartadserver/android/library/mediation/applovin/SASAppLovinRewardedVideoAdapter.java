@@ -2,6 +2,8 @@ package com.smartadserver.android.library.mediation.applovin;
 
 import android.content.Context;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import android.util.Log;
 
 import com.applovin.adview.AppLovinIncentivizedInterstitial;
@@ -27,6 +29,7 @@ public class SASAppLovinRewardedVideoAdapter extends SASAppLovinAdapterBase impl
     // tag for logging purposes
     private static final String TAG = SASAppLovinRewardedVideoAdapter.class.getSimpleName();
 
+    @Nullable
     private AppLovinIncentivizedInterstitial incentivizedInterstitial;
 
     /**
@@ -36,8 +39,10 @@ public class SASAppLovinRewardedVideoAdapter extends SASAppLovinAdapterBase impl
     }
 
     // RewardedVideoListener instance
+    @Nullable
     RewardedVideoListener rewardedVideoListener;
 
+    @Nullable
     Context context;
 
     /**
@@ -49,7 +54,9 @@ public class SASAppLovinRewardedVideoAdapter extends SASAppLovinAdapterBase impl
      * @param rewardedVideoAdapterListener the {@link SASMediationRewardedVideoAdapterListener} provided to this {@link com.smartadserver.android.library.mediation.SASMediationAdapter} to notify the Smart SDK of events
      */
     @Override
-    public void requestRewardedVideoAd(@NonNull Context context, @NonNull String serverParametersString, @NonNull Map<String, String> clientParameters,
+    public void requestRewardedVideoAd(@NonNull Context context,
+                                       @NonNull String serverParametersString,
+                                       @NonNull Map<String, Object> clientParameters,
                                        @NonNull final SASMediationRewardedVideoAdapterListener rewardedVideoAdapterListener) {
 
         configureAdRequest(context, serverParametersString, clientParameters);
@@ -100,7 +107,7 @@ public class SASAppLovinRewardedVideoAdapter extends SASAppLovinAdapterBase impl
                 double amount = 0;
                 try {
                     amount = Double.parseDouble((String) map.get("amount"));
-                } catch (Exception e) {
+                } catch (Exception ignored) {
                 }
 
                 // legit reward, fire appropriate callback

@@ -2,6 +2,8 @@ package com.smartadserver.android.library.mediation.tapjoy;
 
 import android.content.Context;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import android.util.Log;
 
 import com.smartadserver.android.library.mediation.SASMediationRewardedVideoAdapter;
@@ -25,6 +27,7 @@ public class SASTapjoyRewardedVideoAdapter implements SASMediationRewardedVideoA
 
     static private final String TAG = SASTapjoyRewardedVideoAdapter.class.getSimpleName();
 
+    @Nullable
     private TJPlacement tjPlacement;
 
     private boolean needReward = false;
@@ -36,7 +39,10 @@ public class SASTapjoyRewardedVideoAdapter implements SASMediationRewardedVideoA
      * @param rewardedVideoAdapterListener the {@link SASMediationRewardedVideoAdapterListener} provided to this {@link com.smartadserver.android.library.mediation.SASMediationAdapter} to notify the Smart SDK of events
      */
     @Override
-    public void requestRewardedVideoAd(@NonNull final Context context, @NonNull String serverParametersString, @NonNull Map<String, String> clientParameters, @NonNull final SASMediationRewardedVideoAdapterListener rewardedVideoAdapterListener) {
+    public void requestRewardedVideoAd(@NonNull final Context context,
+                                       @NonNull String serverParametersString,
+                                       @NonNull Map<String, Object> clientParameters,
+                                       @NonNull final SASMediationRewardedVideoAdapterListener rewardedVideoAdapterListener) {
         Log.d(TAG, "SASTapjoyInterstitialAdapter adRequest");
 
         // Retrieve placement info -- Here serverParametersString is "SDKKey/placementName"
@@ -48,7 +54,7 @@ public class SASTapjoyRewardedVideoAdapter implements SASMediationRewardedVideoA
         }
 
         // Pass GDPR consent if applicable
-        String value = clientParameters.get(GDPR_APPLIES_KEY);
+        String value = (String)clientParameters.get(GDPR_APPLIES_KEY);
         if (value != null) {
             // Smart determined GDPR applies or not
             Tapjoy.subjectToGDPR(!("false".equalsIgnoreCase(value)));
@@ -57,7 +63,7 @@ public class SASTapjoyRewardedVideoAdapter implements SASMediationRewardedVideoA
         }
 
         // now find if we have the user consent for ad purpose, and pass it to TapJoy
-        String smartConsent = clientParameters.get(GDPR_CONSENT_KEY);
+        String smartConsent = (String)clientParameters.get(GDPR_CONSENT_KEY);
         if (smartConsent != null) {
             Tapjoy.setUserConsent(smartConsent);
         }

@@ -3,6 +3,8 @@ package com.smartadserver.android.library.mediation.adcolony;
 import android.app.Activity;
 import android.content.Context;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import android.util.Log;
 
 import com.adcolony.sdk.AdColony;
@@ -25,9 +27,10 @@ public class SASAdColonyRewardedVideoAdapter extends SASAdColonyAdapterBase impl
 
 
     // tag for logging purposes
-    static private final String TAG = SASAdColonyInterstitialAdapter.class.getSimpleName();
+    static private final String TAG = SASAdColonyRewardedVideoAdapter.class.getSimpleName();
 
     // AdColony interstitial instance
+    @Nullable
     AdColonyInterstitial adColonyInterstitial;
 
 
@@ -41,7 +44,9 @@ public class SASAdColonyRewardedVideoAdapter extends SASAdColonyAdapterBase impl
      *                                     {@link com.smartadserver.android.library.mediation.SASMediationAdapter} to notify the Smart SDK of events
      */
     @Override
-    public void requestRewardedVideoAd(@NonNull Context context, @NonNull String serverParametersString, @NonNull Map<String, String> clientParameters,
+    public void requestRewardedVideoAd(@NonNull Context context,
+                                       @NonNull String serverParametersString,
+                                       @NonNull Map<String, Object> clientParameters,
                                        @NonNull final SASMediationRewardedVideoAdapterListener rewardedVideoAdapterListener) {
         if (!(context instanceof Activity)) {
             rewardedVideoAdapterListener.adRequestFailed("AdColony ad mediation requires that the Smart AdServer SASAdview " +

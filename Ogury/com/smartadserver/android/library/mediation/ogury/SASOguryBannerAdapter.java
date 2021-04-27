@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.ogury.ed.OguryBannerAdSize;
 import com.ogury.ed.OguryBannerAdView;
@@ -18,12 +19,13 @@ public class SASOguryBannerAdapter extends SASOguryAdapterBase implements SASMed
     static private final String TAG = SASOguryBannerAdapter.class.getSimpleName();
 
     // Ogury banner view
+    @Nullable
     OguryBannerAdView bannerAdView;
 
     @Override
     public void requestBannerAd(@NonNull Context context,
                                 @NonNull String serverParametersString,
-                                @NonNull Map<String, String> clientParameters,
+                                @NonNull Map<String, Object> clientParameters,
                                 @NonNull SASMediationBannerAdapterListener bannerAdapterListener) {
         Log.d(TAG, "SASOguryBannerAdapter adRequest");
 
@@ -37,7 +39,7 @@ public class SASOguryBannerAdapter extends SASOguryAdapterBase implements SASMed
         bannerAdView.loadAd();
     }
 
-    protected OguryBannerAdSize getBannerAdSize(String serverParametersString) {
+    protected OguryBannerAdSize getBannerAdSize(@NonNull String serverParametersString) {
 
         String[] parameters = serverParametersString.split("\\|");
         int bannerSizeIndex = 0;
@@ -56,13 +58,17 @@ public class SASOguryBannerAdapter extends SASOguryAdapterBase implements SASMed
     @Override
     public void onAdLoaded() {
         super.onAdLoaded();
-        ((SASMediationBannerAdapterListener)mediationAdapterListener).onBannerLoaded(bannerAdView);
+        if (mediationAdapterListener != null && bannerAdView != null) {
+            ((SASMediationBannerAdapterListener) mediationAdapterListener).onBannerLoaded(bannerAdView);
+        }
     }
 
     @Override
     public void onAdClicked() {
         Log.d(TAG, "oguryBannerCallback onAdClicked");
-        mediationAdapterListener.onAdClicked();
+        if (mediationAdapterListener != null) {
+            mediationAdapterListener.onAdClicked();
+        }
     }
 
     @Override

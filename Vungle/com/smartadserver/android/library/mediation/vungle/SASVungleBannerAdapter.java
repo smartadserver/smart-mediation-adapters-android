@@ -38,7 +38,7 @@ public class SASVungleBannerAdapter extends SASVungleAdapterBase implements SASM
     @Override
     public void requestBannerAd(@NonNull Context context,
                                 @NonNull String serverParametersString,
-                                @NonNull Map<String, String> clientParameters,
+                                @NonNull Map<String, Object> clientParameters,
                                 @NonNull final SASMediationBannerAdapterListener bannerAdapterListener) {
         Log.d(TAG, "SASVungleBannerAdapter requestAd");
 
@@ -59,11 +59,11 @@ public class SASVungleBannerAdapter extends SASVungleAdapterBase implements SASM
     }
 
     @Override
-    public void onAdLoad(String id) {
+    public void onAdLoad(@Nullable String id) {
         super.onAdLoad(id);
         if (Banners.canPlayAd(placementID, bannerAdSize)) {
             vungleBanner = Banners.getBanner(placementID, bannerAdSize, this);
-            if (vungleBanner != null) {
+            if (vungleBanner != null && mediationAdapterListener != null) {
                 ((SASMediationBannerAdapterListener) mediationAdapterListener).onBannerLoaded(vungleBanner);
             }
         }

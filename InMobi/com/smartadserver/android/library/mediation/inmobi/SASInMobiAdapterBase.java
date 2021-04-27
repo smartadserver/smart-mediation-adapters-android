@@ -6,7 +6,11 @@ import android.location.Location;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.inmobi.sdk.InMobiSdk;
+import com.inmobi.sdk.SdkInitializationListener;
 import com.smartadserver.android.library.util.SASLibraryInfo;
 import com.smartadserver.android.library.util.location.SASLocationManager;
 
@@ -34,12 +38,17 @@ public class SASInMobiAdapterBase {
     /**
      * init InMobi SDK once
      */
-    protected static void initInMobiIfNecessary(Context context, String accountID, JSONObject JSONConsent) {
+    protected static void initInMobiIfNecessary(@NonNull Context context, @NonNull String accountID, @NonNull JSONObject JSONConsent) {
         if (!initInMobiDone) {
             InMobiSdk.setLogLevel(InMobiSdk.LogLevel.DEBUG);
-            InMobiSdk.init(context, accountID, JSONConsent);
+            InMobiSdk.init(context, accountID, JSONConsent, new SdkInitializationListener() {
+                @Override
+                public void onInitializationComplete(@Nullable Error error) {
+                    Log.d(TAG, "InMobi onInitializationComplete" + (error != null ? " with error: " + error.getMessage() : ""));
+                }
+            });
 
-            inMobiParametersMap = new HashMap<String, String>();
+            inMobiParametersMap = new HashMap<>();
             inMobiParametersMap.put("tp", "c_smartadserver");
             inMobiParametersMap.put("tp-ver", SASLibraryInfo.getSharedInstance().getVersion());
 
@@ -50,13 +59,14 @@ public class SASInMobiAdapterBase {
     /**
      * Returns a JSON object containing GDPR info as expected by InMobi
      */
-    protected static JSONObject getJSONConsent(Context context, Map<String, String> clientParameters) {
+    @NonNull
+    protected static JSONObject getJSONConsent(@NonNull Context context, @NonNull Map<String, Object> clientParameters) {
         JSONObject JSONConsent = new JSONObject();
 
         try {
             // find if gdpr applies
             String GDPRApplies = ""; // unknown value by default
-            String value = clientParameters.get(GDPR_APPLIES_KEY);
+            String value = (String)clientParameters.get(GDPR_APPLIES_KEY);
             if (value != null) {
                 if ("true".equalsIgnoreCase(value)) {
                     GDPRApplies = "1";
@@ -92,7 +102,7 @@ public class SASInMobiAdapterBase {
     /**
      * Performs common InMobi ad request configuration
      */
-    protected void configureAdRequest(Context context, String serverParameterString, Map<String, String> clientParameters) {
+    protected void configureAdRequest(@NonNull Context context, @NonNull String serverParameterString, @NonNull Map<String, Object> clientParameters) {
 
         // get GDPR consent tailored for inMobi
         JSONObject JSONConsent = getJSONConsent(context, clientParameters);
@@ -102,8 +112,7 @@ public class SASInMobiAdapterBase {
         InMobiSdk.updateGDPRConsent(JSONConsent);
 
         // pass geolocation if available
-        Location location = null;
-        location = SASLocationManager.getSharedInstance().getLocation();
+        Location location = SASLocationManager.getSharedInstance().getLocation();
         if (location != null) {
             InMobiSdk.setLocation(location);
         }
@@ -112,14 +121,15 @@ public class SASInMobiAdapterBase {
     /**
      * Returns InMobi account ID from server parameters String
      */
-    protected String getAccountId(String serverParameters) {
+    @NonNull
+    protected String getAccountId(@NonNull String serverParameters) {
         return serverParameters.split("/")[0];
     }
 
     /**
      * Returns InMobi placement ID from server parameters String
      */
-    protected long getPlacementId(String serverParameters) {
+    protected long getPlacementId(@NonNull String serverParameters) {
 
         // extract inMobi placement ID from server parameters
         String[] inMobiParams = serverParameters.split("/");

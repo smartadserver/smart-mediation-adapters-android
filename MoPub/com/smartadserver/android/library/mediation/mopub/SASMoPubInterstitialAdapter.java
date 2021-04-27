@@ -3,6 +3,8 @@ package com.smartadserver.android.library.mediation.mopub;
 import android.app.Activity;
 import android.content.Context;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import android.util.Log;
 
 import com.mopub.common.MoPub;
@@ -29,6 +31,7 @@ public class SASMoPubInterstitialAdapter implements SASMediationInterstitialAdap
     private static boolean initMoPubDone = false;
 
     // MoPub interstitial instance
+    @Nullable
     private MoPubInterstitial moPubInterstitial;
 
     // GDPR related

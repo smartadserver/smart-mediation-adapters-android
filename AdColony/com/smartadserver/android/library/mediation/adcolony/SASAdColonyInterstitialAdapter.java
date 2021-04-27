@@ -3,6 +3,8 @@ package com.smartadserver.android.library.mediation.adcolony;
 import android.app.Activity;
 import android.content.Context;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import android.util.Log;
 
 
@@ -25,6 +27,7 @@ public class SASAdColonyInterstitialAdapter extends SASAdColonyAdapterBase imple
     static private final String TAG = SASAdColonyInterstitialAdapter.class.getSimpleName();
 
     // AdColony interstitial instance
+    @Nullable
     AdColonyInterstitial adColonyInterstitial;
 
     /**
@@ -38,7 +41,9 @@ public class SASAdColonyInterstitialAdapter extends SASAdColonyAdapterBase imple
      *                                    this {@link com.smartadserver.android.library.mediation.SASMediationAdapter} to notify Smart SDK of events occurring
      */
     @Override
-    public void requestInterstitialAd(@NonNull Context context, @NonNull String serverParametersString, @NonNull Map<String, String> clientParameters,
+    public void requestInterstitialAd(@NonNull Context context,
+                                      @NonNull String serverParametersString,
+                                      @NonNull Map<String, Object> clientParameters,
                                       @NonNull final SASMediationInterstitialAdapterListener interstitialAdapterListener) {
 
         if (!(context instanceof Activity)) {

@@ -24,7 +24,7 @@ public class SASFacebookAdapterBase {
     /**
      * Common configuration code for all formats
      */
-    void configureAdRequest(Context context, String serverParametersString, Map<String, String> clientParameters) {
+    void configureAdRequest(Context context, String serverParametersString, Map<String, Object> clientParameters) {
 
         // one time init
         if (!initFacebookDone) {

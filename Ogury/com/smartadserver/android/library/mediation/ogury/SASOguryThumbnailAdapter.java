@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.ogury.ed.OguryThumbnailAd;
 import com.ogury.ed.OguryThumbnailAdCallback;
@@ -21,13 +22,15 @@ public class SASOguryThumbnailAdapter extends SASOguryAdapterBase implements SAS
 
     static private final String TAG = SASOguryThumbnailAdapter.class.getSimpleName();
 
+    @Nullable
     OguryThumbnailAd thumbnailAd;
+    @Nullable
     FrameLayout dummyBanner;
 
     @Override
     public void requestBannerAd(@NonNull Context context,
                                 @NonNull String serverParametersString,
-                                @NonNull Map<String, String> clientParameters,
+                                @NonNull Map<String, Object> clientParameters,
                                 @NonNull SASMediationBannerAdapterListener bannerAdapterListener) {
 
         Log.d(TAG, "SASOguryThumbnailAdapter adRequest");
@@ -60,7 +63,8 @@ public class SASOguryThumbnailAdapter extends SASOguryAdapterBase implements SAS
         thumbnailAd.load(thumbnailSizeParameters[0],thumbnailSizeParameters[1]);
     }
 
-    protected int[] getThumbnailSizeParameters(String serverParametersString) {
+    @NonNull
+    protected int[] getThumbnailSizeParameters(@NonNull String serverParametersString) {
 
         int[] params = new int[4];
 
@@ -79,7 +83,9 @@ public class SASOguryThumbnailAdapter extends SASOguryAdapterBase implements SAS
     @Override
     public void onAdLoaded() {
         super.onAdLoaded();
-        ((SASMediationBannerAdapterListener)mediationAdapterListener).onBannerLoaded(dummyBanner);
+        if (mediationAdapterListener != null && dummyBanner != null) {
+            ((SASMediationBannerAdapterListener) mediationAdapterListener).onBannerLoaded(dummyBanner);
+        }
     }
 
     @Override

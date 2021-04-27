@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.smartadserver.android.library.mediation.SASMediationInterstitialAdapter;
 import com.smartadserver.android.library.mediation.SASMediationInterstitialAdapterListener;
@@ -34,7 +35,7 @@ public class SASVungleInterstitialAdapter extends SASVungleAdapterBase implement
     @Override
     public void requestInterstitialAd(@NonNull Context context,
                                       @NonNull String serverParametersString,
-                                      @NonNull Map<String, String> clientParameters,
+                                      @NonNull Map<String, Object> clientParameters,
                                       @NonNull final SASMediationInterstitialAdapterListener interstitialAdapterListener) {
         Log.d(TAG, "SASVungleInterstitialAdapter requestAd");
 
@@ -55,7 +56,9 @@ public class SASVungleInterstitialAdapter extends SASVungleAdapterBase implement
             if (exception != null && exception.getLocalizedMessage() != null) {
                 message = exception.getLocalizedMessage();
             }
-            ((SASMediationInterstitialAdapterListener) mediationAdapterListener).onInterstitialFailedToShow(message);
+            if (mediationAdapterListener != null) {
+                ((SASMediationInterstitialAdapterListener) mediationAdapterListener).onInterstitialFailedToShow(message);
+            }
         }
     }
 
@@ -69,16 +72,20 @@ public class SASVungleInterstitialAdapter extends SASVungleAdapterBase implement
     }
 
     @Override
-    public void onAdLoad(String id) {
+    public void onAdLoad(@Nullable String id) {
         super.onAdLoad(id);
-        ((SASMediationInterstitialAdapterListener) mediationAdapterListener).onInterstitialLoaded();
+        if (mediationAdapterListener != null) {
+            ((SASMediationInterstitialAdapterListener) mediationAdapterListener).onInterstitialLoaded();
+        }
     }
 
     @Override
-    public void onAdStart(String s) {
+    public void onAdStart(@Nullable String s) {
         super.onAdStart(s);
         interstitialShown = true;
-        ((SASMediationInterstitialAdapterListener) mediationAdapterListener).onInterstitialShown();
+        if (mediationAdapterListener != null) {
+            ((SASMediationInterstitialAdapterListener) mediationAdapterListener).onInterstitialShown();
+        }
     }
 
     @Override

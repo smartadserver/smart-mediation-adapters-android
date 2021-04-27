@@ -3,6 +3,8 @@ package com.smartadserver.android.library.mediation.applovin;
 import android.content.Context;
 import android.graphics.Color;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import android.util.Log;
 import android.view.View;
 
@@ -40,7 +42,7 @@ public class SASAppLovinNativeAdAdapter extends SASAppLovinAdapterBase implement
         protected void onAdClicked() {
         }
 
-        public ApplovinNativeAdContent(AppLovinNativeAd nativeAd) {
+        public ApplovinNativeAdContent(@NonNull AppLovinNativeAd nativeAd) {
             this.appLovinNativeAd = nativeAd;
 
             onClickListener = new View.OnClickListener() {
@@ -74,21 +76,25 @@ public class SASAppLovinNativeAdAdapter extends SASAppLovinAdapterBase implement
         }
 
         @Override
+        @NonNull
         public String getTitle() {
             return appLovinNativeAd.getTitle();
         }
 
         @Override
+        @NonNull
         public String getSubTitle() {
             return appLovinNativeAd.getDescriptionText();
         }
 
         @Override
+        @NonNull
         public String getBody() {
             return "";
         }
 
         @Override
+        @NonNull
         public String getIconUrl() {
             return appLovinNativeAd.getIconUrl();
         }
@@ -104,6 +110,7 @@ public class SASAppLovinNativeAdAdapter extends SASAppLovinAdapterBase implement
         }
 
         @Override
+        @NonNull
         public String getCoverImageUrl() {
             return appLovinNativeAd.getImageUrl();
         }
@@ -124,27 +131,31 @@ public class SASAppLovinNativeAdAdapter extends SASAppLovinAdapterBase implement
         }
 
         @Override
+        @NonNull
         public String getCallToAction() {
             return appLovinNativeAd.getCtaText();
         }
 
         @Override
+        @NonNull
         public String getSponsoredMessage() {
             return "";
         }
 
         @Override
+        @Nullable
         public SASNativeVideoAdElement getMediaElement() {
             return nativeVideoAdElement;
         }
 
         @Override
-        public View getMediaView(Context context) {
+        @Nullable
+        public View getMediaView(@NonNull Context context) {
             return null;
         }
 
         @Override
-        public void unregisterView(View v) {
+        public void unregisterView(@NonNull View v) {
             if (registerClickableViews != null) {
                 // clean all installed listeners on clickable views
                 for (View clickableView : registerClickableViews) {
@@ -157,7 +168,7 @@ public class SASAppLovinNativeAdAdapter extends SASAppLovinAdapterBase implement
         }
 
         @Override
-        public void registerView(View v, View[] clickableViews) {
+        public void registerView(@NonNull View v, @Nullable View[] clickableViews) {
             if (clickableViews != null) {
                 registerClickableViews = clickableViews;
                 for (View clickableView : clickableViews) {
@@ -172,6 +183,7 @@ public class SASAppLovinNativeAdAdapter extends SASAppLovinAdapterBase implement
         }
 
         @Override
+        @NonNull
         public String getAdChoicesUrl() {
             return "http://applovin.com/optoutmobile";
         }
@@ -188,7 +200,9 @@ public class SASAppLovinNativeAdAdapter extends SASAppLovinAdapterBase implement
      * @param nativeAdAdapterListener the {@link SASMediationNativeAdAdapterListener} provided to this {@link com.smartadserver.android.library.mediation.SASMediationAdapter}
      */
     @Override
-    public void requestNativeAd(@NonNull Context context, @NonNull String serverParametersString, @NonNull Map<String, String> clientParameters,
+    public void requestNativeAd(@NonNull Context context,
+                                @NonNull String serverParametersString,
+                                @NonNull Map<String, Object> clientParameters,
                                 @NonNull final SASMediationNativeAdAdapterListener nativeAdAdapterListener) {
 
         configureAdRequest(context, serverParametersString, clientParameters);

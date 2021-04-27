@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import androidx.annotation.NonNull;
+
 import com.adcolony.sdk.AdColony;
 import com.adcolony.sdk.AdColonyAppOptions;
 import com.smartadserver.android.library.mediation.SASMediationAdapter;
@@ -18,7 +20,7 @@ public class SASAdColonyAdapterBase {
     /**
      * Common configuration code for all formats
      */
-    void configureAdRequest(Activity activity, String serverParametersString, Map<String, String> clientParameters) {
+    void configureAdRequest(@NonNull Activity activity, @NonNull String serverParametersString, @NonNull Map<String, Object> clientParameters) {
 
         // extract AdColony specific parameters
         String[] params = serverParametersString.split("/");
@@ -31,7 +33,7 @@ public class SASAdColonyAdapterBase {
         boolean GDPRRequired = true; // applies by default
 
         // check Smart value
-        final String GDPRApplies = clientParameters.get(SASMediationAdapter.GDPR_APPLIES_KEY);
+        final String GDPRApplies = (String)clientParameters.get(SASMediationAdapter.GDPR_APPLIES_KEY);
 
         // Due to the fact that AdColony is not IAB compliant, it does not accept IAB Consent String, but only a
         // binary consent status.

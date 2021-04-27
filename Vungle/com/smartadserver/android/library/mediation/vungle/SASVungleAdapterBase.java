@@ -9,7 +9,6 @@ import androidx.annotation.Nullable;
 import androidx.preference.PreferenceManager;
 
 import com.smartadserver.android.library.mediation.SASMediationAdapterListener;
-import com.smartadserver.android.library.mediation.SASMediationRewardedVideoAdapterListener;
 import com.vungle.warren.InitCallback;
 import com.vungle.warren.LoadAdCallback;
 import com.vungle.warren.PlayAdCallback;
@@ -40,7 +39,7 @@ public class SASVungleAdapterBase implements LoadAdCallback, PlayAdCallback, Ini
     @Nullable
     private String consentStatus = null;
 
-    @NonNull
+    @Nullable
     protected SASMediationAdapterListener mediationAdapterListener;
 
     protected boolean adLoaded = false;
@@ -50,15 +49,14 @@ public class SASVungleAdapterBase implements LoadAdCallback, PlayAdCallback, Ini
 
     /**
      * Perform some initializations common to all formats.
-     *
-     * @param context                   The {@link Context} needed by the mediation SDK to make the ad request.
+     *  @param context                   The {@link Context} needed by the mediation SDK to make the ad request.
      * @param serverParametersString    a String containing all needed parameters (as returned by Smart ad delivery)
      * @param clientParameters          additional client-side parameters (user specific, like location).
      * @param mediationAdapterListener  the {@link SASMediationAdapterListener} provided to this {@link com.smartadserver.android.library.mediation.SASMediationAdapter} to notify the Smart SDK of events
      */
     protected void configureAdapter(@NonNull Context context,
                                     @NonNull String serverParametersString,
-                                    @NonNull Map<String,String> clientParameters,
+                                    @NonNull Map<String, Object> clientParameters,
                                     @NonNull SASMediationAdapterListener mediationAdapterListener) {
 
         // reset ad loaded status, if need be
@@ -105,47 +103,53 @@ public class SASVungleAdapterBase implements LoadAdCallback, PlayAdCallback, Ini
     /***** LoadAdCallback interface **********/
 
     @Override
-    public void onAdLoad(String id) {
+    public void onAdLoad(@Nullable String id) {
         Log.d(TAG, "Vungle LoadAdCallback onAdLoad");
         this.adLoaded = true;
     }
 
     /***** PlayAdCallback interface **********/
     @Override
-    public void onAdStart(String s) {
+    public void onAdStart(@Nullable String s) {
         Log.d(TAG, "Vungle PlayAdCallback onAdStart");
     }
 
     @Override
-    public void onAdEnd(String s, boolean completed, boolean isClicked) {
+    public void onAdEnd(@Nullable String s, boolean completed, boolean isClicked) {
         Log.d(TAG, "Vungle PlayAdCallback deprecated onAdEnd");
     }
 
     @Override
-    public void onAdEnd(String id) {
+    public void onAdEnd(@Nullable String id) {
         Log.d(TAG, "Vungle PlayAdCallback onAdEnd id:" + id);
-        mediationAdapterListener.onAdClosed();
+        if (mediationAdapterListener != null) {
+            mediationAdapterListener.onAdClosed();
+        }
     }
 
     @Override
-    public void onAdClick(String id) {
+    public void onAdClick(@Nullable String id) {
         Log.d(TAG, "Vungle PlayAdCallback onAdClick id:" + id);
-        mediationAdapterListener.onAdClicked();
+        if (mediationAdapterListener != null) {
+            mediationAdapterListener.onAdClicked();
+        }
     }
 
     @Override
-    public void onAdRewarded(String id) {
+    public void onAdRewarded(@Nullable String id) {
         Log.d(TAG, "Vungle PlayAdCallback onAdRewarded called id:" + id);
     }
 
     @Override
-    public void onAdLeftApplication(String id) {
+    public void onAdLeftApplication(@Nullable String id) {
         Log.d(TAG, "Vungle PlayAdCallback onAdLeftApplication id:" + id);
-        mediationAdapterListener.onAdLeftApplication();
+        if (mediationAdapterListener != null) {
+            mediationAdapterListener.onAdLeftApplication();
+        }
     }
 
     @Override
-    public void onError(String s, VungleException exception) {
+    public void onError(@Nullable String s, @Nullable VungleException exception) {
         if (!adLoaded) {
             Log.d(TAG, "Vungle LoadAdCallback onError");
             // check if the error is due to a no ad.
@@ -154,7 +158,9 @@ public class SASVungleAdapterBase implements LoadAdCallback, PlayAdCallback, Ini
             if (exception != null && exception.getLocalizedMessage() != null) {
                 message = exception.getLocalizedMessage();
             }
-            mediationAdapterListener.adRequestFailed(message, isNoAd);
+            if (mediationAdapterListener != null) {
+                mediationAdapterListener.adRequestFailed(message, isNoAd);
+            }
         } else {
             Log.d(TAG, "Vungle PlayAdCallback onError");
         }
@@ -182,17 +188,19 @@ public class SASVungleAdapterBase implements LoadAdCallback, PlayAdCallback, Ini
     }
 
     @Override
-    public void onError(VungleException exception) {
+    public void onError(@Nullable VungleException exception) {
         Log.d(TAG, "Vungle InitCallback onError");
         String message = "";
         if (exception != null && exception.getLocalizedMessage() != null) {
             message = exception.getLocalizedMessage();
         }
-        mediationAdapterListener.adRequestFailed(message, false);
+        if (mediationAdapterListener != null) {
+            mediationAdapterListener.adRequestFailed(message, false);
+        }
     }
 
     @Override
-    public void onAutoCacheAdAvailable(String placementId) {
+    public void onAutoCacheAdAvailable(@Nullable String placementId) {
         Log.d(TAG, "Vungle InitCallback onAutoCacheAdAvailable: placementId:" + placementId );
     }
 
