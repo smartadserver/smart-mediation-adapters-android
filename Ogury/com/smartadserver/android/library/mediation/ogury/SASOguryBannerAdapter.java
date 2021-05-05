@@ -6,15 +6,18 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.ogury.ed.OguryBannerAdListener;
 import com.ogury.ed.OguryBannerAdSize;
 import com.ogury.ed.OguryBannerAdView;
-import com.ogury.ed.OguryBannerCallback;
 import com.smartadserver.android.library.mediation.SASMediationBannerAdapter;
 import com.smartadserver.android.library.mediation.SASMediationBannerAdapterListener;
 
 import java.util.Map;
 
-public class SASOguryBannerAdapter extends SASOguryAdapterBase implements SASMediationBannerAdapter, OguryBannerCallback {
+/**
+ *  Mediation adapter class for Ogury banner ad format
+ */
+public class SASOguryBannerAdapter extends SASOguryAdapterBase implements SASMediationBannerAdapter, OguryBannerAdListener {
 
     static private final String TAG = SASOguryBannerAdapter.class.getSimpleName();
 
@@ -33,7 +36,7 @@ public class SASOguryBannerAdapter extends SASOguryAdapterBase implements SASMed
         configureAdRequest(context, serverParametersString, bannerAdapterListener);
 
         bannerAdView = new OguryBannerAdView(context);
-        bannerAdView.setCallback(this);
+        bannerAdView.setListener(this);
         bannerAdView.setAdUnit(getAdUnitID(serverParametersString));
         bannerAdView.setAdSize(getBannerAdSize(serverParametersString));
         bannerAdView.loadAd();
@@ -57,17 +60,9 @@ public class SASOguryBannerAdapter extends SASOguryAdapterBase implements SASMed
 
     @Override
     public void onAdLoaded() {
-        super.onAdLoaded();
+        Log.d(TAG, "Ogury banner listener onAdLoaded");
         if (mediationAdapterListener != null && bannerAdView != null) {
             ((SASMediationBannerAdapterListener) mediationAdapterListener).onBannerLoaded(bannerAdView);
-        }
-    }
-
-    @Override
-    public void onAdClicked() {
-        Log.d(TAG, "oguryBannerCallback onAdClicked");
-        if (mediationAdapterListener != null) {
-            mediationAdapterListener.onAdClicked();
         }
     }
 
@@ -78,6 +73,4 @@ public class SASOguryBannerAdapter extends SASOguryAdapterBase implements SASMed
         }
         bannerAdView = null;
     }
-
-
 }

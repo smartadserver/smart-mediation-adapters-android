@@ -11,13 +11,17 @@ import androidx.annotation.Nullable;
 import com.ogury.cm.OguryChoiceManager;
 import com.ogury.cm.OguryChoiceManagerExternal;
 import com.ogury.cm.OguryCmConfig;
+import com.ogury.core.OguryError;
+import com.ogury.ed.OguryAdListener;
+import com.ogury.sdk.Ogury;
+import com.ogury.sdk.OguryConfiguration;
 import com.smartadserver.android.coresdk.util.SCSConstants;
 import com.smartadserver.android.library.mediation.SASMediationAdapterListener;
 
-import io.presage.Presage;
-import io.presage.interstitial.PresageInterstitialCallback;
-
-public class SASOguryAdapterBase implements PresageInterstitialCallback {
+/**
+ * Base class for Ogury formats adapters
+ */
+public abstract class SASOguryAdapterBase implements OguryAdListener {
 
     static private final String TAG = SASOguryAdapterBase.class.getSimpleName();
 
@@ -46,7 +50,9 @@ public class SASOguryAdapterBase implements PresageInterstitialCallback {
         }
 
         // Init the Ogury SDK ad each call, the API KEY can be different at each call
-        Presage.getInstance().start(getAssetKey(serverParametersString), context);
+        OguryConfiguration.Builder oguryConfigurationBuilder =
+                new OguryConfiguration.Builder(context, getAssetKey(serverParametersString));
+        Ogury.start(oguryConfigurationBuilder.build());
 
     }
 
@@ -71,90 +77,49 @@ public class SASOguryAdapterBase implements PresageInterstitialCallback {
     }
 
     @Override
-    public void onAdAvailable() {
-        Log.d(TAG, "Ogury callback onAdAvailable");
-    }
-
-    @Override
-    public void onAdNotAvailable() {
-        Log.d(TAG, "Ogury callback onAdNotAvailable");
-        if (mediationAdapterListener != null) {
-            mediationAdapterListener.adRequestFailed("Ogury ad not available", true);
-        }
-    }
-
-    @Override
-    public void onAdLoaded() {
-        Log.d(TAG, "Ogury callback onAdLoaded");
-    }
-
-    @Override
-    public void onAdNotLoaded() {
-        Log.d(TAG, "Ogury callback onAdNotLoaded");
-        if (mediationAdapterListener != null) {
-            mediationAdapterListener.adRequestFailed("Ogury ad not loaded", false);
-        }
-    }
-
-    @Override
     public void onAdDisplayed() {
-        Log.d(TAG, "Ogury callback onAdDisplayed");
+        Log.d(TAG, "Ogury listener onAdDisplayed");
+    }
+
+    @Override
+    public void onAdClicked() {
+        Log.d(TAG, "Ogury listener onAdClicked");
+        if (mediationAdapterListener != null) {
+            mediationAdapterListener.onAdClicked();
+        }
     }
 
     @Override
     public void onAdClosed() {
-        Log.d(TAG, "Ogury callback onAdClosed");
+        Log.d(TAG, "Ogury listener onAdClosed");
         if (mediationAdapterListener != null) {
             mediationAdapterListener.onAdClosed();
         }
     }
 
     @Override
-    public void onAdError(int i) {
-        Log.d(TAG, "Ogury callback onAdError: " + i);
-
-        boolean isNoFill = true;
-        String errorMessage = "Ogury SASOguryAdapterBase failed with error code " + i;
+    public void onAdError(OguryError error) {
+        Log.d(TAG, "Ogury listener onAdError: " + error);
 
         /**
-         * From Ogury documentation
+         * From Ogury documentation :
          *
-         * code 0: load failed
-         * code 1: phone not connected to internet
-         * code 2: ad disabled fot this placement/application
-         * code 3: internal error occurred
-         * code 5: start method was not called before the ad call
-         * code 6: an error occurred during the initialization of the SDK
+         * NO_INTERNET_CONNECTION = 0;
+         * LOAD_FAILED = 2000;
+         * AD_DISABLED = 2001;
+         * PROFIG_NOT_SYNCED = 2002;
+         * AD_EXPIRED = 2003;
+         * SDK_INIT_NOT_CALLED = 2004;
+         * ANOTHER_AD_ALREADY_DISPLAYED = 2005;
+         * SDK_INIT_FAILED = 2006;
+         * ACTIVITY_IN_BACKGROUND = 2007;
+         * AD_NOT_AVAILABLE = 2008;
+         * AD_NOT_LOADED = 2009;
+         * SHOW_FAILED = 2010;
          **/
 
-        switch (i) {
-            case 0:
-                errorMessage += " : load failed";
-                break;
-
-            case 1:
-                errorMessage += " : phone not connected to internet";
-                isNoFill = false;
-                break;
-
-            case 2:
-                errorMessage += " : ad disabled fot this placement/application";
-                break;
-
-            case 3:
-                errorMessage += " : internal error occurred";
-                break;
-
-            case 5:
-                errorMessage += " : start method was not called before the ad call";
-                isNoFill = false;
-                break;
-
-            case 6:
-                errorMessage += " : an error occurred during the initialization of the SDK";
-                isNoFill = false;
-                break;
-        }
+        boolean isNoFill = error.getErrorCode() == 2001 || error.getErrorCode() == 2008;
+        String errorMessage = "Ogury SASOguryAdapterBase failed with error " + error;
 
         if (mediationAdapterListener != null) {
             mediationAdapterListener.adRequestFailed(errorMessage, isNoFill);

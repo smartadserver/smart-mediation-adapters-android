@@ -2,7 +2,6 @@ package com.smartadserver.android.library.mediation.ogury;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.util.Log;
 import android.widget.FrameLayout;
 
@@ -10,15 +9,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.ogury.ed.OguryThumbnailAd;
-import com.ogury.ed.OguryThumbnailAdCallback;
+import com.ogury.ed.OguryThumbnailAdListener;
 import com.smartadserver.android.library.mediation.SASMediationBannerAdapter;
 import com.smartadserver.android.library.mediation.SASMediationBannerAdapterListener;
 
 import java.util.Map;
 
-import io.presage.common.AdConfig;
-
-public class SASOguryThumbnailAdapter extends SASOguryAdapterBase implements SASMediationBannerAdapter, OguryThumbnailAdCallback {
+/**
+ * Mediation adapter class for Ogury Thumbnail format
+ */
+public class SASOguryThumbnailAdapter extends SASOguryAdapterBase implements SASMediationBannerAdapter, OguryThumbnailAdListener {
 
     static private final String TAG = SASOguryThumbnailAdapter.class.getSimpleName();
 
@@ -38,8 +38,7 @@ public class SASOguryThumbnailAdapter extends SASOguryAdapterBase implements SAS
         // common configuration
         configureAdRequest(context, serverParametersString, bannerAdapterListener);
 
-        AdConfig adConfig = new AdConfig(getAdUnitID(serverParametersString));
-        thumbnailAd = new OguryThumbnailAd(context,adConfig);
+        thumbnailAd = new OguryThumbnailAd(context,getAdUnitID(serverParametersString));
 
 
         final int[] thumbnailSizeParameters = getThumbnailSizeParameters(serverParametersString);
@@ -57,7 +56,7 @@ public class SASOguryThumbnailAdapter extends SASOguryAdapterBase implements SAS
         };
 
         // set callback on thumbnail ad
-        thumbnailAd.setCallback(this);
+        thumbnailAd.setListener(this);
 
         // load thumbnail ad
         thumbnailAd.load(thumbnailSizeParameters[0],thumbnailSizeParameters[1]);
@@ -82,7 +81,7 @@ public class SASOguryThumbnailAdapter extends SASOguryAdapterBase implements SAS
 
     @Override
     public void onAdLoaded() {
-        super.onAdLoaded();
+        Log.d(TAG, "Ogury thumbnail onAdLoaded");
         if (mediationAdapterListener != null && dummyBanner != null) {
             ((SASMediationBannerAdapterListener) mediationAdapterListener).onBannerLoaded(dummyBanner);
         }

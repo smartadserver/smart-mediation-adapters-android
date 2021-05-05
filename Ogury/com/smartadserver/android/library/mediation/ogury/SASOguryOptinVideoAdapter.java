@@ -1,34 +1,30 @@
 package com.smartadserver.android.library.mediation.ogury;
 
-import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.smartadserver.android.library.mediation.SASMediationInterstitialAdapterListener;
+import com.ogury.ed.OguryOptinVideoAd;
+import com.ogury.ed.OguryOptinVideoAdListener;
+import com.ogury.ed.OguryReward;
 import com.smartadserver.android.library.mediation.SASMediationRewardedVideoAdapter;
 import com.smartadserver.android.library.mediation.SASMediationRewardedVideoAdapterListener;
 import com.smartadserver.android.library.model.SASReward;
 
 import java.util.Map;
 
-import io.presage.common.AdConfig;
-import io.presage.common.network.models.RewardItem;
-import io.presage.interstitial.optinvideo.PresageOptinVideo;
-import io.presage.interstitial.optinvideo.PresageOptinVideoCallback;
-
 /**
  * Mediation adapter class for Ogury "Optin video" ad format
  */
-public class SASOguryOptinVideoAdapter extends SASOguryAdapterBase implements SASMediationRewardedVideoAdapter, PresageOptinVideoCallback {
+public class SASOguryOptinVideoAdapter extends SASOguryAdapterBase implements SASMediationRewardedVideoAdapter, OguryOptinVideoAdListener {
 
     static private final String TAG = SASOguryOptinVideoAdapter.class.getSimpleName();
 
     // Ogury optin video manager instance
     @Nullable
-    private PresageOptinVideo optinVideo;
+    private OguryOptinVideoAd optinVideoAd;
 
     /**
      * @param context                     the {@link android.content.Context} needed by the mediation SDK to make the ad request
@@ -50,22 +46,21 @@ public class SASOguryOptinVideoAdapter extends SASOguryAdapterBase implements SA
         configureAdRequest(context, serverParametersString, rewardedVideoAdapterListener);
 
         // Instantiate the Presage Optin video manager
-        AdConfig adConfig = new AdConfig(getAdUnitID(serverParametersString));
-        optinVideo = new PresageOptinVideo(context, adConfig);
-        optinVideo.setOptinVideoCallback(this);
-        optinVideo.load();
+        optinVideoAd = new OguryOptinVideoAd(context, getAdUnitID(serverParametersString));
+        optinVideoAd.setListener(this);
+        optinVideoAd.load();
     }
 
     @Override
     public void showRewardedVideoAd() throws Exception {
-        if (optinVideo != null && optinVideo.isLoaded()) {
-            optinVideo.show();
+        if (optinVideoAd != null && optinVideoAd.isLoaded()) {
+            optinVideoAd.show();
         }
     }
 
     @Override
     public void onAdLoaded() {
-        super.onAdLoaded();
+        Log.d(TAG, "Ogury optin video onAdLoaded");
         if (mediationAdapterListener != null) {
             ((SASMediationRewardedVideoAdapterListener) mediationAdapterListener).onRewardedVideoLoaded();
         }
@@ -80,23 +75,24 @@ public class SASOguryOptinVideoAdapter extends SASOguryAdapterBase implements SA
     }
 
     @Override
-    public void onAdRewarded(RewardItem rewardItem) {
-        Log.d(TAG, "optinVideoCallback onAdRewarded");
+    public void onAdRewarded(OguryReward oguryReward) {
+        Log.d(TAG, "OguryOptinVideoAdListener onAdRewarded");
 
         // notify Smart SDK of earned reward, if reward is numerical
         try {
             if (mediationAdapterListener != null) {
-                ((SASMediationRewardedVideoAdapterListener) mediationAdapterListener).onReward(new SASReward(rewardItem.getName(), Double.parseDouble(rewardItem.getValue())));
+                ((SASMediationRewardedVideoAdapterListener) mediationAdapterListener).onReward(
+                        new SASReward(oguryReward.getName(), Double.parseDouble(oguryReward.getValue())));
             }
         } catch (NumberFormatException ignored) {}
     }
 
     @Override
     public void onDestroy() {
-        if (optinVideo != null) {
+        if (optinVideoAd != null) {
             // workaround for Ogury not supporting nullification of callback
             //optinVideo.setOptinVideoCallback(null);
-            optinVideo = null;
+            optinVideoAd = null;
         }
     }
 }

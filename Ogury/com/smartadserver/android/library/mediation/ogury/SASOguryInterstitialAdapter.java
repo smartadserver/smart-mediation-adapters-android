@@ -1,30 +1,28 @@
 package com.smartadserver.android.library.mediation.ogury;
 
-import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.ogury.ed.OguryInterstitialAd;
+import com.ogury.ed.OguryInterstitialAdListener;
 import com.smartadserver.android.library.mediation.SASMediationInterstitialAdapter;
 import com.smartadserver.android.library.mediation.SASMediationInterstitialAdapterListener;
 
 import java.util.Map;
 
-import io.presage.common.AdConfig;
-import io.presage.interstitial.PresageInterstitial;
-
 /**
  * Mediation adapter class for Ogury interstitial ad format
  */
-public class SASOguryInterstitialAdapter extends SASOguryAdapterBase implements SASMediationInterstitialAdapter {
+public class SASOguryInterstitialAdapter extends SASOguryAdapterBase implements SASMediationInterstitialAdapter, OguryInterstitialAdListener {
 
     static private final String TAG = SASOguryInterstitialAdapter.class.getSimpleName();
 
     // Ogury Interstitial manager instance
     @Nullable
-    private PresageInterstitial presageInterstitial;
+    private OguryInterstitialAd oguryInterstitial;
 
     /**
      * @param context                     the {@link android.content.Context} needed by the mediation SDK to make the ad request
@@ -46,16 +44,15 @@ public class SASOguryInterstitialAdapter extends SASOguryAdapterBase implements 
 
 
         // Instantiate the Presage interstitial
-        AdConfig adConfig = new AdConfig(getAdUnitID(serverParametersString));
-        presageInterstitial = new PresageInterstitial(context, adConfig);
-        presageInterstitial.setInterstitialCallback(this);
-        presageInterstitial.load();
+        oguryInterstitial = new OguryInterstitialAd(context, getAdUnitID(serverParametersString));
+        oguryInterstitial.setListener(this);
+        oguryInterstitial.load();
 
     }
 
     @Override
     public void onAdLoaded() {
-        super.onAdLoaded();
+        Log.d(TAG, "Ogury interstitial onAdLoaded");
         if (mediationAdapterListener != null) {
             ((SASMediationInterstitialAdapterListener) mediationAdapterListener).onInterstitialLoaded();
         }
@@ -71,17 +68,17 @@ public class SASOguryInterstitialAdapter extends SASOguryAdapterBase implements 
 
     @Override
     public void showInterstitial() throws Exception {
-        if (presageInterstitial != null && presageInterstitial.isLoaded()) {
-            presageInterstitial.show();
+        if (oguryInterstitial != null && oguryInterstitial.isLoaded()) {
+            oguryInterstitial.show();
         }
     }
 
     @Override
     public void onDestroy() {
         // workaround for Ogury not supporting nullification of callback
-//        if (presageInterstitial != null) {
-//            presageInterstitial.setInterstitialCallback(null);
+//        if (oguryInterstitial != null) {
+//            oguryInterstitial.setListener(null);
 //        }
-        presageInterstitial = null;
+        oguryInterstitial = null;
     }
 }
