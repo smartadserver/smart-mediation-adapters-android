@@ -1,21 +1,15 @@
 package com.smartadserver.android.library.mediation.ogury;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.ogury.cm.OguryChoiceManager;
-import com.ogury.cm.OguryChoiceManagerExternal;
-import com.ogury.cm.OguryCmConfig;
 import com.ogury.core.OguryError;
 import com.ogury.ed.OguryAdListener;
 import com.ogury.sdk.Ogury;
 import com.ogury.sdk.OguryConfiguration;
-import com.smartadserver.android.coresdk.util.SCSConstants;
 import com.smartadserver.android.library.mediation.SASMediationAdapterListener;
 
 /**
@@ -36,18 +30,6 @@ public abstract class SASOguryAdapterBase implements OguryAdListener {
                                       @NonNull SASMediationAdapterListener mediationAdapterListener) {
 
         this.mediationAdapterListener = mediationAdapterListener;
-
-        String assetKey = getAssetKey(serverParametersString);
-
-        // extract TCF V2 string...
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        String tcfString = sharedPreferences.getString(SCSConstants.GDPR.TCF_V2_KEY, null);
-
-        // ... and pass it to Ogury SDK, if any.
-        if (tcfString != null) {
-            OguryChoiceManager.initialize(context, assetKey, new OguryCmConfig());
-            OguryChoiceManagerExternal.TcfV2.setConsent(context, assetKey, tcfString, new Integer[0]);
-        }
 
         // Init the Ogury SDK ad each call, the API KEY can be different at each call
         OguryConfiguration.Builder oguryConfigurationBuilder =
