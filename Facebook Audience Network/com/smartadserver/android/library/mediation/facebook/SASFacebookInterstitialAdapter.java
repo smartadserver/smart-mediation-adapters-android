@@ -2,6 +2,8 @@ package com.smartadserver.android.library.mediation.facebook;
 
 import android.content.Context;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import android.util.Log;
 
 import com.facebook.ads.Ad;
@@ -23,18 +25,21 @@ public class SASFacebookInterstitialAdapter extends SASFacebookAdapterBase imple
     static private final String TAG = SASFacebookInterstitialAdapter.class.getSimpleName();
 
     // Facebook interstitial object
+    @Nullable
     private InterstitialAd interstitialAdView;
 
     @Override
-    public void requestInterstitialAd(@NonNull Context context, @NonNull String serverParametersString, @NonNull Map<String, String> clientParameters,
-                                @NonNull final SASMediationInterstitialAdapterListener interstitialAdapterListener) {
+    public void requestInterstitialAd(@NonNull Context context,
+                                      @NonNull String serverParametersString,
+                                      @NonNull Map<String, Object> clientParameters,
+                                      @NonNull final SASMediationInterstitialAdapterListener interstitialAdapterListener) {
 
         configureAdRequest(context, serverParametersString, clientParameters);
 
         String placementID = serverParametersString;
 
         // instantiate Facebook interstitial object
-        interstitialAdView = new InterstitialAd(context,placementID);
+        interstitialAdView = new InterstitialAd(context, placementID);
 
         // instantiate Facebook interstitial listener object
         InterstitialAdListener interstitialAdListener = new InterstitialAdListener() {

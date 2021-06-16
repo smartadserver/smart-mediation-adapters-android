@@ -2,6 +2,8 @@ package com.smartadserver.android.library.mediation.facebook;
 
 import android.content.Context;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import android.util.Log;
 
 import com.facebook.ads.Ad;
@@ -24,21 +26,25 @@ public class SASFacebookRewardedVideoAdapter extends SASFacebookAdapterBase impl
     static private final String TAG = SASFacebookRewardedVideoAdapter.class.getSimpleName();
 
     // Facebook interstitial object
+    @Nullable
     private RewardedVideoAd rewardedVideoAd;
 
     // SASReward object
+    @Nullable
     SASReward sasReward;
 
     @Override
-    public void requestRewardedVideoAd(@NonNull Context context, @NonNull String serverParametersString, @NonNull Map<String, String> clientParameters,
+    public void requestRewardedVideoAd(@NonNull Context context,
+                                       @NonNull String serverParametersString,
+                                       @NonNull Map<String, Object> clientParameters,
                                        @NonNull final SASMediationRewardedVideoAdapterListener rewardedVideoAdapterListener) {
 
-        configureAdRequest(context,serverParametersString,clientParameters);
+        configureAdRequest(context, serverParametersString, clientParameters);
 
         String placementID = serverParametersString;
 
         // instantiate Facebook interstitial object
-        rewardedVideoAd = new RewardedVideoAd(context,placementID);
+        rewardedVideoAd = new RewardedVideoAd(context, placementID);
 
         RewardedVideoAdListener rewardedVideoAdListener = new RewardedVideoAdListener() {
             @Override

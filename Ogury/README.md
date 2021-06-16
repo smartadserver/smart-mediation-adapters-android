@@ -8,3 +8,8 @@ Besides, the Ogury Thumbnail format (floating video) having no counterpart in Sm
 For that integration to work properly, it is mandatory that the SASBannerView component be resized according to the size of the banner ad received.
 
 See https://documentation.smartadserver.com/displaySDK/android/integration/banner.html#adviewresize for more information on how to adapt banner size.
+
+## Known issues
+
+### Thumbnail viewability
+As Ogury Thumbnail format has no counterpart in Smart Display SDK, the viewability can not be correctly computed. Therefore, the viewcount pixel is missing for this format.

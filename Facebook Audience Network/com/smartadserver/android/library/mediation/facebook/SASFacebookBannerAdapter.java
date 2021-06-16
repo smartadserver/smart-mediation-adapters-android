@@ -1,7 +1,10 @@
 package com.smartadserver.android.library.mediation.facebook;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.WindowManager;
@@ -27,18 +30,30 @@ public class SASFacebookBannerAdapter extends SASFacebookAdapterBase implements 
     static private final String TAG = SASFacebookBannerAdapter.class.getSimpleName();
 
     // Facebook banner reference for later clean-up
+    @Nullable
     private AdView bannerView;
 
     @Override
-    public void requestBannerAd(@NonNull Context context, @NonNull String serverParametersString, @NonNull Map<String, String> clientParameters,
+    public void requestBannerAd(@NonNull Context context,
+                                @NonNull String serverParametersString,
+                                @NonNull Map<String, Object> clientParameters,
                                 @NonNull final SASMediationBannerAdapterListener bannerAdapterListener) {
-        configureAdRequest(context,serverParametersString,clientParameters);
+        configureAdRequest(context, serverParametersString, clientParameters);
 
         String placementID = serverParametersString;
 
         // retrieve ad view width and height from clientParameters
-        int width = Integer.parseInt(clientParameters.get(SASMediationAdapter.AD_VIEW_WIDTH_KEY));
-        int height = Integer.parseInt(clientParameters.get(SASMediationAdapter.AD_VIEW_HEIGHT_KEY));
+        int width = 0;
+        try {
+            width = Integer.parseInt((String) clientParameters.get(SASMediationAdapter.AD_VIEW_WIDTH_KEY));
+        } catch (NumberFormatException ignored) {
+        }
+
+        int height = 0;
+        try {
+            height = Integer.parseInt((String) clientParameters.get(SASMediationAdapter.AD_VIEW_HEIGHT_KEY));
+        } catch (NumberFormatException ignored) {
+        }
 
         // get Android metrics
         DisplayMetrics metrics = new DisplayMetrics();
@@ -46,13 +61,13 @@ public class SASFacebookBannerAdapter extends SASFacebookAdapterBase implements 
         windowManager.getDefaultDisplay().getMetrics(metrics);
 
         // compute ad view size in dp
-        int adViewWidthDp = (int)(width / metrics.density);
-        int adViewHeightDp = (int)(height / metrics.density);
+        int adViewWidthDp = (int) (width / metrics.density);
+        int adViewHeightDp = (int) (height / metrics.density);
 
-        AdSize adSize = getAppropriateBannerSize(adViewWidthDp,adViewHeightDp);
+        AdSize adSize = getAppropriateBannerSize(adViewWidthDp, adViewHeightDp);
 
         // instantiate Facebook banner view
-        bannerView = new AdView(context,placementID, adSize);
+        bannerView = new AdView(context, placementID, adSize);
 
         // instantiate Facebook banner listener
         AdListener bannerListener = new AdListener() {
@@ -96,7 +111,7 @@ public class SASFacebookBannerAdapter extends SASFacebookAdapterBase implements 
             bannerSize = AdSize.BANNER_HEIGHT_90;
         }
 
-        return  bannerSize;
+        return bannerSize;
 
     }
 
