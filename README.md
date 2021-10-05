@@ -25,17 +25,17 @@ Then in the _build.gradle_ of to your application module, you can now import the
 
 For instance you can import _InMobi_ and _Tapjoy_ as follows:
 
-    implementation('com.smartadserver.android.mediation:smart-display-sdk-with-inmobi:7.12.0.0')
-    implementation('com.smartadserver.android.mediation:smart-display-sdk-with-vungle:7.12.0.0')
+    implementation('com.smartadserver.android.mediation:smart-display-sdk-with-inmobi:7.14.0.0')
+    implementation('com.smartadserver.android.mediation:smart-display-sdk-with-vungle:7.14.0.0')
 
 > **Note on version numbers:**
 >
-> The latest version is: **7.12.0.0**
+> The latest version is: **7.14.0.0**
 >
 > If you import several third party adapters using _Gradle_, you must use the **same version number for all of them**.
 >
 > The version number always correspond to the underlying _Smart Display SDK_ for its first three digits, then a technical version corresponding to the adapters.
-> For instance, 7.12.0.0 will import the first technical release of the adapters with the _Smart Display SDK_ 7.12.0.
+> For instance, 7.14.0.0 will import the first technical release of the adapters with the _Smart Display SDK_ 7.14.0.
 
 Available adapters are:
 
@@ -43,11 +43,10 @@ Available adapters are:
 | ------------ | --------------------- | -------- | ---------------- |
 | ```smart-display-sdk-with-adcolony``` | 4.4.1 | _n/a_ | ```maven { url 'https://adcolony.bintray.com/AdColony' }``` |
 | ```smart-display-sdk-with-applovin``` | 9.3.0 | _n/a_ | _n/a_ |
-| ```smart-display-sdk-with-facebookaudiencenetwork``` | 6.3.0 | _n/a_ | _n/a_ |
-| ```smart-display-sdk-with-googlemobileads``` | 20.0.0 | _n/a_ | _n/a_ |
+| ```smart-display-sdk-with-googlemobileads``` | 20.4.0 | _n/a_ | _n/a_ |
 | ```smart-display-sdk-with-inmobi``` | 9.1.6 | _n/a_ | _n/a_ |
-| ```smart-display-sdk-with-mopub``` | 5.13.0 | _n/a_ | ```maven { url 'https://s3.amazonaws.com/moat-sdk-builds' }``` |
-| ```smart-display-sdk-with-ogury``` | 5.0.8 | _n/a_ | ```maven {url 'https://maven.ogury.co'}``` |
+| ```smart-display-sdk-with-mopub``` | 5.18.0 | _n/a_ | ```maven { url 'https://s3.amazonaws.com/moat-sdk-builds' }``` |
+| ```smart-display-sdk-with-ogury``` | 5.0.10 | _n/a_ | ```maven {url 'https://maven.ogury.co'}``` |
 | ```smart-display-sdk-with-tapjoy``` | 12.0.0 | _n/a_ | _n/a_ |
 | ```smart-display-sdk-with-vungle``` | 6.8.0 | _n/a_ | ```maven { url 'https://jitpack.io' }``` |
 
