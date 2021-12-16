@@ -53,21 +53,6 @@ public class SASTapjoyRewardedVideoAdapter implements SASMediationRewardedVideoA
             rewardedVideoAdapterListener.adRequestFailed("The Tapjoy SDKKey and/or placementName is not correctly set", false);
         }
 
-        // Pass GDPR consent if applicable
-        String value = (String)clientParameters.get(GDPR_APPLIES_KEY);
-        if (value != null) {
-            // Smart determined GDPR applies or not
-            Tapjoy.subjectToGDPR(!("false".equalsIgnoreCase(value)));
-        } else {
-            // leave Tapjoy make its choice on whether GDPR applies or not
-        }
-
-        // now find if we have the user consent for ad purpose, and pass it to TapJoy
-        String smartConsent = (String)clientParameters.get(GDPR_CONSENT_KEY);
-        if (smartConsent != null) {
-            Tapjoy.setUserConsent(smartConsent);
-        }
-
         String SDKKey = placementInfo[0];
         final String placementName = placementInfo[1];
 
@@ -118,6 +103,12 @@ public class SASTapjoyRewardedVideoAdapter implements SASMediationRewardedVideoA
             @Override
             public void onRewardRequest(TJPlacement tjPlacement, TJActionRequest tjActionRequest, String s, int i) {
                 Log.d(TAG, "placementListener onRewardRequest");
+            }
+
+            @Override
+            public void onClick(TJPlacement tjPlacement) {
+                Log.d(TAG, "placementListener onClick");
+                rewardedVideoAdapterListener.onAdClicked();
             }
         };
 

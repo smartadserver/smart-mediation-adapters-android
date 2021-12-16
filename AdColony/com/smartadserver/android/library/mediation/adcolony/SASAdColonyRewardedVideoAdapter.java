@@ -117,18 +117,15 @@ public class SASAdColonyRewardedVideoAdapter extends SASAdColonyAdapterBase impl
             }
         };
 
-        AdColony.setRewardListener(new AdColonyRewardListener() {
-            @Override
-            public void onReward(AdColonyReward adColonyReward) {
+        AdColony.setRewardListener(adColonyReward -> {
 
-                String currency = adColonyReward.getRewardName();
-                int amount = adColonyReward.getRewardAmount();
+            String currency = adColonyReward.getRewardName();
+            int amount = adColonyReward.getRewardAmount();
 
-                Log.d(TAG, "AdColony onReward for rewarded video: label:" + currency + " amount:" + amount);
+            Log.d(TAG, "AdColony onReward for rewarded video: label:" + currency + " amount:" + amount);
 
-                if (amount > 0) {
-                    rewardedVideoAdapterListener.onReward(new SASReward(currency, amount));
-                }
+            if (amount > 0) {
+                rewardedVideoAdapterListener.onReward(new SASReward(currency, amount));
             }
         });
 

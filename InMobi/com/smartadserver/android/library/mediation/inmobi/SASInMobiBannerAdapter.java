@@ -47,13 +47,15 @@ public class SASInMobiBannerAdapter extends SASInMobiAdapterBase implements SASM
 
         int width = 0;
         try {
+            //noinspection ConstantConditions
             width = Integer.parseInt((String)clientParameters.get(SASMediationAdapter.AD_VIEW_WIDTH_KEY));
-        } catch (NumberFormatException ignored) {}
+        } catch (Exception ignored) {}
 
         int height = 0;
         try {
+            //noinspection ConstantConditions
             height = Integer.parseInt((String)clientParameters.get(SASMediationAdapter.AD_VIEW_HEIGHT_KEY));
-        } catch (NumberFormatException ignored) {}
+        } catch (Exception ignored) {}
 
         ViewGroup.LayoutParams lParams = new ViewGroup.LayoutParams(width, height);
         bannerAdView.setLayoutParams(lParams);

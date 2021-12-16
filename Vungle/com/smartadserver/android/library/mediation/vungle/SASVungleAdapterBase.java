@@ -109,6 +109,12 @@ public class SASVungleAdapterBase implements LoadAdCallback, PlayAdCallback, Ini
     }
 
     /***** PlayAdCallback interface **********/
+
+    @Override
+    public void creativeId(String creativeId) {
+        Log.d(TAG, "Vungle PlayAdCallback creativeId: " + creativeId);
+    }
+
     @Override
     public void onAdStart(@Nullable String s) {
         Log.d(TAG, "Vungle PlayAdCallback onAdStart");
@@ -164,6 +170,11 @@ public class SASVungleAdapterBase implements LoadAdCallback, PlayAdCallback, Ini
         } else {
             Log.d(TAG, "Vungle PlayAdCallback onError");
         }
+    }
+
+    @Override
+    public void onAdViewed(String placementId) {
+        Log.d(TAG, "Vungle onAdViewed");
     }
 
     /***** InitCallback interface **********/
