@@ -45,7 +45,7 @@ Available adapters are:
 | ```smart-display-sdk-with-applovin``` | 9.3.0 | _n/a_ | _n/a_ |
 | ```smart-display-sdk-with-googlemobileads``` | 20.5.0 | _n/a_ | _n/a_ |
 | ```smart-display-sdk-with-inmobi``` | 10.0.1 | _n/a_ | _n/a_ |
-| ```smart-display-sdk-with-ogury``` | 5.1.0 | _n/a_ | ```maven {url 'https://maven.ogury.co'}``` |
+| ```smart-display-sdk-with-ogury``` | 5.3.0 | _n/a_ | ```maven {url 'https://maven.ogury.co'}``` |
 | ```smart-display-sdk-with-tapjoy``` | 12.8.1 | _n/a_ | ```maven { url 'https://sdk.tapjoy.com/' }``` |
 | ```smart-display-sdk-with-vungle``` | 6.10.3 | _n/a_ | ```mavenCentral()``` |
 

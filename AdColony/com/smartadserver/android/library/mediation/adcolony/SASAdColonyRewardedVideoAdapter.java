@@ -21,7 +21,7 @@ import com.smartadserver.android.library.model.SASReward;
 import java.util.Map;
 
 /**
- * Mediation adapter class for MoPub interstitial format
+ * Mediation adapter class for AdColony interstitial format
  */
 public class SASAdColonyRewardedVideoAdapter extends SASAdColonyAdapterBase implements SASMediationRewardedVideoAdapter {
 

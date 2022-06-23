@@ -19,7 +19,7 @@ import com.smartadserver.android.library.mediation.SASMediationInterstitialAdapt
 import java.util.Map;
 
 /**
- * Mediation adapter class for MoPub interstitial format
+ * Mediation adapter class for AdColony interstitial format
  */
 public class SASAdColonyInterstitialAdapter extends SASAdColonyAdapterBase implements SASMediationInterstitialAdapter {
 
