@@ -40,7 +40,7 @@ class SASGoogleMobileAdsBannerAdapter : SASGoogleMobileAdsAdapterBase(), SASMedi
             // Create Google AdView and configure it.
             val adMobView = AdView(context)
             adMobView.adUnitId = adUnitID
-            adMobView.adSize = adSize
+            adMobView.setAdSize(adSize)
             val adListener = createAdListener(bannerAdapterListener, adMobView)
 
             // set listener on banner
@@ -103,7 +103,7 @@ class SASGoogleMobileAdsBannerAdapter : SASGoogleMobileAdsAdapterBase(), SASMedi
     /**
      * Utility method to get Banner Size from serverParametersString
      */
-    protected fun getAdSize(serverParametersString: String)= when (serverParametersString.split("|").getOrElse(2){"0"}) {
+    private fun getAdSize(serverParametersString: String)= when (serverParametersString.split("|").getOrElse(2){"0"}) {
             "1" -> AdSize.MEDIUM_RECTANGLE
             "2" -> AdSize.LEADERBOARD
             "3" -> AdSize.LARGE_BANNER
