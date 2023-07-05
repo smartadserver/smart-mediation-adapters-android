@@ -87,6 +87,11 @@ class SASGoogleMobileAdsRewardedVideoAdapter : SASGoogleMobileAdsAdapterBase(), 
                     override fun onAdImpression() {
                         Log.d(TAG, "Google mobile ads onAdImpression for rewarded")
                     }
+
+                    override fun onAdClicked() {
+                        Log.d(TAG, "Google mobile ads onAdClicked for rewarded")
+                        rewardedVideoAdapterListener.onAdClicked()
+                    }
                 }
                 rewardedVideoAdapterListener.onRewardedVideoLoaded()
             }

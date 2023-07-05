@@ -91,6 +91,11 @@ class SASGoogleMobileAdsInterstitialAdapter : SASGoogleMobileAdsAdapterBase(), S
                     override fun onAdImpression() {
                         Log.d(TAG, "Google mobile ads onAdImpression for interstitial")
                     }
+
+                    override fun onAdClicked() {
+                        Log.d(TAG, "Google mobile ads onAdClicked for interstitial")
+                        interstitialAdapterListener.onAdClicked()
+                    }
                 }
 
                 // notify Smart SDK of successful interstitial loading
