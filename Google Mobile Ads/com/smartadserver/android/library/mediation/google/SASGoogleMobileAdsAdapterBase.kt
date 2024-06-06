@@ -1,14 +1,8 @@
 package com.smartadserver.android.library.mediation.google
 
 import android.content.Context
-import android.os.Bundle
-import android.preference.PreferenceManager
 import android.util.Log
-import com.google.ads.mediation.admob.AdMobAdapter
-import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
-import com.google.android.gms.ads.admanager.AdManagerAdRequest
-import com.smartadserver.android.library.mediation.SASMediationAdapter
 
 /**
  * Mediation adapter base class that will handle initialization and GDPR for all Google Mobile ads adapters
