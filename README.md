@@ -27,12 +27,12 @@ Then in the _build.gradle_ of to your application module, you can now import the
 
 For instance you can import _InMobi_ and _Tapjoy_ as follows:
 
-    implementation('com.smartadserver.android.mediation:smart-display-sdk-with-inmobi:7.24.0.1')
-    implementation('com.smartadserver.android.mediation:smart-display-sdk-with-vungle:7.24.0.1')
+    implementation('com.smartadserver.android.mediation:smart-display-sdk-with-inmobi:7.25.0.0')
+    implementation('com.smartadserver.android.mediation:smart-display-sdk-with-vungle:7.25.0.0')
 
 > **Note on version numbers:**
 >
-> The latest version is: **7.24.0.1**
+> The latest version is: **7.25.0.0**
 >
 > If you import several third party adapters using _Gradle_, you must use the **same version number for all of them**.
 >
@@ -44,7 +44,7 @@ Available adapters are:
 | Package name | Supported SDK version | Comments | Maven repository |
 | ------------ | --------------------- | -------- | ---------------- |
 | ```smart-display-sdk-with-adcolony``` | 4.6.5 | _n/a_ | _n/a_ |
-| ```smart-display-sdk-with-applovin``` | 9.3.0 | _n/a_ | _n/a_ |
+| ```smart-display-sdk-with-applovin``` | 9.14.12 | _n/a_ | _n/a_ |
 | ```smart-display-sdk-with-googlemobileads``` | 23.1.0 | _n/a_ | _n/a_ |
 | ```smart-display-sdk-with-inmobi``` | 10.0.1 | _n/a_ | _n/a_ |
 | ```smart-display-sdk-with-ogury``` | 5.6.2 | _n/a_ | ```maven {url 'https://maven.ogury.co'}``` |
